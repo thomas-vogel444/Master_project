@@ -3,6 +3,7 @@ import h5py
 import os
 import re
 import pprint as pp
+import numpy 
 
 # Get all the CT scan folder names
 data_directory = "../../ct_atrium"
@@ -30,5 +31,45 @@ for CT_scan_name in ListCTScans:
 
 	ct_scan_dictionary[CT_scan_name] = dicom_files
 	
+#*****************************************************************************************
+# For a given dicom file, produce a 4d numpy array Batch Channel Width Height
+# with:
+#	Batch   : number of training examples, i.e. number of voxels in the image 480 * 480
+#	Channel : 3 planes centred at the voxel
+#	Width   : width of the image path, i.e. 32
+#	Height  : height of the image patch, i.e. 32
+#*****************************************************************************************
+# Get the path for a given CT scan
+CT_scan_names           = ct_scan_dictionary.keys()
+CT_scan_name 			= CT_scan_names[0]
+CT_scan_dicom_filenames = ct_scan_dictionary[CT_scan_name]
+
+dicom_height  = 480
+dicom_width   = 480
+number_dicoms = len(CT_scan_dicom_filenames)
+
+# Loop through all the DICOM files for a given CT scan
+ArrayDicom = numpy.zeros((dicom_height, dicom_width, number_dicoms), dtype="uint16")
+for dicom_filename in CT_scan_dicom_filenames:
+    # read the file
+    dicom_file_path = DICOM_path.replace("CTScan_name", CT_scan_name).replace("DICOM_name", dicom_filename)
+    print "Reading %s" %(dicom_file_path)
+    ds = dicom.read_file(dicom_file_path)
+    # store the raw image data
+    ArrayDicom[:, :, CT_scan_dicom_filenames.index(dicom_filename)] = ds.pixel_array  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
