@@ -66,84 +66,84 @@ y_grid = np.arange(dicom_width)
 z_grid = np.arange(number_dicoms)
 
 
+def tri_planar_patch_generator(x,y,z,image,patch_size):
+	height, width, depth = image.shape
+	patches = np.zeros((3, patch_size, patch_size))
+
+	x_min = 0
+	x_max = patch_size
+	y_min = 0
+	y_max = patch_size
+	z_min = 0
+	z_max = patch_size
+
+	if x < patch_size/2:
+		x_min = patch_size/2 - x
+
+	if x > height - patch_size/2:
+		x_max = patch_size/2 + height - x
+
+	if y < patch_size/2:
+		y_min = patch_size/2 - y
+
+	if y > width - patch_size/2:
+		y_max = patch_size/2 + width - y
+
+	if z < patch_size/2:
+		z_min = patch_size/2 - z
+
+	if z > depth - patch_size/2:
+		z_max = patch_size/2 + depth - z
+
+	patches[0, x_min:x_max, y_min:y_max] = ArrayDicom[np.maximum(x-patch_size/2, 0):np.minimum(x+patch_size/2, height), 
+						 np.maximum(y-patch_size/2, 0):np.minimum(y+patch_size/2, width), 
+						 z]
+
+	patches[1, x_min:x_max, z_min:z_max] = ArrayDicom[np.maximum(x-patch_size/2, 0):np.minimum(x+patch_size/2, height), 
+						 y, 
+						 np.maximum(z-patch_size/2, 0):np.minimum(z+patch_size/2, depth)]
+
+	patches[2, y_min:y_max, z_min:z_max] = ArrayDicom[x, 
+						 np.maximum(y-patch_size/2, 0):np.minimum(y+patch_size/2, width), 
+						 np.maximum(z-patch_size/2, 0):np.minimum(z+patch_size/2, depth)]
+
+	return patches
+
+
 # For an edge voxel
 x = dicom_height - 1
 y = 20
 z = number_dicoms - patch_size/2 + 1
 # y = patch_size/2 - 1
 # z = patch_size/2 - 1
-plane_1 = np.zeros((patch_size, patch_size))
-plane_2 = np.zeros((patch_size, patch_size))
-plane_3 = np.zeros((patch_size, patch_size))
 
-x_min = 0
-x_max = patch_size
-y_min = 0
-y_max = patch_size
-z_min = 0
-z_max = patch_size
+patches = tri_planar_patch_generator(x,y,z,ArrayDicom,patch_size)
 
-if x < patch_size/2:
-	x_min = patch_size/2 - x
-
-if x > dicom_height - patch_size/2:
-	x_max = patch_size/2 + dicom_height - x
-
-if y < patch_size/2:
-	y_min = patch_size/2 - y
-
-if y > dicom_width - patch_size/2:
-	y_max = patch_size/2 + dicom_width - y
-
-if z < patch_size/2:
-	z_min = patch_size/2 - z
-
-if z > number_dicoms - patch_size/2:
-	z_max = patch_size/2 + number_dicoms - z
-
-ArrayDicom.fill(1)
-
-plane_1[x_min:x_max, y_min:y_max] = ArrayDicom[np.maximum(x-patch_size/2, 0):np.minimum(x+patch_size/2, dicom_height), 
-					 np.maximum(y-patch_size/2, 0):np.minimum(y+patch_size/2, dicom_width), 
-					 z]
-
-plane_2[x_min:x_max, z_min:z_max] = ArrayDicom[np.maximum(x-patch_size/2, 0):np.minimum(x+patch_size/2, dicom_height), 
-					 y, 
-					 np.maximum(z-patch_size/2, 0):np.minimum(z+patch_size/2, number_dicoms)]
-
-plane_3[y_min:y_max, z_min:z_max] = ArrayDicom[x, 
-					 np.maximum(y-patch_size/2, 0):np.minimum(y+patch_size/2, dicom_width), 
-					 np.maximum(z-patch_size/2, 0):np.minimum(z+patch_size/2, number_dicoms)]
-
-print plane_1
-print plane_1.shape
-print plane_2
-print plane_2.shape
-print plane_3
-print plane_3.shape
-
+print patches[0,:,:]
+print patches[1,:,:]
+print patches[2,:,:]
 
 # #***************************************************************
-# from matplotlib import pyplot, cm
-# path = "../../ct_atrium/14022803/DICOMS/00010088"
+from matplotlib import pyplot, cm
+path = "../../ct_atrium/14022803/DICOMS/00010088"
 
 
-# ref = dicom.read_file(path)
+ref = dicom.read_file(path)
 
-# ConstPixelDims = (int(ref.Rows), int(ref.Columns), number_dicoms)
+ConstPixelDims = (int(ref.Rows), int(ref.Columns), number_dicoms)
 
-# # Load spacing values (in mm)
-# ConstPixelSpacing = (float(ref.PixelSpacing[0]), float(ref.PixelSpacing[1]), float(ref.SliceThickness))
+# Load spacing values (in mm)
+ConstPixelSpacing = (float(ref.PixelSpacing[0]), float(ref.PixelSpacing[1]), float(ref.SliceThickness))
 
-# x = np.arange(0.0, (ConstPixelDims[0]+1)*ConstPixelSpacing[0], ConstPixelSpacing[0])
-# y = np.arange(0.0, (ConstPixelDims[1]+1)*ConstPixelSpacing[1], ConstPixelSpacing[1])
-# z = np.arange(0.0, (ConstPixelDims[2]+1)*ConstPixelSpacing[2], ConstPixelSpacing[2])
+x = np.arange(0.0, (ConstPixelDims[0]+1)*ConstPixelSpacing[0], ConstPixelSpacing[0])
+y = np.arange(0.0, (ConstPixelDims[1]+1)*ConstPixelSpacing[1], ConstPixelSpacing[1])
+z = np.arange(0.0, (ConstPixelDims[2]+1)*ConstPixelSpacing[2], ConstPixelSpacing[2])
 
-# pyplot.figure(dpi=300)
-# pyplot.axes().set_aspect('equal', 'datalim')
-# pyplot.set_cmap(pyplot.gray())
-# pyplot.pcolormesh(x, y, np.flipud(ArrayDicom[:, :, 29]))
-# pyplot.show()
+pyplot.figure(dpi=300)
+pyplot.axes().set_aspect('equal', 'datalim')
+pyplot.set_cmap(pyplot.gray())
+pyplot.pcolormesh(x, y, np.flipud(patches[0,:,:]))
+pyplot.show()
 
 
 
