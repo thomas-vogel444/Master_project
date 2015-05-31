@@ -3,7 +3,7 @@ import h5py
 import os
 import re
 import pprint as pp
-import numpy 
+import numpy as np
 
 # Get all the CT scan folder names
 data_directory = "../../ct_atrium"
@@ -32,7 +32,7 @@ for CT_scan_name in ListCTScans:
 	ct_scan_dictionary[CT_scan_name] = dicom_files
 	
 #*****************************************************************************************
-# For a given dicom file, produce a 4d numpy array Batch Channel Width Height
+# For a given dicom file, produce a 4D numpy array Batch Channel Width Height
 # with:
 #	Batch   : number of training examples, i.e. number of voxels in the image 480 * 480
 #	Channel : 3 planes centred at the voxel
@@ -44,12 +44,13 @@ CT_scan_names           = ct_scan_dictionary.keys()
 CT_scan_name 			= CT_scan_names[0]
 CT_scan_dicom_filenames = ct_scan_dictionary[CT_scan_name]
 
+patch_size 	  = 32
 dicom_height  = 480
 dicom_width   = 480
 number_dicoms = len(CT_scan_dicom_filenames)
 
-# Loop through all the DICOM files for a given CT scan
-ArrayDicom = numpy.zeros((dicom_height, dicom_width, number_dicoms), dtype="uint16")
+# Loop through all the DICOM files for a given CT scan and get all the values into a single 3D numpy array
+ArrayDicom = np.zeros((dicom_height, dicom_width, number_dicoms), dtype="uint16")
 for dicom_filename in CT_scan_dicom_filenames:
     # read the file
     dicom_file_path = DICOM_path.replace("CTScan_name", CT_scan_name).replace("DICOM_name", dicom_filename)
@@ -58,10 +59,60 @@ for dicom_filename in CT_scan_dicom_filenames:
     # store the raw image data
     ArrayDicom[:, :, CT_scan_dicom_filenames.index(dicom_filename)] = ds.pixel_array  
 
+# For each voxel, produce 3 32*32 perpendicular patches with it as their centre. 
+tri_planar_dataset = np.zeros((ArrayDicom.size, 3, patch_size, patch_size))
+x_grid = np.arange(dicom_height)
+y_grid = np.arange(dicom_width)
+z_grid = np.arange(number_dicoms)
 
 
+# For an edge voxel
+x = 7
+y = 1
+z = 3
+plane_1 = np.zeros((patch_size, patch_size))
+
+plane_1 = ArrayDicom[np.maximum(x-patch_size/2, 0):np.minimum(x+patch_size/2, dicom_height), 
+					 np.maximum(y-patch_size/2, 0):np.minimum(y+patch_size/2, dicom_width), 
+					 z]
+
+plane_2 = ArrayDicom[np.maximum(x-patch_size/2, 0):np.minimum(x+patch_size/2, dicom_height), 
+					 y, 
+					 np.maximum(z-patch_size/2, 0):np.minimum(z+patch_size/2, number_dicoms)]
+
+plane_3 = ArrayDicom[x, 
+					 np.maximum(y-patch_size/2, 0):np.minimum(y+patch_size/2, dicom_width), 
+					 np.maximum(z-patch_size/2, 0):np.minimum(z+patch_size/2, number_dicoms)]
+
+print plane_1
+print plane_1.shape
+print plane_2
+print plane_2.shape
+print plane_3
+print plane_3.shape
 
 
+# #***************************************************************
+# from matplotlib import pyplot, cm
+# path = "../../ct_atrium/14022803/DICOMS/00010088"
+
+
+# ref = dicom.read_file(path)
+
+# ConstPixelDims = (int(ref.Rows), int(ref.Columns), number_dicoms)
+
+# # Load spacing values (in mm)
+# ConstPixelSpacing = (float(ref.PixelSpacing[0]), float(ref.PixelSpacing[1]), float(ref.SliceThickness))
+
+# x = np.arange(0.0, (ConstPixelDims[0]+1)*ConstPixelSpacing[0], ConstPixelSpacing[0])
+# y = np.arange(0.0, (ConstPixelDims[1]+1)*ConstPixelSpacing[1], ConstPixelSpacing[1])
+# z = np.arange(0.0, (ConstPixelDims[2]+1)*ConstPixelSpacing[2], ConstPixelSpacing[2])
+
+# pyplot.figure(dpi=300)
+# pyplot.axes().set_aspect('equal', 'datalim')
+# pyplot.set_cmap(pyplot.gray())
+# pyplot.pcolormesh(x, y, np.flipud(ArrayDicom[:, :, 29]))
+# pyplot.show()
 
 
 
