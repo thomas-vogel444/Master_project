@@ -10,27 +10,32 @@ data_directory = "../../ct_atrium"
 ct_scan_path = "../../ct_atrium/CTScan_name"
 DICOM_path = "../../ct_atrium/CTScan_name/DICOMS/DICOM_name"
 
-ct_directory_pattern = re.compile("[0-9]{8}")
-ListCTScans = [directory for directory in os.listdir(data_directory) if ct_directory_pattern.match(directory)]
-
 #************************************************************
 # For each CT scan folder get all the DICOM names
 #************************************************************
-ct_scan_dictionary = {}
-for CT_scan_name in ListCTScans:
+def get_dicom_names(data_directory):
+	ct_directory_pattern = re.compile("[0-9]{8}")
+	ListCTScans = [directory for directory in os.listdir(data_directory) if ct_directory_pattern.match(directory)]
 
-	# Get the path of a specific CT scan data directory
-	ct_scan_directory = ct_scan_path.replace("CTScan_name", CT_scan_name)
+	ct_scan_dictionary = {}
+	for CT_scan_name in ListCTScans:
 
-	# Get the DICOM file names into a dictionary with the CT scan name as value and a list of DICOM image names as values
-	dicom_directory = os.path.join(ct_scan_directory, "DICOMS")
-	dicom_name_pattern = re.compile("^[0-9]{8}")
-	dicom_files = []
-	for root, directory, files in os.walk(dicom_directory):
-		dicom_files = [myfile for myfile in files if dicom_name_pattern.match(myfile)]
+		# Get the path of a specific CT scan data directory
+		ct_scan_directory = ct_scan_path.replace("CTScan_name", CT_scan_name)
 
-	ct_scan_dictionary[CT_scan_name] = dicom_files
-	
+		# Get the DICOM file names into a dictionary with the CT scan name as value and a list of DICOM image names as values
+		dicom_directory = os.path.join(ct_scan_directory, "DICOMS")
+		dicom_name_pattern = re.compile("^[0-9]{8}")
+		dicom_files = []
+		for root, directory, files in os.walk(dicom_directory):
+			dicom_files = [myfile for myfile in files if dicom_name_pattern.match(myfile)]
+
+		ct_scan_dictionary[CT_scan_name] = dicom_files
+	return ct_scan_dictionary
+
+ct_scan_dictionary = get_dicom_names(data_directory)
+pp.pprint(ct_scan_dictionary)
+
 #*****************************************************************************************
 # For a given dicom file, produce a 4D numpy array Batch Channel Width Height
 # with:
@@ -44,19 +49,23 @@ CT_scan_names           = ct_scan_dictionary.keys()
 CT_scan_name 			= CT_scan_names[0]
 CT_scan_dicom_filenames = ct_scan_dictionary[CT_scan_name]
 
-dicom_height  = 480
-dicom_width   = 480
-number_dicoms = len(CT_scan_dicom_filenames)
+# Get the 3D image from the CT scan
+def get_CT_scan_array(CT_scan_name, CT_scan_dicom_filenames, dicom_height = 480, dicom_width = 480):	
+	number_dicoms = len(CT_scan_dicom_filenames)
 
-# Loop through all the DICOM files for a given CT scan and get all the values into a single 3D numpy array
-CT_scan_array = np.zeros((dicom_height, dicom_width, number_dicoms), dtype="uint16")
-for dicom_filename in CT_scan_dicom_filenames:
-    # read the file
-    dicom_file_path = DICOM_path.replace("CTScan_name", CT_scan_name).replace("DICOM_name", dicom_filename)
-    print "Reading %s" %(dicom_file_path)
-    ds = dicom.read_file(dicom_file_path)
-    # store the raw image data
-    CT_scan_array[:, :, CT_scan_dicom_filenames.index(dicom_filename)] = ds.pixel_array  
+	# Loop through all the DICOM files for a given CT scan and get all the values into a single 3D numpy array
+	CT_scan_array = np.zeros((dicom_height, dicom_width, number_dicoms), dtype="uint16")
+	for dicom_filename in CT_scan_dicom_filenames:
+	    # read the file
+	    dicom_file_path = DICOM_path.replace("CTScan_name", CT_scan_name).replace("DICOM_name", dicom_filename)
+	    print "Reading %s" %(dicom_file_path)
+	    ds = dicom.read_file(dicom_file_path)
+	    # store the raw image data
+	    CT_scan_array[:, :, CT_scan_dicom_filenames.index(dicom_filename)] = ds.pixel_array
+
+	return CT_scan_array
+
+CT_scan_array = get_CT_scan_array(CT_scan_name, CT_scan_dicom_filenames)
 
 #*****************************************************************************************
 #									GENERATING PATCHES
@@ -162,30 +171,41 @@ def tri_planar_patch_generator(x,y,z,image_3d,patch_size):
 # 											GENERATING THE FULL DATASET
 #************************************************************************************************************
 # For each voxel, produce 3 32*32 perpendicular patches with it as their centre. 
-tri_planar_dataset = np.zeros((CT_scan_array.size, 3, patch_size, patch_size))
+# patch_size = 32
+# tri_planar_dataset = np.zeros((CT_scan_array.size, 3, patch_size, patch_size))
 
-dicom_height  = 480
-dicom_width   = 480
-number_dicoms = len(CT_scan_dicom_filenames)
+# dicom_height  = 480
+# dicom_width   = 480
+# number_dicoms = 2
+# # number_dicoms = len(CT_scan_dicom_filenames)
 
-x_grid = np.arange(dicom_height)
-y_grid = np.arange(dicom_width)
-z_grid = np.arange(number_dicoms)
+# x_grid = np.arange(dicom_height)
+# y_grid = np.arange(dicom_width)
+# z_grid = np.arange(2)
+# # z_grid = np.arange(number_dicoms)
 
-for z in z_grid:
-	for y in y_grid:
-		for x in x_grid:
-			tri_planar_dataset[x + dicom_width*y + dicom_height*dicom_width*z, :, :, :] = tri_planar_patch_generator(x,y,z,CT_scan_array,patch_size)
+# for z in z_grid:
+# 	print "Generating patches for the %i th dicom file..." %(z)
+# 	for y in y_grid:
+# 		for x in x_grid:
+# 			tri_planar_dataset[x + dicom_width*y + dicom_height*dicom_width*z, :, :, :] = tri_planar_patch_generator(x,y,z,CT_scan_array,patch_size)
 
+#************************************************************************************************************
+# 									SAVING THE FULL DATASET INTO AN HDF5 File
+#************************************************************************************************************
+# Each data element is saved in 1 byte of memory as it takes values between 0 and 255.
+# import h5py
+# f = h5py.File("mytestfile.hdf5", "w")
+# dataset = f.create_dataset("my_first_dataset", tri_planar_dataset.shape, dtype="uint8")
 
 #************************************************************************************************************
 # 											LOADING THE NRRD DATA
 #************************************************************************************************************
 # Loading the NRRD data
-import nrrd
-nrrd_path = "../../ct_atrium/14022803/14022803.nrrd"
+# import nrrd
+# nrrd_path = "../../ct_atrium/14022803/14022803.nrrd"
 
-nrrd_data, nrrd_header = nrrd.read(nrrd_path)
+# nrrd_data, nrrd_header = nrrd.read(nrrd_path)
 
 
 
