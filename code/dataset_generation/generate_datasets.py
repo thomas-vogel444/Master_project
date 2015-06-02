@@ -37,14 +37,16 @@ def get_CT_scan_array(CT_scan_name, CT_scan_dicom_filenames, dicom_height = 480,
 	"""
 		Get the 3D image from a given CT scan into a numpy array.
 	"""
-	number_dicoms = len(CT_scan_dicom_filenames)
+	# Get the dimensions of a given DICOM file
+	dicom_file_path  = DICOM_path.replace("CTScan_name", CT_scan_name).replace("DICOM_name", CT_scan_dicom_filenames[0])
+	ref 			 = dicom.read_file(dicom_file_path)
+	DICOM_dimensions = (int(ref.Rows), int(ref.Columns), len(CT_scan_dicom_filenames))
 
 	# Loop through all the DICOM files for a given CT scan and get all the values into a single 3D numpy array
-	CT_scan_array = np.zeros((dicom_height, dicom_width, number_dicoms), dtype="uint16")
+	CT_scan_array = np.zeros(DICOM_dimensions, dtype="uint16")
 	for dicom_filename in CT_scan_dicom_filenames:
 	    # read the file
 	    dicom_file_path = DICOM_path.replace("CTScan_name", CT_scan_name).replace("DICOM_name", dicom_filename)
-	    print "Reading %s" %(dicom_file_path)
 	    ds = dicom.read_file(dicom_file_path)
 	    # store the raw image data
 	    CT_scan_array[:, :, CT_scan_dicom_filenames.index(dicom_filename)] = ds.pixel_array
@@ -206,42 +208,43 @@ if __name__ == "__main__":
 
 
 	# For every CT scan, produce a dataset
-	f = h5py.File("mytestfile.hdf5", "w")
-	for CT_scan, DICOM_list in CT_scan_dictionary.items():
+	dataset_directory = os.path.join(data_directory, "datasets")
+	dataset_path      = os.path.join(dataset_directory, "dataset.hdf5")
+	f 			      = h5py.File(dataset_path, "w")
+	for CT_scan, DICOM_list in CT_scan_dictionary.items()[0:3]:
 		# Extract the 3d image into a numpy array
+		print "Extracting the data from the DICOM files for CT scan %s" % CT_scan
 		CT_scan_3d_image = get_CT_scan_array(CT_scan, DICOM_list)
 
 		# Generate 3 perpendicular patches for each data point
 		# For each voxel, produce 3 32*32 perpendicular patches with it as their centre. 
-		patch_size = 32
-		tri_planar_dataset = np.zeros((CT_scan_3d_image.size, 3, patch_size, patch_size))
-
-		dicom_height  = 480
-		dicom_width   = 480
-		number_dicoms = len(DICOM_list)
+		patch_size    = 32
+		dicom_height, dicom_width, number_dicoms = CT_scan_3d_image.shape
 
 		x_grid = np.arange(dicom_height)
 		y_grid = np.arange(dicom_width)
 		z_grid = np.arange(number_dicoms)
 
-		for z in z_grid:
-			print "Generating patches for the %i th dicom file..." %(z)
-			for y in y_grid:
-				for x in x_grid:
-					tri_planar_dataset[x + dicom_width*y + dicom_height*dicom_width*z, :, :, :] = tri_planar_patch_generator(x,y,z,CT_scan_3d_image,patch_size)
+		# tri_planar_dataset = np.zeros((CT_scan_3d_image.size, 3, patch_size, patch_size))
+		# for z in z_grid:
+		# 	print "Generating patches for the %i th dicom file..." %(z)
+		# 	for y in y_grid:
+		# 		for x in x_grid:
+		# 			tri_planar_dataset[x + dicom_width*y + dicom_height*dicom_width*z, :, :, :] = tri_planar_patch_generator(x,y,z,CT_scan_3d_image,patch_size)
 
-		# Save the dataset into a HDF5 file. Each data element is saved in 1 byte of memory as it takes values between 0 and 255.
-		dataset 	 = f.create_dataset("dataset_%s"%(CT_scan), tri_planar_dataset.shape, dtype="uint8")
+		z = 0
+		tri_planar_dataset = np.zeros((CT_scan_3d_image[:,:,z].size, 3, patch_size, patch_size))
+		print "Generating patches for the %i th dicom file..." %(z)
+		for y in y_grid:
+			for x in x_grid:
+				tri_planar_dataset[x + dicom_width*y + dicom_height*dicom_width*z, :, :, :] = tri_planar_patch_generator(x,y,z,CT_scan_3d_image,patch_size)		
+
+		# Save the dataset. Each data element is saved in 1 byte of memory as it takes values between 0 and 255.
+		print "Saving the dataset..."
+		dataset 	 = f.create_dataset(CT_scan, tri_planar_dataset.shape, dtype="uint8")
 		dataset[...] = tri_planar_dataset
 
-	# #********************************************************************************
-	# # Get the path for a given CT scan
-	# CT_scan_names           = CT_scan_dictionary.keys()
-	# CT_scan_name 			= CT_scan_names[0]
-	# CT_scan_dicom_filenames = CT_scan_dictionary[CT_scan_name]
-
-	# # Extract the 3D image into a numpy array
-	# CT_scan_array = get_CT_scan_array(CT_scan_name, CT_scan_dicom_filenames)
+	print "The datasets have been saved into %s" % (dataset_path)
 
 
 
