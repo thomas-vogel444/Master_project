@@ -20,7 +20,6 @@ cmd:option('-model', 'convnet', 'type of model to construct: mlp | convnet')
 -- training:
 cmd:option('-maxepoch', 15, 'Maximum number of epoch on which to train the NN')
 cmd:option('-save', 'results', 'subdirectory to save/log experiments in')
-cmd:option('-plot', false, 'live plot')
 cmd:option('-learningRate', 0.1, 'learning rate at t=0')
 cmd:option('-batchSize', 128, 'mini-batch size (1 = pure stochastic)')
 cmd:option('-weightDecay', 0.001, 'weight decay (SGD only)')
@@ -52,10 +51,14 @@ dofile 'test.lua'
 ----------------------------------------------------------------------
 print '==> training!'
 
+maxEpoch = opt.maxepoch
 while true do
     train()
     test()
-    if epoch > 15 then
+    if epoch > maxEpoch then
     	break
     end
 end
+
+-- RUDRA: WRITING THE CONFUSION MATRIX RETURNS NAN VALUES FOR SOME REASON.
+print(confusion)
