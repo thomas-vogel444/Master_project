@@ -1,6 +1,7 @@
 .DS_Store
 Articles
-demos
-MNIST_test_code
-Master_data
 neural-networks-and-deep-learning
+*.pyc
+ct_atrium
+code/lua_programming
+code/example_code
