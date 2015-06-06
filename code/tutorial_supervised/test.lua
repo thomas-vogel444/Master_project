@@ -44,12 +44,8 @@ function test()
    -- print confusion matrix
    print(confusion)
 
-   -- update log/plot
+   -- update log
    testLogger:add{['% mean class accuracy (test set)'] = confusion.totalValid * 100}
-   if opt.plot then
-      testLogger:style{['% mean class accuracy (test set)'] = '-'}
-      testLogger:plot()
-   end
    
    -- next iteration:
    confusion:zero()
