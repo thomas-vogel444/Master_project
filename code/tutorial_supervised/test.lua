@@ -14,6 +14,9 @@ print '==> defining test procedure'
 
 -- test function
 function test()
+   -- next iteration:
+   confusion:zero()
+
    -- local vars
    local time = sys.clock()
 
@@ -46,7 +49,4 @@ function test()
 
    -- update log
    testLogger:add{['% mean class accuracy (test set)'] = confusion.totalValid * 100}
-   
-   -- next iteration:
-   confusion:zero()
 end

@@ -13,6 +13,7 @@ cmd:text('Options:')
 -- global:
 cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
 cmd:option('-threads', 2, 'number of threads')
+cmd:option('-identifier', 1, 'integer identifying the NN for later procesing')
 -- data:
 cmd:option('-size', 'full', 'how many samples do we load: reduced | small | full')
 -- model:
@@ -60,5 +61,16 @@ while true do
     end
 end
 
--- RUDRA: WRITING THE CONFUSION MATRIX RETURNS NAN VALUES FOR SOME REASON.
-print(confusion)
+-- Appending the relevant result into a file 
+f = io.open('results/results.txt', 'a')
+f:write('% mean class accuracy for NN #' .. opt.identifier .. ": " .. confusion.totalValid .. "\n")
+f:close()
+
+
+
+
+
+
+
+
+
