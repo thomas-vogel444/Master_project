@@ -1,14 +1,20 @@
 import dicom
 import h5py
+import nrrd
 import os
 import re
 import pprint as pp
 import numpy as np
 
-# Canonical path names for use by the various functions
-data_directory = "../../ct_atrium"
-CT_scan_path = "../../ct_atrium/CTScan_name"
-DICOM_path = "../../ct_atrium/CTScan_name/DICOMS/DICOM_name"
+#************************************************************
+# 					   Setting Parameters
+#************************************************************
+data_directory 		  = "../../ct_atrium"
+CT_scan_path_template = "../../ct_atrium/CTScan_name"
+NRRD_path_template    = "../../ct_atrium/CTScan_name/CTScan_name.nrrd"
+DICOM_path_template   = "../../ct_atrium/CTScan_name/DICOMS/DICOM_name"
+ct_directory_pattern  = re.compile("[0-9]{8}")
+patch_size    		  = 32
 
 #************************************************************
 # For each CT scan folder get all the DICOM names
@@ -38,7 +44,7 @@ def get_CT_scan_array(CT_scan_name, CT_scan_dicom_filenames, dicom_height = 480,
 		Get the 3D image from a given CT scan into a numpy array.
 	"""
 	# Get the dimensions of a given DICOM file
-	dicom_file_path  = DICOM_path.replace("CTScan_name", CT_scan_name).replace("DICOM_name", CT_scan_dicom_filenames[0])
+	dicom_file_path  = DICOM_path_template.replace("CTScan_name", CT_scan_name).replace("DICOM_name", CT_scan_dicom_filenames[0])
 	ref 			 = dicom.read_file(dicom_file_path)
 	DICOM_dimensions = (int(ref.Rows), int(ref.Columns), len(CT_scan_dicom_filenames))
 
@@ -46,7 +52,7 @@ def get_CT_scan_array(CT_scan_name, CT_scan_dicom_filenames, dicom_height = 480,
 	CT_scan_array = np.zeros(DICOM_dimensions, dtype="uint16")
 	for dicom_filename in CT_scan_dicom_filenames:
 	    # read the file
-	    dicom_file_path = DICOM_path.replace("CTScan_name", CT_scan_name).replace("DICOM_name", dicom_filename)
+	    dicom_file_path = DICOM_path_template.replace("CTScan_name", CT_scan_name).replace("DICOM_name", dicom_filename)
 	    ds = dicom.read_file(dicom_file_path)
 	    # store the raw image data
 	    CT_scan_array[:, :, CT_scan_dicom_filenames.index(dicom_filename)] = ds.pixel_array
@@ -105,76 +111,66 @@ def tri_planar_patch_generator(x,y,z,image_3d,patch_size):
 
 if __name__ == "__main__":
 	# Get the names of all the CT scans
-	ct_directory_pattern = re.compile("[0-9]{8}")
 	list_CT_scans = [directory for directory in os.listdir(data_directory) if ct_directory_pattern.match(directory)]
 
 	# For every CT scan, get a list of their associated DICOM files
 	CT_scan_dictionary = {}
 	for CT_scan in list_CT_scans:
-		CT_scan_directory = CT_scan_path.replace("CTScan_name", CT_scan)
-		CT_scan_dictionary[CT_scan] = get_DICOM_names(CT_scan_directory)
+		CT_scan_dictionary[CT_scan] = get_DICOM_names(CT_scan_path_template.replace("CTScan_name", CT_scan))
 
 
 	# For every CT scan, produce a dataset
 	dataset_directory = os.path.join(data_directory, "datasets")
 	dataset_path      = os.path.join(dataset_directory, "dataset.hdf5")
 	f 			      = h5py.File(dataset_path, "w")
-	for CT_scan, DICOM_list in CT_scan_dictionary.items()[0:3]:
+
+	#**************************************************************************
+	#			TO BE MODIFIED AGAIN TO LOOP OVER ALL THE CT SCANS
+	#  for CT_scan, DICOM_list in CT_scan_dictionary.items():
+	#**************************************************************************
+	for CT_scan, DICOM_list in CT_scan_dictionary.items()[0:1]:
+		# Get the atlas from the NRRD file
+		nrrd_path = NRRD_path_template.replace("CTScan_name", CT_scan)
+		CT_scan_labels, CT_scan_nrrd_header = nrrd.read(nrrd_path)
+
 		# Extract the 3d image into a numpy array
 		print "Extracting the data from the DICOM files for CT scan %s" % CT_scan
 		CT_scan_3d_image = get_CT_scan_array(CT_scan, DICOM_list)
 
 		# Generate 3 perpendicular patches for each data point
 		# For each voxel, produce 3 32*32 perpendicular patches with it as their centre. 
-		patch_size    = 32
 		dicom_height, dicom_width, number_dicoms = CT_scan_3d_image.shape
 
 		x_grid = np.arange(dicom_height)
 		y_grid = np.arange(dicom_width)
 		z_grid = np.arange(number_dicoms)
 
-		z = 0
-		tri_planar_dataset = np.zeros((CT_scan_3d_image[:,:,z].size, 3, patch_size, patch_size))
-		print "Generating patches for the %i th dicom file..." %(z)
-		for y in y_grid:
-			for x in x_grid:
-				tri_planar_dataset[x + dicom_width*y, :, :, :] = tri_planar_patch_generator(x,y,z,CT_scan_3d_image,patch_size)		
-		dataset_name = "%s_%i"%(CT_scan, z)
+		tri_planar_dataset = np.zeros((CT_scan_3d_image[:,:,0].size, 3, patch_size, patch_size))
 
-		print "Saving dataset %s..." %dataset_name
-		dataset 	 = f.create_dataset(dataset_name, tri_planar_dataset.shape, dtype="uint8")
-		dataset[...] = tri_planar_dataset
-
-		# tri_planar_dataset = np.zeros((CT_scan_3d_image[:,:,0].size, 3, patch_size, patch_size))
+		#**************************************************************************
+		#			TO BE MODIFIED AGAIN TO LOOP OVER ALL THE DICOM FILES
 		# for z in z_grid:
-		# 	print "Generating patches for dicom file number %i..." %(z)
-		# 	for y in y_grid:
-		# 		for x in x_grid:
-		# 			tri_planar_dataset[x + dicom_width*y, :, :, :] = tri_planar_patch_generator(x,y,z,CT_scan_3d_image,patch_size)
-		# 	# Save the dataset. Each data element is saved in 1 byte of memory as it takes values between 0 and 255.
-		# 	dataset_name = "%s_%i"%(CT_scan, z)
-		# 	print "Saving dataset %s..." %dataset_name
-		# 	dataset 	 = f.create_dataset(dataset_name, tri_planar_dataset.shape, dtype="uint8")
-		# 	dataset[...] = tri_planar_dataset
+		#**************************************************************************
+		for z in z_grid[30:31]:
+			print "Generating patches for dicom file number %i..." %(z)
+			for x in y_grid:
+				for y in x_grid:
+					tri_planar_dataset[y + dicom_width*x, :, :, :] = tri_planar_patch_generator(x,y,z,CT_scan_3d_image,patch_size)
+			
+			# Save the set of patches into a dataset. Each data element is saved in 1 byte of memory as it takes values between 0 and 255.
+			patches_dataset_name = "patches_%s_%i"%(CT_scan, z)
+			print "Saving dataset of patches %s..." %patches_dataset_name
+			dataset 	 = f.create_dataset(patches_dataset_name, tri_planar_dataset.shape, dtype="uint8")
+			dataset[...] = tri_planar_dataset
+
+			# Save the labels into a separate dataset, one per DICOM image.
+			labels_dataset_name = "labels_%s_%i"%(CT_scan, z)
+			print "Saving dataset of labels %s..." %labels_dataset_name
+			print "=============>" +  str(tri_planar_dataset.shape[0])
+			dataset 	 = f.create_dataset(labels_dataset_name, (tri_planar_dataset.shape[0],), dtype="uint8")
+			dataset[...] = np.ravel(np.transpose(CT_scan_labels[:,:,z]))
 	
 	print "The datasets have been saved into %s" % (dataset_path)
-
-	# z = 0
-	# tri_planar_dataset = np.zeros((CT_scan_3d_image[:,:,z].size, 3, patch_size, patch_size))
-	# print "Generating patches for the %i th dicom file..." %(z)
-	# for y in y_grid:
-	# 	for x in x_grid:
-	# 		tri_planar_dataset[x + dicom_width*y + dicom_height*dicom_width*z, :, :, :] = tri_planar_patch_generator(x,y,z,CT_scan_3d_image,patch_size)		
-
-	#************************************************************************************************************
-	# 											LOADING THE NRRD DATA
-	#************************************************************************************************************
-	# Loading the NRRD data
-	# import nrrd
-	# nrrd_path = "../../ct_atrium/14022803/14022803.nrrd"
-
-	# nrrd_data, nrrd_header = nrrd.read(nrrd_path)
-
 
 #************************************************************************************************************
 # 					I NEED TO START PLOTTING STUFF AND UNDERSTAND MATPLOTLIB PROPERLY!!!
