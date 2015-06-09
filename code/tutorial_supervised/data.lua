@@ -44,6 +44,11 @@ elseif opt.size == 'full' then
 	testData  = testingSet
 end
 
+if opt.model == 'mlp' then
+	trainData.data = trainData.data:reshape(trainData.data:size()[1], 32*32)
+	testData.data  = testData.data:reshape(testData.data:size()[1], 32*32)
+end
+
 trainData.size = function() return((#trainData.data)[1]) end
 testData.size = function() return((#testData.data)[1]) end
 

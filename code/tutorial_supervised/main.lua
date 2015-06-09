@@ -45,7 +45,13 @@ torch.manualSeed(opt.seed)
 print '==> executing all'
 
 dofile 'data.lua'
-dofile 'model.lua'
+
+if opt.model == 'convnet' then 
+	dofile 'model_convnet.lua'
+elseif opt.model == 'mlp' then
+	dofile 'model_mlp.lua'
+end
+
 dofile 'train.lua'
 dofile 'test.lua'
 
