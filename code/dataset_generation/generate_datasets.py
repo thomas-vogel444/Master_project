@@ -39,15 +39,10 @@ def get_DICOM_names(CT_scan_directory):
 #	Width   : width of the image path, i.e. 32
 #	Height  : height of the image patch, i.e. 32
 #*****************************************************************************************
-def get_CT_scan_array(CT_scan_name, CT_scan_dicom_filenames, dicom_height = 480, dicom_width = 480):	
+def get_CT_scan_array(CT_scan_name, CT_scan_dicom_filenames, DICOM_dimensions):	
 	"""
 		Get the 3D image from a given CT scan into a numpy array.
 	"""
-	# Get the dimensions of a given DICOM file
-	dicom_file_path  = DICOM_path_template.replace("CTScan_name", CT_scan_name).replace("DICOM_name", CT_scan_dicom_filenames[0])
-	ref 			 = dicom.read_file(dicom_file_path)
-	DICOM_dimensions = (int(ref.Rows), int(ref.Columns), len(CT_scan_dicom_filenames))
-
 	# Loop through all the DICOM files for a given CT scan and get all the values into a single 3D numpy array
 	CT_scan_array = np.zeros(DICOM_dimensions, dtype="uint16")
 	for dicom_filename in CT_scan_dicom_filenames:
@@ -133,7 +128,7 @@ if __name__ == "__main__":
 		# Extract the 3d image into a numpy array
 		print "Extracting the data from the DICOM files for CT scan %s" % CT_scan
 		print "CT scan number %i out of %i" %(CT_scan_dictionary.keys().index(CT_scan), len(CT_scan_dictionary.keys()))
-		CT_scan_3d_image = get_CT_scan_array(CT_scan, DICOM_list)
+		CT_scan_3d_image = get_CT_scan_array(CT_scan, DICOM_list, CT_scan_nrrd_header["sizes"])
 
 		# Generate 3 perpendicular patches for each data point
 		# For each voxel, produce 3 32*32 perpendicular patches with it as their centre. 
