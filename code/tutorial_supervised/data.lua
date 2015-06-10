@@ -3,8 +3,15 @@
 -- http://yann.lecun.com/exdb/mnist/
 ----------------------------------------------------------------------
 
-train_file = 'data/mnist.t7/train_32x32.t7'
-test_file  = 'data/mnist.t7/test_32x32.t7'
+tar = 'http://torch7.s3-website-us-east-1.amazonaws.com/data/mnist.t7.tgz'
+
+if not paths.dirp('mnist.t7') then
+   os.execute('wget ' .. tar)
+   os.execute('tar xvf ' .. paths.basename(tar))
+end
+
+train_file = 'mnist.t7/train_32x32.t7'
+test_file  = 'mnist.t7/test_32x32.t7'
 
 trainingSet = torch.load(train_file,'ascii')
 testingSet  = torch.load(test_file,'ascii')
