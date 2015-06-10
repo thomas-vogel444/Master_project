@@ -4,9 +4,9 @@ options = {
 "seed": 1 ,
 "threads": 2,
 "identifier": 2,
-"size": "full",       	# options: reduced, small, full
+"size": "small",       	# options: reduced, small, full
 "model": "mlp",			# options: mlp, convnet
-"maxepoch": 30,
+"maxepoch": 15,
 "save": "results",
 "learningRate": 1,
 "batchSize": 64,
@@ -20,14 +20,20 @@ command_template = "th main.lua -seed %(seed)i -threads %(threads)i -identifier 
 "-momentum %(momentum)f -type %(type)s"
 
 #***************************************************************************************************************
-options["learningRate"] = 1
-subprocess.call(command_template%options, shell=True)
+# options["learningRate"] = 100
+# subprocess.call(command_template%options, shell=True)
+
+# options["learningRate"] = 10
+# subprocess.call(command_template%options, shell=True)
+
+# options["learningRate"] = 1
+# subprocess.call(command_template%options, shell=True)
 
 options["learningRate"] = 0.1
 subprocess.call(command_template%options, shell=True)
 
-options["learningRate"] = 0.01
-subprocess.call(command_template%options, shell=True)
+# options["learningRate"] = 0.01
+# subprocess.call(command_template%options, shell=True)
 
-options["learningRate"] = 0.001
-subprocess.call(command_template%options, shell=True)
+# options["learningRate"] = 0.001
+# subprocess.call(command_template%options, shell=True)
