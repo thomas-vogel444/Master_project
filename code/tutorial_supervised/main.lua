@@ -48,6 +48,8 @@ dofile 'data.lua'
 
 if opt.model == 'convnet' then 
 	dofile 'model_convnet.lua'
+elseif opt.model == 'convnet2' then
+	dofile 'model_convnet2.lua'
 elseif opt.model == 'mlp' then
 	dofile 'model_mlp.lua'
 end
