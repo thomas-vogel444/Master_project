@@ -118,23 +118,21 @@ if __name__ == "__main__":
 	for CT_scan in list_CT_scans:
 		CT_scan_dictionary[CT_scan] = get_DICOM_names(CT_scan_path_template.replace("CTScan_name", CT_scan))
 
-
-	# For every CT scan, produce a dataset
 	dataset_directory = os.path.join(data_directory, "datasets")
-	dataset_path      = os.path.join(dataset_directory, "dataset.hdf5")
-	f 			      = h5py.File(dataset_path, "w")
 
-	#**************************************************************************
-	#			TO BE MODIFIED AGAIN TO LOOP OVER ALL THE CT SCANS
-	#  for CT_scan, DICOM_list in CT_scan_dictionary.items():
-	#**************************************************************************
 	for CT_scan, DICOM_list in CT_scan_dictionary.items()[0:1]:
+		# For every CT scan, produce a hdf5 file
+		datafile_name = "dataset_CTScan_Name.hdf5".replace("CTScan_Name", CT_scan)
+		dataset_path  = os.path.join(dataset_directory, datafile_name)
+		f 			  = h5py.File(dataset_path, "w")
+
 		# Get the atlas from the NRRD file
 		nrrd_path = NRRD_path_template.replace("CTScan_name", CT_scan)
 		CT_scan_labels, CT_scan_nrrd_header = nrrd.read(nrrd_path)
 
 		# Extract the 3d image into a numpy array
 		print "Extracting the data from the DICOM files for CT scan %s" % CT_scan
+		print "CT scan number %i out of %i" %(CT_scan_dictionary.keys().index(CT_scan), len(CT_scan_dictionary.keys()))
 		CT_scan_3d_image = get_CT_scan_array(CT_scan, DICOM_list)
 
 		# Generate 3 perpendicular patches for each data point
@@ -151,7 +149,7 @@ if __name__ == "__main__":
 		#			TO BE MODIFIED AGAIN TO LOOP OVER ALL THE DICOM FILES
 		# for z in z_grid:
 		#**************************************************************************
-		for z in z_grid[30:31]:
+		for z in z_grid:
 			print "Generating patches for dicom file number %i..." %(z)
 			for x in y_grid:
 				for y in x_grid:
@@ -170,7 +168,8 @@ if __name__ == "__main__":
 			dataset 	 = f.create_dataset(labels_dataset_name, (tri_planar_dataset.shape[0],), dtype="uint8")
 			dataset[...] = np.ravel(np.transpose(CT_scan_labels[:,:,z]))
 	
-	print "The datasets have been saved into %s" % (dataset_path)
+		f.close()
+		print "The datasets for %s have been saved into %s" % (CT_scan, dataset_path)
 
 #************************************************************************************************************
 # 					I NEED TO START PLOTTING STUFF AND UNDERSTAND MATPLOTLIB PROPERLY!!!
