@@ -3,7 +3,12 @@ print '==> define parameters'
 
 n_inputs  = 32*32
 n_hidden  = 30
-n_outputs = 10
+
+if opt.size == 'reduced' then
+	n_outputs = 2
+else
+	n_outputs = 10
+end
 
 ----------------------------------------------------------------------
 print '==> construct model'
