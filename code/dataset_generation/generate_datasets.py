@@ -142,7 +142,6 @@ if __name__ == "__main__":
 
 		#**************************************************************************
 		#			TO BE MODIFIED AGAIN TO LOOP OVER ALL THE DICOM FILES
-		# for z in z_grid:
 		#**************************************************************************
 		for z in z_grid:
 			print "Generating patches for dicom file number %i..." %(z)
