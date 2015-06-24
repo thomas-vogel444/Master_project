@@ -50,19 +50,25 @@ function train()
     model:training()
 
     -- shuffle at each epoch
-    shuffle = torch.randperm(trainData:size())
+    if opt.size == "small" then
+        trainingSize = 2500
+    elseif opt.size == "full" then
+        trainingSize = trainData.size()
+    end
+
+    shuffle = torch.randperm(trainData.size())
 
     -- do one epoch
     print('==> doing epoch on training data:')
     print("==> online epoch # " .. epoch .. ' [batchSize = ' .. opt.batchSize .. ']')
-    for t = 1,trainData:size(),opt.batchSize do
+    for t = 1,trainingSize,opt.batchSize do
     	-- disp progress
-    	xlua.progress(t, trainData:size())
+    	xlua.progress(t, trainingSize)
 
     	-- create mini batch
     	local inputs = {}
     	local targets = {}
-    	for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
+    	for i = t,math.min(t+opt.batchSize-1,trainingSize) do
         	-- load new sample
         	local input = trainData.data[shuffle[i]]
         	local target = trainData.labels[shuffle[i]]
@@ -114,7 +120,7 @@ function train()
 
 	-- time taken
     time = sys.clock() - time
-    time = time / trainData:size()
+    time = time / trainingSize
     print("\n==> time to learn 1 sample = " .. (time*1000) .. 'ms')
 
     -- print confusion matrix

@@ -24,10 +24,11 @@ function test()
    model:evaluate()
 
    -- test over test data
-   print('==> testing on test set:')
-   for t = 1,testData:size() do
+   print('==> testing on test set:') 
+
+   for t = 1,testData.size() do
       -- disp progress
-      xlua.progress(t, testData:size())
+      xlua.progress(t, testData.size())
 
       -- get new sample
       local input = testData.data[t]
@@ -41,7 +42,7 @@ function test()
 
    -- timing
    time = sys.clock() - time
-   time = time / testData:size()
+   time = time / testData.size()
    print("\n==> time to test 1 sample = " .. (time*1000) .. 'ms')
 
    -- print confusion matrix

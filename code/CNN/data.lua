@@ -9,13 +9,9 @@ print("Loading data from: " .. filename)
 
 -- Reading the datasets
 local f = hdf5.open(filename,'r')
-if opt.size == "small" then
-	trainingDataset = f:read("training_dataset"):all():float()[{{1,500},{},{},{}}]
-	testingDataset  = f:read("testing_dataset"):all():float()[{{1,500},{},{},{}}]
-elseif opt.size == "full" then
-	trainingDataset = f:read("training_dataset"):all():float()
-	testingDataset  = f:read("testing_dataset"):all():float()
-end
+
+trainingDataset = f:read("training_dataset"):all():float()
+testingDataset  = f:read("testing_dataset"):all():float()
 
 trainData.data = trainingDataset
 trainData.size = function() return(trainingDataset:size()[1]) end
@@ -27,13 +23,18 @@ labels[{{trainData.size()/2+1, trainData.size()}}] = 2
 trainData.labels = labels
 
 -- Reading the testing data
-testData.data = testingDataset
-testData.size = function() return(testingDataset:size()[1]) end
+labels = torch.ones(testingDataset:size()[1])
+labels[{{testingDataset:size()[1]/2+1, testingDataset:size()[1]}}] = 2
 
--- Creating the labels
-labels = torch.ones(testData.size())
-labels[{{testData.size()/2+1, testData.size()}}] = 2
-
-testData.labels = labels
+if opt.size == "small" then
+	n = 1000
+	testData.data = testingDataset[{{(#testingDataset)[1]/2 - n/2, (#testingDataset)[1]/2 + n/2}, {}, {}, {}}]
+	testData.labels = labels[{{(#testingDataset)[1]/2 - n/2, (#testingDataset)[1]/2 + n/2}}]
+	testData.size = function() return(testData.data:size()[1]) end
+elseif opt.size == "full" then
+    testData.data = testingDataset
+    testData.labels = labels
+    testData.size = function() return(testingDataset:size()[1]) end
+end
 
 f:close()
