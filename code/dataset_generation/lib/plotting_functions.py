@@ -1,10 +1,7 @@
+import utils
 import numpy as np
 from matplotlib import pyplot
 
-def generate_grids(h, w):
-	x_grid = np.arange(h)
-	y_grid = np.arange(w)
-	return x_grid, y_grid
 
 def plot_2d_image(fig, image_2d, show=True):
 	x_grid, y_grid = generate_grids(image_2d.shape[0], image_2d.shape[1])
