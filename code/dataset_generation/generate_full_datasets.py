@@ -1,11 +1,11 @@
 import dicom
 import h5py
-import nrrd
+import lib.nrrd as nrrd
 import os
 import re
 import pprint as pp
 import numpy as np
-import dataset_functions as df
+import lib.dataset_functions as df
 
 if __name__ == "__main__":
 	# Setting Parameters

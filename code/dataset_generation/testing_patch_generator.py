@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import plotting_functions as pf
-import dataset_functions as df
-import nrrd
+import lib.plotting_functions as pf
+import lib.dataset_functions as df
+import lib.nrrd as nrrd
 
 CT_scan 		   = "14022803" 
 CT_scan_directory  = "../../ct_atrium/14022803"

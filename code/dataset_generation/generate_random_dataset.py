@@ -1,10 +1,10 @@
 import os
-import dataset_functions as df
+import lib.dataset_functions as df
 import re
 import math
 import numpy as np
 import h5py
-import nrrd
+import lib.nrrd as nrrd
 
 # - Generate a training dataset with 100000 example voxels half in the atrium, half not in the atrium randomly across 22 CT scans.
 # - Generate a testing dataset with 20000 example voxels half in the atrium, half not in the atrium randomly across the remaining 5 CT scans.
