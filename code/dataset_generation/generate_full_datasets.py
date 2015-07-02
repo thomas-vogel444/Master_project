@@ -1,6 +1,5 @@
 import dicom
 import h5py
-import lib.nrrd as nrrd
 import os
 import re
 import pprint as pp
@@ -31,7 +30,7 @@ if __name__ == "__main__":
 
 		# Get the atlas from the NRRD file
 		nrrd_path = NRRD_path_template.replace("CTScan_name", CT_scan)
-		CT_scan_labels, CT_scan_nrrd_header = nrrd.read(nrrd_path)
+		CT_scan_labels, CT_scan_nrrd_header = df.get_NRRD_array(nrrd_path)
 
 		# Extract the 3d image into a numpy array
 		print "Extracting the data from the DICOM files for CT scan %s" % CT_scan

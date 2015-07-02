@@ -1,4 +1,3 @@
-import lib.nrrd as nrrd
 import lib.dataset_functions as df
 import lib.utils as utils
 import os
@@ -40,9 +39,9 @@ if __name__ == "__main__":
 	# 						Generate the training and tetsing datasets
 	# ********************************************************************************************
 	print "=======> Generating the training dataset <======="
-	tri_planar_training_dataset = df.generate_random_tri_planar_dataset(training_CT_scans[0:1], CT_scan_dictionary, parameters["n_training_examples_per_CT_scan"], parameters)
+	tri_planar_training_dataset = df.generate_random_tri_planar_dataset(training_CT_scans, CT_scan_dictionary, parameters["n_training_examples_per_CT_scan"], parameters)
 	print "=======> Generating the testing dataset <======="
-	tri_planar_testing_dataset  = df.generate_random_tri_planar_dataset(testing_CT_scans[0:1], CT_scan_dictionary, parameters["n_testing_examples_per_CT_scan"], parameters)
+	tri_planar_testing_dataset  = df.generate_random_tri_planar_dataset(testing_CT_scans, CT_scan_dictionary, parameters["n_testing_examples_per_CT_scan"], parameters)
 
 	# ********************************************************************************************
 	# 	  Generating the segmentation dataset from a dicom file of one of the testing CT scans
@@ -51,7 +50,8 @@ if __name__ == "__main__":
 	segmented_CT_scan_DICOMS = df.get_DICOMs(parameters["CT_scan_path_template"].replace("CTScan_name", segmented_CT_scan))
 	nrrd_path 		  		 = parameters["NRRD_path_template"].replace("CTScan_name", segmented_CT_scan)
 
-	CT_scan_labels, CT_scan_nrrd_header 	 = nrrd.read(nrrd_path)	
+	# CT_scan_labels, CT_scan_nrrd_header 	 = nrrd.read(nrrd_path)	
+	CT_scan_labels, CT_scan_nrrd_header 	 = df.get_NRRD_array(nrrd_path)
 	CT_scan_3d_image  						 = df.get_CT_scan_array(segmented_CT_scan, segmented_CT_scan_DICOMS, 
 																	CT_scan_nrrd_header["sizes"], parameters["DICOM_path_template"])
 	dicom_height, dicom_width, number_dicoms = CT_scan_3d_image.shape
@@ -77,8 +77,15 @@ if __name__ == "__main__":
 	training_dataset[...]  	  = tri_planar_training_dataset
 	testing_dataset 	  	  = f.create_dataset("testing_dataset", tri_planar_testing_dataset.shape, dtype="uint8")
 	testing_dataset[...]  	  = tri_planar_testing_dataset
-	segmentation_dataset  	  = f.create_dataset("segmentation_dataset", tri_planar_segmentation_dataset.shape, dtype="uint8")
+	segmentation_dataset_name = "segmentation_dataset"
+	segmentation_dataset  	  = f.create_dataset(segmentation_dataset_name, tri_planar_segmentation_dataset.shape, dtype="uint8")
 	segmentation_dataset[...] = tri_planar_segmentation_dataset
+	segmentation_label_name   = "segmentation_labels"
+	segmentation_label  	  = f.create_dataset(segmentation_label_name, CT_scan_labels[:,:,z].shape, dtype="uint8")
+	segmentation_label[...]   = CT_scan_labels[:,:,z]
+	segmentation_values_name  = "segmentation_values"
+	segmentation_values  	  = f.create_dataset(segmentation_values_name, CT_scan_3d_image[:,:,z].shape, dtype="uint8")
+	segmentation_values[...]  = CT_scan_3d_image[:,:,z]
 	f.close()
 
 
