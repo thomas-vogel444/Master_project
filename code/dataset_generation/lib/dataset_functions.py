@@ -10,6 +10,14 @@ def get_CT_scan_names(data_directory, ct_directory_pattern):
 	"""
 	return [directory for directory in os.listdir(data_directory) if ct_directory_pattern.match(directory)]
 
+def get_NRRD_array(nrrd_path):
+	"""
+		Wrapper around nrrd.read so as to return the transpose of the array.
+	"""
+	CT_scan_labels, CT_scan_nrrd_header = nrrd.read(nrrd_path)
+	CT_scan_labels = np.transpose(CT_scan_labels, (1,0,2))
+	return CT_scan_labels, CT_scan_nrrd_header
+
 def get_DICOMs(CT_scan_directory):
 	"""
 		Get the DICOM file names following a given pattern for a given CT scan, i.e. a name with 8 digits in it.
@@ -116,7 +124,7 @@ def generate_random_tri_planar_dataset(CT_scans, CT_scan_dictionary, n_examples_
 	for i_CT_scan, CT_scan in enumerate(CT_scans):
 		# Extract the NRRD file into a numpy array
 		nrrd_path = parameters["NRRD_path_template"].replace("CTScan_name", CT_scan)
-		CT_scan_labels, CT_scan_nrrd_header = nrrd.read(nrrd_path)
+		CT_scan_labels, CT_scan_nrrd_header = get_NRRD_array(nrrd_path)
 
 		# Get the 3D image into a numpy array
 		print "Extracting 3d image from the DICOM files for CT scan %s" % CT_scan
