@@ -14,14 +14,15 @@ cmd:text('Options:')
 cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
 cmd:option('-threads', 2, 'number of threads')
 cmd:option('-identifier', 1, 'integer identifying the NN for later procesing')
+cmd:option('-segment', 'false', 'Boolean indicating whether to segment the test DICOM image after training.')
 -- data:
 cmd:option('-size', 'small', 'how many samples do we load: small | full')
 -- model:
 cmd:option('-model', 'convnet', 'type of model to construct: convnet')
 -- training:
-cmd:option('-maxepoch', 1, 'Maximum number of epoch on which to train the NN')
+cmd:option('-maxepoch', 20, 'Maximum number of epoch on which to train the NN')
 cmd:option('-save', 'results', 'subdirectory to save/log experiments in')
-cmd:option('-learningRate', 0.001, 'learning rate at t=0')
+cmd:option('-learningRate', 0.01, 'learning rate at t=0')
 cmd:option('-batchSize', 128, 'mini-batch size (1 = pure stochastic)')
 cmd:option('-weightDecay', 0.000, 'weight decay (SGD only)')
 cmd:option('-momentum', 0.000, 'momentum (SGD only)')
@@ -67,9 +68,10 @@ end
 -- f:close()
 
 ----------------------------------------------------------------------
-print '==> Segmenting a test image'
-dofile 'segment.lua'
-
+if opt.segment == true then
+	print '==> Segmenting a test image'
+	dofile 'segment.lua'
+end
 
 
 
