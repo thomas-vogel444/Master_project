@@ -13,7 +13,7 @@ local f = hdf5.open(filename,'r')
 trainingDataset = f:read("training_dataset"):all():float()
 testingDataset  = f:read("testing_dataset"):all():float()
 
-trainData.data = trainingDataset
+trainData.data = trainingDataset:div(255)
 trainData.size = function() return(trainingDataset:size()[1]) end
 
 -- Creating the labels
