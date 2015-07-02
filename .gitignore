@@ -9,5 +9,4 @@ code/example_code
 code/tutorial_supervised/data/
 results/
 code/torch-hdf5/
-code/tutorial_supervised/mnist.t7.tgz
-code/tutorial_supervised/mnist.t7/
+code/tutorial_supervised
