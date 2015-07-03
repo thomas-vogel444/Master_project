@@ -73,12 +73,17 @@ if __name__ == "__main__":
 
 	print "=======> Saving the datasets in %s <=======" %dataset_path
 	f 			  		  	  = h5py.File(dataset_path, "w")
+	# For the training dataset
 	training_dataset 	  	  = f.create_dataset("training_dataset", tri_planar_training_dataset.shape, dtype="uint8")
 	training_dataset[...]  	  = tri_planar_training_dataset
+	# For the testing dataset
 	testing_dataset 	  	  = f.create_dataset("testing_dataset", tri_planar_testing_dataset.shape, dtype="uint8")
 	testing_dataset[...]  	  = tri_planar_testing_dataset
+	# For the segmentation dataset
 	segmentation_dataset_name = "segmentation_dataset"
 	segmentation_dataset  	  = f.create_dataset(segmentation_dataset_name, tri_planar_segmentation_dataset.shape, dtype="uint8")
+	segmentation_dataset.attrs["CT_scan"] = segmented_CT_scan
+	segmentation_dataset.attrs["DICOM_number"] = z
 	segmentation_dataset[...] = tri_planar_segmentation_dataset
 	segmentation_label_name   = "segmentation_labels"
 	segmentation_label  	  = f.create_dataset(segmentation_label_name, CT_scan_labels[:,:,z].shape, dtype="uint8")
