@@ -21,7 +21,7 @@ if __name__ == "__main__":
 		"patch_size"    		: 32,
 		"n_training_CT_scans"   : 22,
 		"n_testing_CT_scans"	: 5,
-		"n_training_examples_per_CT_scan" : 2500,
+		"n_training_examples_per_CT_scan" : 5000,
 		"n_testing_examples_per_CT_scan"  : 2500
 	}
 
@@ -39,9 +39,9 @@ if __name__ == "__main__":
 	# 						Generate the training and tetsing datasets
 	# ********************************************************************************************
 	print "=======> Generating the training dataset <======="
-	tri_planar_training_dataset = df.generate_random_tri_planar_dataset(training_CT_scans, CT_scan_dictionary, parameters["n_training_examples_per_CT_scan"], parameters)
+	tri_planar_training_dataset, tri_planar_training_labels = df.generate_random_tri_planar_dataset(training_CT_scans, CT_scan_dictionary, parameters["n_training_examples_per_CT_scan"], parameters)
 	print "=======> Generating the testing dataset <======="
-	tri_planar_testing_dataset  = df.generate_random_tri_planar_dataset(testing_CT_scans, CT_scan_dictionary, parameters["n_testing_examples_per_CT_scan"], parameters)
+	tri_planar_testing_dataset, tri_planar_testing_labels  = df.generate_random_tri_planar_dataset(testing_CT_scans, CT_scan_dictionary, parameters["n_testing_examples_per_CT_scan"], parameters)
 
 	# ********************************************************************************************
 	# 	  Generating the segmentation dataset from a dicom file of one of the testing CT scans
@@ -76,9 +76,13 @@ if __name__ == "__main__":
 	# For the training dataset
 	training_dataset 	  	  = f.create_dataset("training_dataset", tri_planar_training_dataset.shape, dtype="uint8")
 	training_dataset[...]  	  = tri_planar_training_dataset
+	training_labels 	  	  = f.create_dataset("training_labels", tri_planar_training_labels.shape, dtype="uint8")
+	training_labels[...]  	  = tri_planar_training_labels
 	# For the testing dataset
 	testing_dataset 	  	  = f.create_dataset("testing_dataset", tri_planar_testing_dataset.shape, dtype="uint8")
 	testing_dataset[...]  	  = tri_planar_testing_dataset
+	testing_labels 	  	      = f.create_dataset("testing_labels", tri_planar_testing_labels.shape, dtype="uint8")
+	testing_labels[...]  	  = tri_planar_testing_labels
 	# For the segmentation dataset
 	segmentation_dataset_name = "segmentation_dataset"
 	segmentation_dataset  	  = f.create_dataset(segmentation_dataset_name, tri_planar_segmentation_dataset.shape, dtype="uint8")

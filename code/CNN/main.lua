@@ -20,7 +20,7 @@ cmd:option('-size', 'small', 'how many samples do we load: small | full')
 -- model:
 cmd:option('-model', 'convnet', 'type of model to construct: convnet')
 -- training:
-cmd:option('-maxepoch', 20, 'Maximum number of epoch on which to train the NN')
+cmd:option('-maxepoch', 30, 'Maximum number of epoch on which to train the NN')
 cmd:option('-save', 'results', 'subdirectory to save/log experiments in')
 cmd:option('-learningRate', 0.01, 'learning rate at t=0')
 cmd:option('-batchSize', 128, 'mini-batch size (1 = pure stochastic)')
@@ -62,10 +62,10 @@ while true do
     end
 end
 
--- -- Appending the relevant result into a file 
--- f = io.open('results/results.txt', 'a')
--- f:write('% mean class accuracy for NN #' .. opt.identifier .. ": " .. confusion.totalValid .. "\n")
--- f:close()
+-- Appending the relevant result into a file 
+f = io.open('results/results.txt', 'a')
+f:write('% mean class accuracy for NN #' .. opt.identifier .. ": " .. confusion.totalValid .. "\n")
+f:close()
 
 ----------------------------------------------------------------------
 if opt.segment == true then
@@ -76,5 +76,3 @@ end
 
 
 
-
-    

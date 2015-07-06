@@ -121,6 +121,7 @@ def tri_planar_patch_generator(x,y,z,image_3d,patch_size):
 
 def generate_random_tri_planar_dataset(CT_scans, CT_scan_dictionary, n_examples_per_CT_scan, parameters):
 	tri_planar_dataset = np.zeros((n_examples_per_CT_scan * len(CT_scans), 3, parameters["patch_size"], parameters["patch_size"]))
+	tri_planar_labels  = np.zeros(n_examples_per_CT_scan * len(CT_scans))
 	for i_CT_scan, CT_scan in enumerate(CT_scans):
 		# Extract the NRRD file into a numpy array
 		nrrd_path = parameters["NRRD_path_template"].replace("CTScan_name", CT_scan)
@@ -138,6 +139,8 @@ def generate_random_tri_planar_dataset(CT_scans, CT_scan_dictionary, n_examples_
 		for i, atrium_3d_index in enumerate(atrium_3d_indices):
 			x, y, z = atrium_3d_index
 			tri_planar_dataset[i + n_examples_per_CT_scan/2 * i_CT_scan] = tri_planar_patch_generator(x, y, z ,CT_scan_3d_image,parameters["patch_size"])
+			tri_planar_labels[i + n_examples_per_CT_scan/2 * i_CT_scan] = 2
+
 
 		# Sample indexes from the non-atrium
 		non_atrium_3d_indices = random_3d_indices(CT_scan_labels, n_examples_per_CT_scan/2, 0)
@@ -147,4 +150,5 @@ def generate_random_tri_planar_dataset(CT_scans, CT_scan_dictionary, n_examples_
 			x, y, z = non_atrium_3d_index
 			tri_planar_dataset[len(CT_scans)*n_examples_per_CT_scan/2 + i + n_examples_per_CT_scan/2 * i_CT_scan] = \
 					tri_planar_patch_generator(x, y, z ,CT_scan_3d_image,parameters["patch_size"])
-	return tri_planar_dataset
+			tri_planar_labels[len(CT_scans)*n_examples_per_CT_scan/2 + i + n_examples_per_CT_scan/2 * i_CT_scan] = 1
+	return tri_planar_dataset, tri_planar_labels
