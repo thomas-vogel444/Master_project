@@ -1,3 +1,4 @@
+require "utils.lua"
 require "torch"
 require "xlua"
 require "hdf5"
@@ -16,6 +17,8 @@ data = f:read("segmentation_dataset"):all():float()
 segmentDataset = {}
 segmentDataset.data = data
 segmentDataset.size = function() return(segmentDataset.data:size()[1]) end
+
+normalize(segmentDataset.data)
 
 -- Classify every voxel in the segmentation dataset
 prediction = torch.zeros(segmentDataset.size())
