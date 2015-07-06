@@ -1,5 +1,4 @@
 import lib.dataset_functions as df
-import lib.utils as utils
 import os
 import re
 import math
@@ -55,7 +54,9 @@ if __name__ == "__main__":
 	CT_scan_3d_image  						 = df.get_CT_scan_array(segmented_CT_scan, segmented_CT_scan_DICOMS, 
 																	CT_scan_nrrd_header["sizes"], parameters["DICOM_path_template"])
 	dicom_height, dicom_width, number_dicoms = CT_scan_3d_image.shape
-	x_grid, y_grid = utils.generate_grids(dicom_height, dicom_width)
+	# x_grid, y_grid = utils.generate_grids(dicom_height, dicom_width)
+	x_grid = range(dicom_height)
+	y_grid = range(dicom_width)
 
 	tri_planar_segmentation_dataset = np.zeros((CT_scan_3d_image[:,:,0].size, 3, parameters["patch_size"], parameters["patch_size"]))
 
