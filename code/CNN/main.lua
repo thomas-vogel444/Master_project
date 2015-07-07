@@ -42,6 +42,9 @@ end
 torch.setnumthreads(opt.threads)
 torch.manualSeed(opt.seed)
 
+-- Records the history of classification errors
+classificationErrors = {trainingErrors = {}, testErrors = {}}
+
 ----------------------------------------------------------------------
 print '==> executing all'
 
@@ -62,8 +65,8 @@ while true do
     end
 end
 
-function writeToFile(file, data) 
-	file:write('TrainingClassificationError_' .. opt.identifier ": "
+function writeToFile(file, data, errorType) 
+	file:write(errorType .. 'ClassificationError_' .. opt.identifier .. ": ")
 	file:write(data[1])
 	for i = 2, #data do
 		file:write("," .. data[i])
@@ -73,8 +76,10 @@ end
 
 -- Appending the relevant result into a file 
 f = io.open('results/results.txt', 'a')
-f:write('TrainingClassificationError #' .. opt.identifier .. ": " .. confusion.totalValid .. "\n")
-f:write('testingClassificationError #' .. opt.identifier .. ": " .. confusion.totalValid .. "\n")
+writeToFile(f, classificationErrors.trainingErrors, "Training")
+writeToFile(f, classificationErrors.testErrors, "Testing")
+-- f:write('TrainingClassificationError #' .. opt.identifier .. ": " .. confusion.totalValid .. "\n")
+-- f:write('testingClassificationError #' .. opt.identifier .. ": " .. confusion.totalValid .. "\n")
 f:close()
 
 ----------------------------------------------------------------------

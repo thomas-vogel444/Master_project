@@ -14,7 +14,7 @@ classes = {'0','1'}
 confusion = optim.ConfusionMatrix(classes)
 
 -- Records the history of classification errors
-classificationErrors = {trainingErrors = {}, testErrors = {}}
+classificationErrors = classificationErrors or {trainingErrors = {}, testErrors = {}}
 
 -- Log results to files
 trainLogger = optim.Logger(paths.concat(opt.save, 'train.log'))
