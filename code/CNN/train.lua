@@ -13,6 +13,9 @@ classes = {'0','1'}
 -- This matrix records the current confusion across classes
 confusion = optim.ConfusionMatrix(classes)
 
+-- Records the history of classification errors
+classificationErrors = {trainingErrors = {}, testErrors = {}}
+
 -- Log results to files
 trainLogger = optim.Logger(paths.concat(opt.save, 'train.log'))
 testLogger = optim.Logger(paths.concat(opt.save, 'test.log'))
@@ -125,6 +128,7 @@ function train()
 
     -- print confusion matrix
     print(confusion)
+    table.insert(classificationErrors.trainingErrors, confusion.totalValid)
 
     -- update logger
     trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}

@@ -62,9 +62,19 @@ while true do
     end
 end
 
+function writeToFile(file, data) 
+	file:write('TrainingClassificationError_' .. opt.identifier ": "
+	file:write(data[1])
+	for i = 2, #data do
+		file:write("," .. data[i])
+	end
+	file:write("\n")
+end
+
 -- Appending the relevant result into a file 
 f = io.open('results/results.txt', 'a')
-f:write('% mean class accuracy for NN #' .. opt.identifier .. ": " .. confusion.totalValid .. "\n")
+f:write('TrainingClassificationError #' .. opt.identifier .. ": " .. confusion.totalValid .. "\n")
+f:write('testingClassificationError #' .. opt.identifier .. ": " .. confusion.totalValid .. "\n")
 f:close()
 
 ----------------------------------------------------------------------
