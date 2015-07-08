@@ -9,10 +9,10 @@ options = {
 "maxepoch": 15,
 "save": "results",
 "learningRate": 1,
-"batchSize": 128,
+"batchSize": 512,
 "weightDecay": 0.000,
 "momentum": 0.000,
-"type": "float"
+"type": "cuda"
 }
 
 command_template = "th main.lua -seed %(seed)i -threads %(threads)i -identifier %(identifier)i -size %(size)s -model %(model)s -maxepoch %(maxepoch)i " \
