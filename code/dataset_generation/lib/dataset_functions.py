@@ -3,6 +3,8 @@ import re
 import numpy as np
 import dicom
 import nrrd
+import Image
+
 
 def get_CT_scan_names(data_directory, ct_directory_pattern):
 	"""
@@ -72,20 +74,15 @@ def random_3d_indices(CT_scan_labels, n, target_label):
 											atrium_3d_indices[1][atrium_training_1d_indices], 
 											atrium_3d_indices[2][atrium_training_1d_indices]))[0]
 
-def tri_planar_patch_generator(x,y,z,image_3d,patch_size):
-	""" 
-		Generates a 3 * patch_size * patch_size numpy matrix centred at (x,y,z) containing the 
-		three perpendicular patches from the 3D tensor image. 
-	"""
-	height, width, depth = image_3d.shape
-	patches = np.zeros((3, patch_size, patch_size))
+
+def generate_patch(x,y,image_2d, patch_size):
+	height, width = image_2d.shape
+	patch = np.zeros((patch_size, patch_size))
 
 	x_min = 0
 	x_max = patch_size
 	y_min = 0
 	y_max = patch_size
-	z_min = 0
-	z_max = patch_size
 
 	if x < patch_size/2:
 		x_min = patch_size/2 - x
@@ -99,28 +96,28 @@ def tri_planar_patch_generator(x,y,z,image_3d,patch_size):
 	if y > width - patch_size/2:
 		y_max = patch_size/2 + width - y
 
-	if z < patch_size/2:
-		z_min = patch_size/2 - z
+	patch[x_min:x_max, y_min:y_max] = image_2d[np.maximum(x-patch_size/2, 0):np.minimum(x+patch_size/2, height), 
+						 np.maximum(y-patch_size/2, 0):np.minimum(y+patch_size/2, width)]
 
-	if z > depth - patch_size/2:
-		z_max = patch_size/2 + depth - z
+	return patch
 
-	patches[0, x_min:x_max, y_min:y_max] = image_3d[np.maximum(x-patch_size/2, 0):np.minimum(x+patch_size/2, height), 
-						 np.maximum(y-patch_size/2, 0):np.minimum(y+patch_size/2, width), 
-						 z]
 
-	patches[1, x_min:x_max, z_min:z_max] = image_3d[np.maximum(x-patch_size/2, 0):np.minimum(x+patch_size/2, height), 
-						 y, 
-						 np.maximum(z-patch_size/2, 0):np.minimum(z+patch_size/2, depth)]
+def generate_patches(x,y,z,image_3d,patch_size):
+	""" 
+		Generates a 3 * patch_size * patch_size numpy matrix centred at (x,y,z) containing the 
+		three perpendicular patches from the 3D tensor image. 
+	"""
+	height, width, depth = image_3d.shape
+	patches = np.zeros((4, patch_size, patch_size))
 
-	patches[2, y_min:y_max, z_min:z_max] = image_3d[x, 
-						 np.maximum(y-patch_size/2, 0):np.minimum(y+patch_size/2, width), 
-						 np.maximum(z-patch_size/2, 0):np.minimum(z+patch_size/2, depth)]
-
+	patches[0] = generate_patch(x,y,image_3d[:,:,z], patch_size)
+	patches[1] = generate_patch(x,z,image_3d[:,y,:], patch_size)
+	patches[2] = generate_patch(y,z,image_3d[x,:,:], patch_size)
+	patches[3] = resize_patch(generate_patch(x,y,image_3d[:,:,z], 4*patch_size))
 	return patches
 
-def generate_random_tri_planar_dataset(CT_scans, CT_scan_dictionary, n_examples_per_CT_scan, parameters):
-	tri_planar_dataset = np.zeros((n_examples_per_CT_scan * len(CT_scans), 3, parameters["patch_size"], parameters["patch_size"]))
+def generate_random_dataset(CT_scans, CT_scan_dictionary, n_examples_per_CT_scan, parameters):
+	tri_planar_dataset = np.zeros((n_examples_per_CT_scan * len(CT_scans), 4, parameters["patch_size"], parameters["patch_size"]))
 	tri_planar_labels  = np.zeros(n_examples_per_CT_scan * len(CT_scans))
 	for i_CT_scan, CT_scan in enumerate(CT_scans):
 		# Extract the NRRD file into a numpy array
@@ -138,7 +135,7 @@ def generate_random_tri_planar_dataset(CT_scans, CT_scan_dictionary, n_examples_
 		# For each index sampled generate 3 patches centred at the voxel of interest
 		for i, atrium_3d_index in enumerate(atrium_3d_indices):
 			x, y, z = atrium_3d_index
-			tri_planar_dataset[i + n_examples_per_CT_scan/2 * i_CT_scan] = tri_planar_patch_generator(x, y, z ,CT_scan_3d_image,parameters["patch_size"])
+			tri_planar_dataset[i + n_examples_per_CT_scan/2 * i_CT_scan] = generate_patches(x, y, z ,CT_scan_3d_image,parameters["patch_size"])
 			tri_planar_labels[i + n_examples_per_CT_scan/2 * i_CT_scan] = 2
 
 
@@ -149,6 +146,16 @@ def generate_random_tri_planar_dataset(CT_scans, CT_scan_dictionary, n_examples_
 		for i, non_atrium_3d_index in enumerate(non_atrium_3d_indices):
 			x, y, z = non_atrium_3d_index
 			tri_planar_dataset[len(CT_scans)*n_examples_per_CT_scan/2 + i + n_examples_per_CT_scan/2 * i_CT_scan] = \
-					tri_planar_patch_generator(x, y, z ,CT_scan_3d_image,parameters["patch_size"])
+					generate_patches(x, y, z ,CT_scan_3d_image,parameters["patch_size"])
 			tri_planar_labels[len(CT_scans)*n_examples_per_CT_scan/2 + i + n_examples_per_CT_scan/2 * i_CT_scan] = 1
 	return tri_planar_dataset, tri_planar_labels
+
+def resize_patch(patch):
+	"""
+		resizes the image to 32*32.
+	"""
+	im = Image.fromarray(patch)
+	out = im.resize((32, 32))
+	return np.array(out)
+
+

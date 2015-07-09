@@ -38,9 +38,9 @@ if __name__ == "__main__":
 	# 						Generate the training and tetsing datasets
 	# ********************************************************************************************
 	print "=======> Generating the training dataset <======="
-	tri_planar_training_dataset, tri_planar_training_labels = df.generate_random_tri_planar_dataset(training_CT_scans, CT_scan_dictionary, parameters["n_training_examples_per_CT_scan"], parameters)
+	tri_planar_training_dataset, tri_planar_training_labels = df.generate_random_dataset(training_CT_scans, CT_scan_dictionary, parameters["n_training_examples_per_CT_scan"], parameters)
 	print "=======> Generating the testing dataset <======="
-	tri_planar_testing_dataset, tri_planar_testing_labels  = df.generate_random_tri_planar_dataset(testing_CT_scans, CT_scan_dictionary, parameters["n_testing_examples_per_CT_scan"], parameters)
+	tri_planar_testing_dataset, tri_planar_testing_labels  = df.generate_random_dataset(testing_CT_scans, CT_scan_dictionary, parameters["n_testing_examples_per_CT_scan"], parameters)
 
 	# ********************************************************************************************
 	# 	  Generating the segmentation dataset from a dicom file of one of the testing CT scans
@@ -49,22 +49,19 @@ if __name__ == "__main__":
 	segmented_CT_scan_DICOMS = df.get_DICOMs(parameters["CT_scan_path_template"].replace("CTScan_name", segmented_CT_scan))
 	nrrd_path 		  		 = parameters["NRRD_path_template"].replace("CTScan_name", segmented_CT_scan)
 
-	# CT_scan_labels, CT_scan_nrrd_header 	 = nrrd.read(nrrd_path)	
 	CT_scan_labels, CT_scan_nrrd_header 	 = df.get_NRRD_array(nrrd_path)
 	CT_scan_3d_image  						 = df.get_CT_scan_array(segmented_CT_scan, segmented_CT_scan_DICOMS, 
 																	CT_scan_nrrd_header["sizes"], parameters["DICOM_path_template"])
 	dicom_height, dicom_width, number_dicoms = CT_scan_3d_image.shape
-	# x_grid, y_grid = utils.generate_grids(dicom_height, dicom_width)
-	x_grid = range(dicom_height)
-	y_grid = range(dicom_width)
+	x_grid, y_grid = range(dicom_height), range(dicom_width)
 
-	tri_planar_segmentation_dataset = np.zeros((CT_scan_3d_image[:,:,0].size, 3, parameters["patch_size"], parameters["patch_size"]))
+	tri_planar_segmentation_dataset = np.zeros((CT_scan_3d_image[:,:,0].size, 4, parameters["patch_size"], parameters["patch_size"]))
 
 	z = 30
 	print "Generating the segmentation dataset from the DICOM file %i from CT scan %s..." %(z, segmented_CT_scan)
 	for x in y_grid:
 		for y in x_grid:
-			tri_planar_segmentation_dataset[y + dicom_width*x, :, :, :] = df.tri_planar_patch_generator(x,y,z,CT_scan_3d_image,parameters["patch_size"])
+			tri_planar_segmentation_dataset[y + dicom_width*x, :, :, :] = df.generate_patches(x,y,z,CT_scan_3d_image,parameters["patch_size"])
 
 	# ********************************************************************************************
 	# 								Stick all this stuff into a dataset

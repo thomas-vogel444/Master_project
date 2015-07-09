@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
-import lib.plotting_functions as pf
 import lib.dataset_functions as df
 
 CT_scan 		   = "14022803" 
