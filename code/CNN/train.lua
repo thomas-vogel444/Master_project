@@ -72,11 +72,20 @@ function train()
         	-- load new sample
         	local input = trainData.data[shuffle[i]]
         	local target = trainData.labels[shuffle[i]]
-        	if opt.type == 'double' then input = input:double()
-        	elseif opt.type == 'cuda' then input = input:cuda() end
         	table.insert(inputs, input)
         	table.insert(targets, target)
     	end
+
+        targets_matrix = torch.Tensor(opt.batchSize, (#classes)):zero():float()
+        for i = 1, opt.batchSize do
+          targets_matrix[{i,targets[i]}] = 1
+        end
+
+        if opt.type == 'cuda' then 
+            inputs  = input:cuda() 
+            targets = target:cuda()
+            targets_matrix = targets_matrix:cuda()
+        end
 
     	-- create closure to evaluate f(X) and df/dX
     	local feval = function(x)
