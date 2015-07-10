@@ -38,30 +38,30 @@ if __name__ == "__main__":
 	# 						Generate the training and tetsing datasets
 	# ********************************************************************************************
 	print "=======> Generating the training dataset <======="
-	tri_planar_training_dataset, tri_planar_training_labels = df.generate_random_dataset(training_CT_scans, CT_scan_dictionary, parameters["n_training_examples_per_CT_scan"], parameters)
+	training_dataset, training_labels = df.generate_random_dataset(training_CT_scans, CT_scan_dictionary, parameters["n_training_examples_per_CT_scan"], parameters)
 	print "=======> Generating the testing dataset <======="
-	tri_planar_testing_dataset, tri_planar_testing_labels  = df.generate_random_dataset(testing_CT_scans, CT_scan_dictionary, parameters["n_testing_examples_per_CT_scan"], parameters)
+	testing_dataset, testing_labels  = df.generate_random_dataset(testing_CT_scans, CT_scan_dictionary, parameters["n_testing_examples_per_CT_scan"], parameters)
 
 	# ********************************************************************************************
 	# 	  Generating the segmentation dataset from a dicom file of one of the testing CT scans
 	# ********************************************************************************************
-	segmented_CT_scan 		 = testing_CT_scans[0]
-	segmented_CT_scan_DICOMS = df.get_DICOMs(parameters["CT_scan_path_template"].replace("CTScan_name", segmented_CT_scan))
-	nrrd_path 		  		 = parameters["NRRD_path_template"].replace("CTScan_name", segmented_CT_scan)
+	# segmented_CT_scan 		 = testing_CT_scans[0]
+	# segmented_CT_scan_DICOMS = df.get_DICOMs(parameters["CT_scan_path_template"].replace("CTScan_name", segmented_CT_scan))
+	# nrrd_path 		  		 = parameters["NRRD_path_template"].replace("CTScan_name", segmented_CT_scan)
 
-	CT_scan_labels, CT_scan_nrrd_header 	 = df.get_NRRD_array(nrrd_path)
-	CT_scan_3d_image  						 = df.get_CT_scan_array(segmented_CT_scan, segmented_CT_scan_DICOMS, 
-																	CT_scan_nrrd_header["sizes"], parameters["DICOM_path_template"])
-	dicom_height, dicom_width, number_dicoms = CT_scan_3d_image.shape
-	x_grid, y_grid = range(dicom_height), range(dicom_width)
+	# CT_scan_labels, CT_scan_nrrd_header 	 = df.get_NRRD_array(nrrd_path)
+	# CT_scan_3d_image  						 = df.get_CT_scan_array(segmented_CT_scan, segmented_CT_scan_DICOMS, 
+	# 																CT_scan_nrrd_header["sizes"], parameters["DICOM_path_template"])
+	# dicom_height, dicom_width, number_dicoms = CT_scan_3d_image.shape
+	# x_grid, y_grid = range(dicom_height), range(dicom_width)
 
-	tri_planar_segmentation_dataset = np.zeros((CT_scan_3d_image[:,:,0].size, 4, parameters["patch_size"], parameters["patch_size"]))
+	# tri_planar_segmentation_dataset = np.zeros((CT_scan_3d_image[:,:,0].size, 4, parameters["patch_size"], parameters["patch_size"]))
 
-	z = 30
-	print "Generating the segmentation dataset from the DICOM file %i from CT scan %s..." %(z, segmented_CT_scan)
-	for x in y_grid:
-		for y in x_grid:
-			tri_planar_segmentation_dataset[y + dicom_width*x, :, :, :] = df.generate_patches(x,y,z,CT_scan_3d_image,parameters["patch_size"])
+	# z = 30
+	# print "Generating the segmentation dataset from the DICOM file %i from CT scan %s..." %(z, segmented_CT_scan)
+	# for x in y_grid:
+	# 	for y in x_grid:
+	# 		tri_planar_segmentation_dataset[y + dicom_width*x, :, :, :] = df.generate_patches(x,y,z,CT_scan_3d_image,parameters["patch_size"])
 
 	# ********************************************************************************************
 	# 								Stick all this stuff into a dataset
@@ -72,27 +72,27 @@ if __name__ == "__main__":
 	print "=======> Saving the datasets in %s <=======" %dataset_path
 	f 			  		  	  = h5py.File(dataset_path, "w")
 	# For the training dataset
-	training_dataset 	  	  = f.create_dataset("training_dataset", tri_planar_training_dataset.shape, dtype="uint8")
-	training_dataset[...]  	  = tri_planar_training_dataset
-	training_labels 	  	  = f.create_dataset("training_labels", tri_planar_training_labels.shape, dtype="uint8")
-	training_labels[...]  	  = tri_planar_training_labels
+	training_dataset 	  	  = f.create_dataset("training_dataset", training_dataset.shape, dtype="uint8")
+	training_dataset[...]  	  = training_dataset
+	training_labels 	  	  = f.create_dataset("training_labels", training_labels.shape, dtype="uint8")
+	training_labels[...]  	  = training_labels
 	# For the testing dataset
-	testing_dataset 	  	  = f.create_dataset("testing_dataset", tri_planar_testing_dataset.shape, dtype="uint8")
-	testing_dataset[...]  	  = tri_planar_testing_dataset
-	testing_labels 	  	      = f.create_dataset("testing_labels", tri_planar_testing_labels.shape, dtype="uint8")
-	testing_labels[...]  	  = tri_planar_testing_labels
+	testing_dataset 	  	  = f.create_dataset("testing_dataset", testing_dataset.shape, dtype="uint8")
+	testing_dataset[...]  	  = testing_dataset
+	testing_labels 	  	      = f.create_dataset("testing_labels", testing_labels.shape, dtype="uint8")
+	testing_labels[...]  	  = testing_labels
 	# For the segmentation dataset
-	segmentation_dataset_name = "segmentation_dataset"
-	segmentation_dataset  	  = f.create_dataset(segmentation_dataset_name, tri_planar_segmentation_dataset.shape, dtype="uint8")
-	segmentation_dataset.attrs["CT_scan"] = segmented_CT_scan
-	segmentation_dataset.attrs["DICOM_number"] = z
-	segmentation_dataset[...] = tri_planar_segmentation_dataset
-	segmentation_label_name   = "segmentation_labels"
-	segmentation_label  	  = f.create_dataset(segmentation_label_name, CT_scan_labels[:,:,z].shape, dtype="uint8")
-	segmentation_label[...]   = CT_scan_labels[:,:,z]
-	segmentation_values_name  = "segmentation_values"
-	segmentation_values  	  = f.create_dataset(segmentation_values_name, CT_scan_3d_image[:,:,z].shape, dtype="uint8")
-	segmentation_values[...]  = CT_scan_3d_image[:,:,z]
+	# segmentation_dataset_name = "segmentation_dataset"
+	# segmentation_dataset  	  = f.create_dataset(segmentation_dataset_name, tri_planar_segmentation_dataset.shape, dtype="uint8")
+	# segmentation_dataset.attrs["CT_scan"] = segmented_CT_scan
+	# segmentation_dataset.attrs["DICOM_number"] = z
+	# segmentation_dataset[...] = tri_planar_segmentation_dataset
+	# segmentation_label_name   = "segmentation_labels"
+	# segmentation_label  	  = f.create_dataset(segmentation_label_name, CT_scan_labels[:,:,z].shape, dtype="uint8")
+	# segmentation_label[...]   = CT_scan_labels[:,:,z]
+	# segmentation_values_name  = "segmentation_values"
+	# segmentation_values  	  = f.create_dataset(segmentation_values_name, CT_scan_3d_image[:,:,z].shape, dtype="uint8")
+	# segmentation_values[...]  = CT_scan_3d_image[:,:,z]
 	f.close()
 
 
