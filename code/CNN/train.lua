@@ -82,8 +82,8 @@ function train()
         end
 
         if opt.type == 'cuda' then 
-            inputs  = input:cuda() 
-            targets = target:cuda()
+            inputs  = inputs:cuda() 
+            targets = targets:cuda()
             targets_matrix = targets_matrix:cuda()
         end
 
