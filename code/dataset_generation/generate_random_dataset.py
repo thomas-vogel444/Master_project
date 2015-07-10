@@ -41,7 +41,6 @@ if __name__ == "__main__":
 	training_dataset, training_labels = df.generate_random_dataset(training_CT_scans, CT_scan_dictionary, parameters["n_training_examples_per_CT_scan"], parameters)
 	print "=======> Generating the testing dataset <======="
 	testing_dataset, testing_labels  = df.generate_random_dataset(testing_CT_scans, CT_scan_dictionary, parameters["n_testing_examples_per_CT_scan"], parameters)
-
 	# ********************************************************************************************
 	# 	  Generating the segmentation dataset from a dicom file of one of the testing CT scans
 	# ********************************************************************************************
@@ -72,15 +71,15 @@ if __name__ == "__main__":
 	print "=======> Saving the datasets in %s <=======" %dataset_path
 	f 			  		  	  = h5py.File(dataset_path, "w")
 	# For the training dataset
-	training_dataset 	  	  = f.create_dataset("training_dataset", training_dataset.shape, dtype="uint8")
-	training_dataset[...]  	  = training_dataset
-	training_labels 	  	  = f.create_dataset("training_labels", training_labels.shape, dtype="uint8")
-	training_labels[...]  	  = training_labels
+	training_dataset_hdf5 	  	  = f.create_dataset("training_dataset", training_dataset.shape, dtype="uint32")
+	training_dataset_hdf5[...]    = np.int16(training_dataset)
+	training_labels_hdf5 	  	  = f.create_dataset("training_labels", training_labels.shape, dtype="uint8")
+	training_labels_hdf5[...]  	  = np.int16(training_labels)
 	# For the testing dataset
-	testing_dataset 	  	  = f.create_dataset("testing_dataset", testing_dataset.shape, dtype="uint8")
-	testing_dataset[...]  	  = testing_dataset
-	testing_labels 	  	      = f.create_dataset("testing_labels", testing_labels.shape, dtype="uint8")
-	testing_labels[...]  	  = testing_labels
+	testing_dataset_hdf5 	  	  = f.create_dataset("testing_dataset", testing_dataset.shape, dtype="uint32")
+	testing_dataset_hdf5[...]  	  = np.int16(testing_dataset)
+	testing_labels_hdf5 	  	  = f.create_dataset("testing_labels", testing_labels.shape, dtype="uint8")
+	testing_labels_hdf5[...]  	  = testing_labels
 	# For the segmentation dataset
 	# segmentation_dataset_name = "segmentation_dataset"
 	# segmentation_dataset  	  = f.create_dataset(segmentation_dataset_name, tri_planar_segmentation_dataset.shape, dtype="uint8")
