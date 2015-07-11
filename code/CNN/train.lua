@@ -77,8 +77,9 @@ function train()
     	end
 
         if opt.type == 'cuda' then 
-            inputs  = inputs:cuda() 
-            targets = targets:cuda()
+            inputs    = inputs:cuda() 
+            targets   = targets:cuda()
+            confusion = confusion:cuda()
         end
 
     	-- create closure to evaluate f(X) and df/dX
