@@ -66,25 +66,19 @@ function train()
     	xlua.progress(t, trainingSize)
 
     	-- create mini batch
-    	local inputs = {}
-    	local targets = {}
+        batchSize = math.min(opt.batchSize,trainingSize - t + 1)
+
+    	inputs = torch.Tensor(batchSize,nfeats,width,height)
+    	targets = torch.Tensor(batchSize)
     	for i = t,math.min(t+opt.batchSize-1,trainingSize) do
         	-- load new sample
-        	local input = trainData.data[shuffle[i]]
-        	local target = trainData.labels[shuffle[i]]
-        	table.insert(inputs, input)
-        	table.insert(targets, target)
+        	inputs[{{i%batchSize + 1},{},{},{}}] = trainData.data[shuffle[i]]
+            targets[i%batchSize + 1]             = trainData.labels[shuffle[i]]
     	end
-
-        targets_matrix = torch.Tensor(opt.batchSize, (#classes)):zero():float()
-        for i = 1, opt.batchSize do
-          targets_matrix[{i,targets[i]}] = 1
-        end
 
         if opt.type == 'cuda' then 
             inputs  = inputs:cuda() 
             targets = targets:cuda()
-            targets_matrix = targets_matrix:cuda()
         end
 
     	-- create closure to evaluate f(X) and df/dX
@@ -101,10 +95,15 @@ function train()
             local f = 0
 
             -- evaluate function for complete mini batch
-            for i = 1,#inputs do
+            for i = 1,inputs:size()[1] do
             	-- estimate f
+                -- print(inputs[i])
             	local output = model:forward(inputs[i])
-            	local err = criterion:forward(output, targets[i])
+            	-- print(output)
+                -- print(targets[i])
+                -- print(targets)
+                local err = criterion:forward(output, targets[i])
+
             	f = f + err
 
             	-- estimate df/dW
@@ -116,8 +115,8 @@ function train()
             end
 
             -- normalize gradients and f(X)
-            gradParameters:div(#inputs)
-            f = f/#inputs
+            gradParameters:div(inputs:size()[1])
+            f = f/inputs:size()[1]
 
             -- return f and df/dX
             return f,gradParameters
