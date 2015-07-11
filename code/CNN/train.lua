@@ -79,7 +79,6 @@ function train()
         if opt.type == 'cuda' then 
             inputs    = inputs:cuda() 
             targets   = targets:cuda()
-            confusion = confusion:cuda()
         end
 
     	-- create closure to evaluate f(X) and df/dX
@@ -98,11 +97,7 @@ function train()
             -- evaluate function for complete mini batch
             for i = 1,inputs:size()[1] do
             	-- estimate f
-                -- print(inputs[i])
             	local output = model:forward(inputs[i])
-            	-- print(output)
-                -- print(targets[i])
-                -- print(targets)
                 local err = criterion:forward(output, targets[i])
 
             	f = f + err
