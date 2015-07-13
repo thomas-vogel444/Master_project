@@ -10,3 +10,4 @@ code/tutorial_supervised/data/
 results/
 code/torch-hdf5/
 code/tutorial_supervised
+code/process_results/model.net
