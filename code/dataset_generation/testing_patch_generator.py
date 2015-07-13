@@ -20,24 +20,20 @@ y = 200
 z = 40
 
 # Get the patches at a given voxel
-patch_size = 128
-patches = df.tri_planar_patch_generator(x,y,z,CT_scan_image,patch_size)
+patch_size = 32
+patches = df.generate_patches(x,y,z,CT_scan_image,patch_size)
 np.set_printoptions(threshold=np.nan)
 
 # Plot 3 patches next to their respective DICOM slice.
 # print CT_scan_labels[x,y,z]
 
-# fig = plt.figure()
-# a   = fig.add_subplot(1,3,1)
-# plt.imshow(CT_scan_image[:,:,z], cmap = cm.Greys_r)
-# plt.scatter(y,x)
-# a   = fig.add_subplot(1,3,2)
-# plt.imshow(patches[0,:,:], cmap = cm.Greys_r)
-# a   = fig.add_subplot(1,3,3)
-# plt.imshow(CT_scan_labels[:,:,z], cmap = cm.Greys_r)
-# plt.scatter(y,x)
-# plt.show()
-
-m = np.zeros(CT_scan_nrrd_header["sizes"][2])
-for z in range(CT_scan_nrrd_header["sizes"][2]):
-	m[z] = CT_scan_image[:,:,z].max()
+fig = plt.figure()
+a   = fig.add_subplot(1,3,1)
+plt.imshow(CT_scan_image[:,:,z], cmap = cm.Greys_r)
+plt.scatter(y,x)
+a   = fig.add_subplot(1,3,2)
+plt.imshow(patches[0,:,:], cmap = cm.Greys_r)
+a   = fig.add_subplot(1,3,3)
+plt.imshow(CT_scan_labels[:,:,z], cmap = cm.Greys_r)
+plt.scatter(y,x)
+plt.show()

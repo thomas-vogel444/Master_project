@@ -63,16 +63,21 @@ def get_CT_scan_array(CT_scan_name, CT_scan_dicom_filenames, DICOM_dimensions, D
 
 	return CT_scan_array
 
-def random_3d_indices(CT_scan_labels, n, target_label):
+def random_3d_indices(CT_scan_labels, n, target_label, z):
 	"""
 		Randomly selects n data points from the set of points of a given label and returns their indices.
 	"""
-	atrium_3d_indices = np.where(CT_scan_labels == 1)
-	atrium_training_1d_indices = np.random.choice(xrange(len(np.where(CT_scan_labels == 1)[0])), n, replace=False)
-	
-	return np.dstack((atrium_3d_indices[0][atrium_training_1d_indices], 
-											atrium_3d_indices[1][atrium_training_1d_indices], 
-											atrium_3d_indices[2][atrium_training_1d_indices]))[0]
+	if z is None:
+		indices_3d = np.where(CT_scan_labels == target_label)
+	else:
+		indices_3d = list(np.where(CT_scan_labels[:,:,z] == target_label))
+		indices_3d.append(np.ones(len(indices_3d[0]))*z)
+
+	indices_1d = np.random.choice(xrange(len(indices_3d[0])), n, replace=False)
+
+	return np.dstack((indices_3d[0][indices_1d], 
+											indices_3d[1][indices_1d], 
+											indices_3d[2][indices_1d]))[0]
 
 
 def generate_patch(x,y,image_2d, patch_size):
@@ -116,7 +121,7 @@ def generate_patches(x,y,z,image_3d,patch_size):
 	patches[3] = resize_patch(generate_patch(x,y,image_3d[:,:,z], 4*patch_size))
 	return patches
 
-def generate_random_dataset(CT_scans, CT_scan_dictionary, n_examples_per_CT_scan, parameters):
+def generate_random_dataset(CT_scans, CT_scan_dictionary, n_examples_per_CT_scan, parameters, z=None):
 	tri_planar_dataset = np.zeros((n_examples_per_CT_scan * len(CT_scans), 4, parameters["patch_size"], parameters["patch_size"]))
 	tri_planar_labels  = np.zeros(n_examples_per_CT_scan * len(CT_scans))
 	for i_CT_scan, CT_scan in enumerate(CT_scans):
@@ -129,18 +134,15 @@ def generate_random_dataset(CT_scans, CT_scan_dictionary, n_examples_per_CT_scan
 		DICOMs = CT_scan_dictionary[CT_scan]
 		CT_scan_3d_image = get_CT_scan_array(CT_scan, DICOMs, CT_scan_nrrd_header["sizes"], parameters["DICOM_path_template"])
 
-		# Sample indexes from the atrium
-		atrium_3d_indices = random_3d_indices(CT_scan_labels, n_examples_per_CT_scan/2, 1)
+		# Sample indexes from the atrium and non-atrium
+		atrium_3d_indices     = random_3d_indices(CT_scan_labels, n_examples_per_CT_scan/2, 1, z)
+		non_atrium_3d_indices = random_3d_indices(CT_scan_labels, n_examples_per_CT_scan/2, 0, z)
 
 		# For each index sampled generate 3 patches centred at the voxel of interest
 		for i, atrium_3d_index in enumerate(atrium_3d_indices):
 			x, y, z = atrium_3d_index
 			tri_planar_dataset[i + n_examples_per_CT_scan/2 * i_CT_scan] = generate_patches(x, y, z ,CT_scan_3d_image,parameters["patch_size"])
 			tri_planar_labels[i + n_examples_per_CT_scan/2 * i_CT_scan] = 2
-
-
-		# Sample indexes from the non-atrium
-		non_atrium_3d_indices = random_3d_indices(CT_scan_labels, n_examples_per_CT_scan/2, 0)
 
 		# For each index sampled generate 3 patches centred at the voxel of interest
 		for i, non_atrium_3d_index in enumerate(non_atrium_3d_indices):
