@@ -10,7 +10,7 @@ height  = 32
 ninputs = nfeats*width*height
 
 -- hidden units, filter sizes (for ConvNet only):
-nfeaturemaps  = {32,64,1000}
+nfeaturemaps  = {32,64,1000,1000}
 filtsize 	  = 5
 poolsize 	  = {3,2}
 featuremaps_h = 2
@@ -35,6 +35,9 @@ model:add(nn.SpatialMaxPooling(poolsize[2],poolsize[2],poolsize[2],poolsize[2]))
 model:add(nn.View(nfeaturemaps[2]*featuremaps_h*featuremaps_w))
 model:add(nn.Dropout(0.5))
 model:add(nn.Linear(nfeaturemaps[2]*featuremaps_h*featuremaps_w, nfeaturemaps[3]))
+model:add(nn.ReLU())
+model:add(nn.Dropout(0.5))
+model:add(nn.Linear(nfeaturemaps[3], nfeaturemaps[4]))
 model:add(nn.ReLU())
 -- model:add(nn.Tanh())
 model:add(nn.Dropout(0.5))
