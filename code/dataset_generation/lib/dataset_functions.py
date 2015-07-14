@@ -127,8 +127,11 @@ def generate_random_dataset(CT_scans, CT_scan_dictionary, n_examples_per_CT_scan
 	"""
 		Generates a random dataset.
 	"""
-	tri_planar_dataset = np.zeros((n_examples_per_CT_scan * len(CT_scans), 6, parameters["patch_size"], parameters["patch_size"]))
-	tri_planar_labels  = np.zeros(n_examples_per_CT_scan * len(CT_scans))
+	tri_planar_dataset    = np.zeros((n_examples_per_CT_scan * len(CT_scans), 6, parameters["patch_size"], parameters["patch_size"]))
+	tri_planar_labels     = np.zeros(n_examples_per_CT_scan * len(CT_scans))
+	n_examples_atrium_per_CT_scan 	  = np.ceil(n_examples_per_CT_scan * parameters["pourcentage_atrium"])
+	n_examples_non_atrium_per_CT_scan = n_examples_per_CT_scan - n_examples_atrium_per_CT_scan
+
 	for i_CT_scan, CT_scan in enumerate(CT_scans):
 		# Extract the NRRD file into a numpy array
 		nrrd_path = parameters["NRRD_path_template"].replace("CTScan_name", CT_scan)
@@ -140,21 +143,21 @@ def generate_random_dataset(CT_scans, CT_scan_dictionary, n_examples_per_CT_scan
 		CT_scan_3d_image = get_CT_scan_array(CT_scan, DICOMs, CT_scan_nrrd_header["sizes"], parameters["DICOM_path_template"])
 
 		# Sample indexes from the atrium and non-atrium
-		atrium_3d_indices     = random_3d_indices(CT_scan_labels, n_examples_per_CT_scan/2, 1, i_dicom_slice)
-		non_atrium_3d_indices = random_3d_indices(CT_scan_labels, n_examples_per_CT_scan/2, 0, i_dicom_slice)
+		atrium_3d_indices     = random_3d_indices(CT_scan_labels, n_examples_atrium_per_CT_scan, 1, i_dicom_slice)
+		non_atrium_3d_indices = random_3d_indices(CT_scan_labels, n_examples_non_atrium_per_CT_scan, 0, i_dicom_slice)
 
 		# For each index sampled generate 3 patches centred at the voxel of interest
 		for i, atrium_3d_index in enumerate(atrium_3d_indices):
 			x, y, z = atrium_3d_index
-			tri_planar_dataset[i + n_examples_per_CT_scan/2 * i_CT_scan] = generate_patches(x, y, z ,CT_scan_3d_image,parameters["patch_size"])
-			tri_planar_labels[i + n_examples_per_CT_scan/2 * i_CT_scan] = 2
+			tri_planar_dataset[i + n_examples_atrium_per_CT_scan * i_CT_scan] = generate_patches(x, y, z ,CT_scan_3d_image,parameters["patch_size"])
+			tri_planar_labels[i + n_examples_atrium_per_CT_scan * i_CT_scan] = 2
 
 		# For each index sampled generate 3 patches centred at the voxel of interest
 		for i, non_atrium_3d_index in enumerate(non_atrium_3d_indices):
 			x, y, z = non_atrium_3d_index
-			tri_planar_dataset[len(CT_scans)*n_examples_per_CT_scan/2 + i + n_examples_per_CT_scan/2 * i_CT_scan] = \
+			tri_planar_dataset[len(CT_scans)*n_examples_atrium_per_CT_scan + i + n_examples_non_atrium_per_CT_scan * i_CT_scan] = \
 					generate_patches(x, y, z ,CT_scan_3d_image,parameters["patch_size"])
-			tri_planar_labels[len(CT_scans)*n_examples_per_CT_scan/2 + i + n_examples_per_CT_scan/2 * i_CT_scan] = 1
+			tri_planar_labels[len(CT_scans)*n_examples_atrium_per_CT_scan + i + n_examples_non_atrium_per_CT_scan * i_CT_scan] = 1
 	return tri_planar_dataset, tri_planar_labels
 
 def resize_patch(patch):

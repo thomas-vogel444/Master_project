@@ -20,8 +20,9 @@ if __name__ == "__main__":
 		"patch_size"    		: 32,
 		"n_training_CT_scans"   : 22,
 		"n_testing_CT_scans"	: 5,
-		"n_training_examples_per_CT_scan" : 20000,
-		"n_testing_examples_per_CT_scan"  : 5000
+		"n_training_examples_per_CT_scan" : 10000,
+		"n_testing_examples_per_CT_scan"  : 10000,
+		"pourcentage_atrium"	: 0.2
 	}
 
 	# ********************************************************************************************
