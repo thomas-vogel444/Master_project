@@ -113,19 +113,21 @@ def generate_patches(x,y,z,image_3d,patch_size):
 		three perpendicular patches from the 3D tensor image. 
 	"""
 	height, width, depth = image_3d.shape
-	patches = np.zeros((4, patch_size, patch_size))
+	patches = np.zeros((6, patch_size, patch_size))
 
 	patches[0] = generate_patch(x,y,image_3d[:,:,z], patch_size)
 	patches[1] = generate_patch(x,z,image_3d[:,y,:], patch_size)
 	patches[2] = generate_patch(y,z,image_3d[x,:,:], patch_size)
 	patches[3] = resize_patch(generate_patch(x,y,image_3d[:,:,z], 4*patch_size))
+	patches[4] = resize_patch(generate_patch(x,z,image_3d[:,y,:], 4*patch_size))
+	patches[5] = resize_patch(generate_patch(y,z,image_3d[x,:,:], 4*patch_size))
 	return patches
 
 def generate_random_dataset(CT_scans, CT_scan_dictionary, n_examples_per_CT_scan, parameters, i_dicom_slice=None):
 	"""
 		Generates a random dataset.
 	"""
-	tri_planar_dataset = np.zeros((n_examples_per_CT_scan * len(CT_scans), 4, parameters["patch_size"], parameters["patch_size"]))
+	tri_planar_dataset = np.zeros((n_examples_per_CT_scan * len(CT_scans), 6, parameters["patch_size"], parameters["patch_size"]))
 	tri_planar_labels  = np.zeros(n_examples_per_CT_scan * len(CT_scans))
 	for i_CT_scan, CT_scan in enumerate(CT_scans):
 		# Extract the NRRD file into a numpy array

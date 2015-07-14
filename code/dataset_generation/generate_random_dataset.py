@@ -20,8 +20,8 @@ if __name__ == "__main__":
 		"patch_size"    		: 32,
 		"n_training_CT_scans"   : 22,
 		"n_testing_CT_scans"	: 5,
-		"n_training_examples_per_CT_scan" : 20000,
-		"n_testing_examples_per_CT_scan"  : 5000
+		"n_training_examples_per_CT_scan" : 5000,
+		"n_testing_examples_per_CT_scan"  : 2500
 	}
 
 	# ********************************************************************************************
@@ -54,10 +54,10 @@ if __name__ == "__main__":
 	dicom_height, dicom_width, number_dicoms = CT_scan_3d_image.shape
 	x_grid, y_grid = range(dicom_height), range(dicom_width)
 
-	tri_planar_segmentation_dataset = np.zeros((CT_scan_3d_image[:,:,0].size, 4, parameters["patch_size"], parameters["patch_size"]))
+	tri_planar_segmentation_dataset = np.zeros((CT_scan_3d_image[:,:,0].size, 6, parameters["patch_size"], parameters["patch_size"]))
 
 	z = 30
-	print "Generating the segmentation dataset from the DICOM file %i from CT scan %s..." %(z, segmented_CT_scan)
+	print "=======> Generating the segmentation dataset from the DICOM file %i from CT scan %s... <=======" %(z, segmented_CT_scan)
 	for x in y_grid:
 		for y in x_grid:
 			tri_planar_segmentation_dataset[y + dicom_width*x, :, :, :] = df.generate_patches(x,y,z,CT_scan_3d_image,parameters["patch_size"])
@@ -83,7 +83,7 @@ if __name__ == "__main__":
 	f.close()
 
 
-	# For the segmentation dataset in 
+	# For the segmentation dataset 
 	segmentation_dataset_path = os.path.join(dataset_directory, "segmentation_datasets.hdf5")
 	print "=======> Saving the segmentation dataset in %s <=======" %segmentation_dataset_path
 	f 			  		  	  = h5py.File(segmentation_dataset_path, "w")
