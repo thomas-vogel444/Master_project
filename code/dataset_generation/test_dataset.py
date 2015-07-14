@@ -38,13 +38,6 @@ CT_scan_labels, CT_scan_nrrd_header = df.get_NRRD_array(nrrd_path)
 DICOM_path_template = "../../ct_atrium/CTScan_name/DICOMS/DICOM_name"
 CT_scan_image       = df.get_CT_scan_array(CT_scan[0], CT_scan_dicoms, CT_scan_nrrd_header["sizes"], DICOM_path_template)
 
-# fig = plt.figure()
-# a   = fig.add_subplot(1,2,1)
-# plt.imshow(CT_scan_image[:,:,z], cmap = cm.Greys_r, vmin = 0, vmax = 500)
-# a   = fig.add_subplot(1,2,2)
-# plt.imshow(CT_scan_labels[:,:,z], cmap = cm.Greys_r)
-# plt.show()
-
 # Saving the datasets
 f 							  = h5py.File("generated_dataset.hdf5", "w")
 testing_dataset_hdf5 	  	  = f.create_dataset("testing_dataset", generated_dataset.shape, dtype="uint32")
@@ -63,17 +56,17 @@ testing_labels = f["testing_labels"]
 i_non_atrium_patch = len(testing_labels)-1
 fig = plt.figure()
 a   = fig.add_subplot(1,3,1)
-plt.imshow(testing_dataset[i_non_atrium_patch,3,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
+plt.imshow(testing_dataset[i_non_atrium_patch,4,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
 a   = fig.add_subplot(1,3,2)
-plt.imshow(testing_dataset[i_non_atrium_patch,0,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
+plt.imshow(testing_dataset[i_non_atrium_patch,1,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
 plt.show()
 
 i_atrium_patch = 0
 fig = plt.figure()
 a   = fig.add_subplot(1,3,1)
-plt.imshow(testing_dataset[i_atrium_patch,3,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
+plt.imshow(testing_dataset[i_atrium_patch,4,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
 a   = fig.add_subplot(1,3,2)
-plt.imshow(testing_dataset[i_atrium_patch,0,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
+plt.imshow(testing_dataset[i_atrium_patch,1,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
 plt.show()
 
 f.close()

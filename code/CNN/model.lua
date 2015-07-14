@@ -4,7 +4,7 @@ require "nn"
 print '==> define parameters'
 
 -- input dimensions
-nfeats  = 4
+nfeats  = 6
 width   = 32
 height  = 32
 ninputs = nfeats*width*height

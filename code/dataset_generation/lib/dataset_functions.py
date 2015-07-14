@@ -118,9 +118,9 @@ def generate_patches(x,y,z,image_3d,patch_size):
 	patches[0] = generate_patch(x,y,image_3d[:,:,z], patch_size)
 	patches[1] = generate_patch(x,z,image_3d[:,y,:], patch_size)
 	patches[2] = generate_patch(y,z,image_3d[x,:,:], patch_size)
-	patches[3] = resize_patch(generate_patch(x,y,image_3d[:,:,z], 4*patch_size))
-	patches[4] = resize_patch(generate_patch(x,z,image_3d[:,y,:], 4*patch_size))
-	patches[5] = resize_patch(generate_patch(y,z,image_3d[x,:,:], 4*patch_size))
+	patches[3] = resize_patch(generate_patch(x,y,image_3d[:,:,z], 5*patch_size))
+	patches[4] = resize_patch(generate_patch(x,z,image_3d[:,y,:], 5*patch_size))
+	patches[5] = resize_patch(generate_patch(y,z,image_3d[x,:,:], 5*patch_size))
 	return patches
 
 def generate_random_dataset(CT_scans, CT_scan_dictionary, n_examples_per_CT_scan, parameters, i_dicom_slice=None):
