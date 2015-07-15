@@ -5,10 +5,6 @@ import math
 import numpy as np
 import h5py
 
-# - Generate a training dataset with 100000 example voxels half in the atrium, half not in the atrium randomly across 22 CT scans.
-# - Generate a testing dataset with 20000 example voxels half in the atrium, half not in the atrium randomly across the remaining 5 CT scans.
-# - Generate a full dataset for the dicom file of 1 CT scan for segmentation
-
 if __name__ == "__main__":
 	# Setting Parameters
 	parameters = {
@@ -20,8 +16,8 @@ if __name__ == "__main__":
 		"patch_size"    		: 32,
 		"n_training_CT_scans"   : 22,
 		"n_testing_CT_scans"	: 5,
-		"n_training_examples_per_CT_scan" : 10000,
-		"n_testing_examples_per_CT_scan"  : 10000,
+		"n_training_examples_per_CT_scan" : 20000,
+		"n_testing_examples_per_CT_scan"  : 20000,
 		"pourcentage_atrium"	: 0.2
 	}
 
@@ -45,23 +41,23 @@ if __name__ == "__main__":
 	# ********************************************************************************************
 	# 	  Generating the segmentation dataset from a dicom file of one of the testing CT scans
 	# ********************************************************************************************
-	segmented_CT_scan 		 = testing_CT_scans[0]
-	segmented_CT_scan_DICOMS = df.get_DICOMs(parameters["CT_scan_path_template"].replace("CTScan_name", segmented_CT_scan))
-	nrrd_path 		  		 = parameters["NRRD_path_template"].replace("CTScan_name", segmented_CT_scan)
+	# segmented_CT_scan 		 = testing_CT_scans[0]
+	# segmented_CT_scan_DICOMS = df.get_DICOMs(parameters["CT_scan_path_template"].replace("CTScan_name", segmented_CT_scan))
+	# nrrd_path 		  		 = parameters["NRRD_path_template"].replace("CTScan_name", segmented_CT_scan)
 
-	CT_scan_labels, CT_scan_nrrd_header 	 = df.get_NRRD_array(nrrd_path)
-	CT_scan_3d_image  						 = df.get_CT_scan_array(segmented_CT_scan, segmented_CT_scan_DICOMS, 
-																	CT_scan_nrrd_header["sizes"], parameters["DICOM_path_template"])
-	dicom_height, dicom_width, number_dicoms = CT_scan_3d_image.shape
-	x_grid, y_grid = range(dicom_height), range(dicom_width)
+	# CT_scan_labels, CT_scan_nrrd_header 	 = df.get_NRRD_array(nrrd_path)
+	# CT_scan_3d_image  						 = df.get_CT_scan_array(segmented_CT_scan, segmented_CT_scan_DICOMS, 
+	# 																CT_scan_nrrd_header["sizes"], parameters["DICOM_path_template"])
+	# dicom_height, dicom_width, number_dicoms = CT_scan_3d_image.shape
+	# x_grid, y_grid = range(dicom_height), range(dicom_width)
 
-	tri_planar_segmentation_dataset = np.zeros((CT_scan_3d_image[:,:,0].size, 6, parameters["patch_size"], parameters["patch_size"]))
+	# tri_planar_segmentation_dataset = np.zeros((CT_scan_3d_image[:,:,0].size, 6, parameters["patch_size"], parameters["patch_size"]))
 
-	z = 30
-	print "=======> Generating the segmentation dataset from the DICOM file %i from CT scan %s... <=======" %(z, segmented_CT_scan)
-	for x in y_grid:
-		for y in x_grid:
-			tri_planar_segmentation_dataset[y + dicom_width*x, :, :, :] = df.generate_patches(x,y,z,CT_scan_3d_image,parameters["patch_size"])
+	# z = 30
+	# print "=======> Generating the segmentation dataset from the DICOM file %i from CT scan %s... <=======" %(z, segmented_CT_scan)
+	# for x in y_grid:
+	# 	for y in x_grid:
+	# 		tri_planar_segmentation_dataset[y + dicom_width*x, :, :, :] = df.generate_patches(x,y,z,CT_scan_3d_image,parameters["patch_size"])
 
 	# ********************************************************************************************
 	# 								Stick all this stuff into a dataset
@@ -85,20 +81,20 @@ if __name__ == "__main__":
 
 
 	# For the segmentation dataset 
-	segmentation_dataset_path = os.path.join(dataset_directory, "segmentation_datasets.hdf5")
-	print "=======> Saving the segmentation dataset in %s <=======" %segmentation_dataset_path
-	f 			  		  	  = h5py.File(segmentation_dataset_path, "w")
-	segmentation_dataset_name = "segmentation_dataset"
-	segmentation_dataset  	  = f.create_dataset(segmentation_dataset_name, tri_planar_segmentation_dataset.shape, dtype="uint8")
-	segmentation_dataset.attrs["CT_scan"] 	   = segmented_CT_scan
-	segmentation_dataset.attrs["DICOM_number"] = z
-	segmentation_dataset[...] = tri_planar_segmentation_dataset
-	segmentation_label_name   = "segmentation_labels"
-	segmentation_label  	  = f.create_dataset(segmentation_label_name, CT_scan_labels[:,:,z].shape, dtype="uint8")
-	segmentation_label[...]   = CT_scan_labels[:,:,z]
-	segmentation_values_name  = "segmentation_values"
-	segmentation_values  	  = f.create_dataset(segmentation_values_name, CT_scan_3d_image[:,:,z].shape, dtype="uint8")
-	segmentation_values[...]  = CT_scan_3d_image[:,:,z]
+	# segmentation_dataset_path = os.path.join(dataset_directory, "segmentation_datasets.hdf5")
+	# print "=======> Saving the segmentation dataset in %s <=======" %segmentation_dataset_path
+	# f 			  		  	  = h5py.File(segmentation_dataset_path, "w")
+	# segmentation_dataset_name = "segmentation_dataset"
+	# segmentation_dataset  	  = f.create_dataset(segmentation_dataset_name, tri_planar_segmentation_dataset.shape, dtype="uint8")
+	# segmentation_dataset.attrs["CT_scan"] 	   = segmented_CT_scan
+	# segmentation_dataset.attrs["DICOM_number"] = z
+	# segmentation_dataset[...] = tri_planar_segmentation_dataset
+	# segmentation_label_name   = "segmentation_labels"
+	# segmentation_label  	  = f.create_dataset(segmentation_label_name, CT_scan_labels[:,:,z].shape, dtype="uint8")
+	# segmentation_label[...]   = CT_scan_labels[:,:,z]
+	# segmentation_values_name  = "segmentation_values"
+	# segmentation_values  	  = f.create_dataset(segmentation_values_name, CT_scan_3d_image[:,:,z].shape, dtype="uint8")
+	# segmentation_values[...]  = CT_scan_3d_image[:,:,z]
 
 
 
