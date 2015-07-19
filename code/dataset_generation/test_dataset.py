@@ -15,7 +15,8 @@ parameters = {
 		"n_training_CT_scans"   : 22,
 		"n_testing_CT_scans"	: 5,
 		"n_training_examples_per_CT_scan" : 5000,
-		"n_testing_examples_per_CT_scan"  : 2500
+		"n_testing_examples_per_CT_scan"  : 2500,
+		"pourcentage_atrium" : .5
 	}
 
 z = 40
@@ -56,17 +57,17 @@ testing_labels = f["testing_labels"]
 i_non_atrium_patch = len(testing_labels)-1
 fig = plt.figure()
 a   = fig.add_subplot(1,3,1)
-plt.imshow(testing_dataset[i_non_atrium_patch,4,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
+plt.imshow(testing_dataset[i_non_atrium_patch,3,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
 a   = fig.add_subplot(1,3,2)
-plt.imshow(testing_dataset[i_non_atrium_patch,1,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
+plt.imshow(testing_dataset[i_non_atrium_patch,0,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
 plt.show()
 
 i_atrium_patch = 0
 fig = plt.figure()
 a   = fig.add_subplot(1,3,1)
-plt.imshow(testing_dataset[i_atrium_patch,4,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
+plt.imshow(testing_dataset[i_atrium_patch,3,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
 a   = fig.add_subplot(1,3,2)
-plt.imshow(testing_dataset[i_atrium_patch,1,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
+plt.imshow(testing_dataset[i_atrium_patch,0,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
 plt.show()
 
 f.close()
