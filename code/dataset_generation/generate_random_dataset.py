@@ -1,3 +1,4 @@
+from lib.CTScanImage import CTScanImage
 import lib.dataset_functions as df
 import os
 import re
@@ -8,19 +9,23 @@ import argparse
 
 if __name__ == "__main__":
 	# Setting Parameters
-	parameters = {
-		"data_directory" 		: "../../ct_atrium",
-		"CT_scan_path_template" : "../../ct_atrium/CTScan_name",
-		"NRRD_path_template"    : "../../ct_atrium/CTScan_name/CTScan_name.nrrd",
-		"DICOM_path_template"   : "../../ct_atrium/CTScan_name/DICOMS/DICOM_name",
-		"ct_directory_pattern"  : re.compile("[0-9]{8}"),
-		"patch_size"    		: 32,
-		"n_training_CT_scans"   : 22,
-		"n_testing_CT_scans"	: 5,
-		"n_training_examples_per_CT_scan" : 10000,
-		"n_testing_examples_per_CT_scan"  : 20000,
-		"pourcentage_atrium"	: 0.2
-	}
+	data_directory = "../../ct_atrium/"
+	
+	CT_scan_parameters_template = {
+		"CT_scan_path_template" : data_directory + "CTScan_name",
+		"NRRD_path_template"    : data_directory + "CTScan_name/CTScan_name.nrrd",
+		"DICOM_directory"		: data_directory + "CTScan_name/DICOMS",
+		"DICOM_path_template"   : data_directory + "CTScan_name/DICOMS/DICOM_name",
+		"CT_directory_pattern"  : re.compile("[0-9]{8}")
+		}
+	patch_size 			= 32
+	n_training_CT_scans = 22
+	n_testing_CT_scans  = 5
+	# Labels: 
+	# 			Atrium: 				 2
+	# 			Boundary Non-Atrium: 	 1
+	# 			Non-Boundary Non-Atrium: 0
+	n_examples_per_CT_scan_per_label = (2500, 2500, 5000) # (n_non_bd_non_atrium, n_bd_non_atrium, n_atrium)
 
 	random  == True
 	segment == False
@@ -30,22 +35,21 @@ if __name__ == "__main__":
 	# 					Separate the CT scans into a training and testing set
 	# ********************************************************************************************
 	# Get the names of all the CT scans
-	CT_scans = [directory for directory in os.listdir(data_directory) if CT_directory_pattern.match(directory)]
-
-	CT_scan_dictionary = df.get_all_DICOMs(parameters["CT_scan_path_template"], CT_scans)
+	CT_scan_names = [directory for directory in os.listdir(data_directory) if CT_directory_pattern.match(directory)]
 
 	np.random.seed(12)
-	training_CT_scans = np.random.choice(CT_scans, parameters["n_training_CT_scans"], replace=False)
-	testing_CT_scans  = [CT_scan for CT_scan in CT_scans if CT_scan not in training_CT_scans]
+	training_CT_scan_names = np.random.choice(CT_scan_names, parameters["n_training_CT_scans"], replace=False)
+	testing_CT_scan_names  = [CT_scan_name for CT_scan_name in CT_scan_names if CT_scan_name not in training_CT_scan_name]
 
 	# ********************************************************************************************
 	# 						Generate the training and testing datasets
 	# ********************************************************************************************
 	if random == True:
 		print "=======> Generating the training dataset <======="
-		training_dataset, training_labels = df.generate_random_dataset(training_CT_scans, CT_scan_dictionary, parameters["n_training_examples_per_CT_scan"], parameters)
+		training_dataset, training_labels = df.generate_random_dataset(training_CT_scan_names, n_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size)
+
 		print "=======> Generating the testing dataset <======="
-		testing_dataset, testing_labels  = df.generate_random_dataset(testing_CT_scans, CT_scan_dictionary, parameters["n_testing_examples_per_CT_scan"], parameters)
+		testing_dataset, testing_labels  = df.generate_random_dataset(testing_CT_scan_names, n_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size)
 
 		dataset_directory = os.path.join(parameters["data_directory"], "datasets")
 		dataset_path      = os.path.join(dataset_directory, "CNN_datasets.hdf5")

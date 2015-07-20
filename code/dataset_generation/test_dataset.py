@@ -3,41 +3,31 @@ import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import numpy as np
 import h5py
+from lib.CTScanImage import CTScanImage
 import lib.dataset_functions as df
 
-parameters = {
-		"data_directory" 		: "../../ct_atrium",
-		"CT_scan_path_template" : "../../ct_atrium/CTScan_name",
-		"NRRD_path_template"    : "../../ct_atrium/CTScan_name/CTScan_name.nrrd",
-		"DICOM_path_template"   : "../../ct_atrium/CTScan_name/DICOMS/DICOM_name",
-		"ct_directory_pattern"  : re.compile("[0-9]{8}"),
-		"patch_size"    		: 32,
-		"n_training_CT_scans"   : 22,
-		"n_testing_CT_scans"	: 5,
-		"n_training_examples_per_CT_scan" : 5000,
-		"n_testing_examples_per_CT_scan"  : 2500,
-		"pourcentage_atrium" : .5
-	}
+data_directory = "../../ct_atrium/"
 
+CT_scan_parameters_template = {
+		"CT_scan_path_template" : data_directory + "CTScan_name",
+		"NRRD_path_template"    : data_directory + "CTScan_name/CTScan_name.nrrd",
+		"DICOM_directory"		: data_directory + "CTScan_name/DICOMS",
+		"DICOM_path_template"   : data_directory + "CTScan_name/DICOMS/DICOM_name",
+		"CT_directory_pattern"  : re.compile("[0-9]{8}")
+		}
+
+n_examples_per_CT_scan_per_label = (2, 2)
+patch_size = 32
 z = 40
 
 # Generate a test dataset from a single DICOM image from a single CT scan
-CT_scan 		   = ["14022803"]
-CT_scan_directory  = "../../ct_atrium/14022803"
-CT_scan_dicoms     = df.get_DICOMs(CT_scan_directory)
-
-CT_scan_dictionary = {CT_scan[0]:CT_scan_dicoms}
+CT_scan_names = ["14022803", "14012303"]
 
 print "=======> Generating the testing dataset <======="
-generated_dataset, generated_labels = df.generate_random_dataset(CT_scan, CT_scan_dictionary, parameters["n_testing_examples_per_CT_scan"], parameters, z)
+generated_dataset, generated_labels = df.generate_random_dataset(CT_scan_names, n_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size, z)
 
-# Get the NRRD and CT 3D images
-NRRD_path_template 					= "../../ct_atrium/CTScan_name/CTScan_name.nrrd"
-nrrd_path 							= NRRD_path_template.replace("CTScan_name", CT_scan[0])
-CT_scan_labels, CT_scan_nrrd_header = df.get_NRRD_array(nrrd_path)
-
-DICOM_path_template = "../../ct_atrium/CTScan_name/DICOMS/DICOM_name"
-CT_scan_image       = df.get_CT_scan_array(CT_scan[0], CT_scan_dicoms, CT_scan_nrrd_header["sizes"], DICOM_path_template)
+print "Expected number of examples generated: %s" %(sum(n_examples_per_CT_scan_per_label)*len(CT_scan_names))
+print "Actual number of examples generated: %s" %(len(generated_labels))
 
 # Saving the datasets
 f 							  = h5py.File("generated_dataset.hdf5", "w")
@@ -48,26 +38,34 @@ testing_labels_hdf5[...]  	  = generated_labels
 f.close()
 
 # Plot various patches from the test dataset
+CT_scan_0 	 = CTScanImage(CT_scan_names[0], CT_scan_parameters_template)
+CT_scan_1 	 = CTScanImage(CT_scan_names[1], CT_scan_parameters_template)
 dataset_path = "generated_dataset.hdf5"
 
-f = h5py.File(dataset_path, "r")
+f 				= h5py.File(dataset_path, "r")
 testing_dataset = f["testing_dataset"]
-testing_labels = f["testing_labels"]
+testing_labels  = f["testing_labels"]
 
+i_atrium_patch 	   = 0
 i_non_atrium_patch = len(testing_labels)-1
-fig = plt.figure()
-a   = fig.add_subplot(1,3,1)
-plt.imshow(testing_dataset[i_non_atrium_patch,3,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
-a   = fig.add_subplot(1,3,2)
-plt.imshow(testing_dataset[i_non_atrium_patch,0,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
-plt.show()
 
-i_atrium_patch = 0
 fig = plt.figure()
-a   = fig.add_subplot(1,3,1)
+a   = fig.add_subplot(2,4,1)
 plt.imshow(testing_dataset[i_atrium_patch,3,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
-a   = fig.add_subplot(1,3,2)
+a   = fig.add_subplot(2,4,5)
 plt.imshow(testing_dataset[i_atrium_patch,0,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
+a   = fig.add_subplot(2,4,2)
+plt.imshow(testing_dataset[i_non_atrium_patch,3,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
+a   = fig.add_subplot(2,4,6)
+plt.imshow(testing_dataset[i_non_atrium_patch,0,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 500)
+a   = fig.add_subplot(2,4,3)
+plt.imshow(CT_scan_0.image[:,:,z], cmap = cm.Greys_r, vmin = 0, vmax = 500)
+a   = fig.add_subplot(2,4,7)
+plt.imshow(CT_scan_0.labels[:,:,z], cmap = cm.Greys_r)
+a   = fig.add_subplot(2,4,4)
+plt.imshow(CT_scan_1.image[:,:,z], cmap = cm.Greys_r, vmin = 0, vmax = 500)
+a   = fig.add_subplot(2,4,8)
+plt.imshow(CT_scan_1.labels[:,:,z], cmap = cm.Greys_r)
 plt.show()
 
 f.close()
