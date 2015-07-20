@@ -18,10 +18,10 @@ CT_scan_parameters_template = {
 
 n_examples_per_CT_scan_per_label = (2, 2)
 patch_size = 32
-z = 40
+z = 30
 
 # Generate a test dataset from a single DICOM image from a single CT scan
-CT_scan_names = ["14022803", "14012303"]
+CT_scan_names = ["14032003", "14012303"]
 
 print "=======> Generating the testing dataset <======="
 generated_dataset, generated_labels = df.generate_random_dataset(CT_scan_names, n_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size, z)

@@ -76,7 +76,7 @@ def generate_patches(voxel_location, image_3d, patch_size=32):
 	patches[5] = resize_patch(generate_patch(y,z,image_3d[x,:,:], 5*patch_size), patch_size)
 	return patches
 
-def generate_random_dataset_from_CT_scan(CT_scan, n_examples_per_label, patch_size, dicom_index=None):
+def generate_random_dataset_from_CT_scan(CT_scan, n_examples_per_label, patch_size, dicom_index=None, xy_padding=30, z_padding=10):
 	"""
 		Generates a random dataset from a CT scan.
 	"""
@@ -85,18 +85,21 @@ def generate_random_dataset_from_CT_scan(CT_scan, n_examples_per_label, patch_si
 
 	# For each index sampled generate 3 patches centred at the voxel of interest
 	labels = range(len(n_examples_per_label))
-	random_indices = itertools.chain.from_iterable([random_3d_indices(CT_scan.labels, n_examples_per_label[label], label, dicom_index) for label in labels])
+
+	if len(labels) == 2:
+		random_indices = itertools.chain.from_iterable([random_3d_indices(CT_scan.labels, n_examples_per_label[label], label, dicom_index) for label in labels])
+	elif len(labels) == 3:
+		random_indices = itertools.chain.from_iterable([random_3d_indices(CT_scan.get_labels_with_atrium_box(xy_padding, z_padding), n_examples_per_label[label], label, dicom_index) for label in labels])
 
 	for i, index in enumerate(random_indices):
-		print index
 		tri_planar_dataset[i] = generate_patches(index, CT_scan.image, patch_size)
 
 	# Generate the labels array
-	tri_planar_labels = np.array([2]*n_examples_per_label[0] + [1]*n_examples_per_label[1])
+	tri_planar_labels = np.repeat(labels, n_examples_per_label)
 
 	return tri_planar_dataset, tri_planar_labels
 
-def generate_random_dataset(CT_scan_names, n_examples_per_label, CT_scan_parameters_template, patch_size, dicom_index=None):
+def generate_random_dataset(CT_scan_names, n_examples_per_label, CT_scan_parameters_template, patch_size, dicom_index=None, xy_padding=30, z_padding=10):
 	"""
 		Generates a full dataset from a set of CT scans.
 	"""
@@ -105,9 +108,10 @@ def generate_random_dataset(CT_scan_names, n_examples_per_label, CT_scan_paramet
 	labels  = np.zeros(n_examples_per_CT_scan*len(CT_scan_names))
 
 	for i, CT_scan_name in enumerate(CT_scan_names):
+		print "Generating datasets from CT scan %s" %CT_scan_name
 		CT_scan = CTScanImage(CT_scan_name, CT_scan_parameters_template)
 		dataset[(i*n_examples_per_CT_scan):((i+1)*n_examples_per_CT_scan)], labels[(i*n_examples_per_CT_scan):((i+1)*n_examples_per_CT_scan)] = \
-				generate_random_dataset_from_CT_scan(CT_scan, n_examples_per_label, patch_size, dicom_index)
+				generate_random_dataset_from_CT_scan(CT_scan, n_examples_per_label, patch_size, dicom_index, xy_padding, z_padding)
 
 	return dataset, labels
 

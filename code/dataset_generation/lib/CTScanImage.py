@@ -62,3 +62,39 @@ class CTScanImage:
 		    CT_scan_array[:, :, self.dicoms.index(dicom_filename)] = ds.pixel_array
 
 		return CT_scan_array
+
+	def get_labels_with_atrium_box(self, xy_padding, z_padding):
+		"""
+			Returns a modified labels 3D matrix where the labels denote:
+				Non-Atrium outside boundary	: 0
+				Non_Atrium inside boundary 	: 1
+				Atrium 						: 2
+		"""
+		dimensions = self.labels.shape
+		atrium_indices = np.where(self.labels == 1)
+
+		x_min = np.max(((np.min(atrium_indices[0]) - xy_padding), 0))
+		x_max = np.min(((np.max(atrium_indices[0]) + xy_padding), dimensions[0]))
+		y_min = np.max(((np.min(atrium_indices[1]) - xy_padding), 0))
+		y_max = np.min(((np.max(atrium_indices[1]) + xy_padding), dimensions[1]))
+		z_min = np.max(((np.min(atrium_indices[2]) - z_padding), 0))
+		z_max = np.min(((np.max(atrium_indices[2]) + z_padding), dimensions[2]))
+
+		boxed_labels = np.matrix.copy(self.labels)
+		boxed_labels[x_min:x_max, y_min:y_max, z_min:z_max] += 1
+		return boxed_labels
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
