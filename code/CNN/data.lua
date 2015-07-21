@@ -5,7 +5,7 @@ trainData = {}
 testData = {}
 
 -- Loading the data
-filename = "../../datasets/CNN_datasets.hdf5"
+filename = opt.dataset
 print("Loading data from: " .. filename)
 
 -- Reading the datasets

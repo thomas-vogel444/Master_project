@@ -4,6 +4,7 @@ options = {
 "seed": 1 ,
 "threads": 2,
 "identifier": 2,
+"dataset": "../../datasets/CNN_datasets.hdf5"
 "size": "full",       	# options:  small, full
 "model": "convnet",		# options: mlp, convnet, convnet2
 "maxepoch": 15,

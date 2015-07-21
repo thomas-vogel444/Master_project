@@ -17,6 +17,7 @@ cmd:option('-threads', 2, 'number of threads')
 cmd:option('-identifier', 1, 'integer identifying the NN for later procesing')
 cmd:option('-segment', 'false', 'Boolean indicating whether to segment the test DICOM image after training.')
 -- data:
+cmd:option('-dataset', '../../datasets/CNN_datasets.hdf5', 'Dataset path')
 cmd:option('-size', 'small', 'how many samples do we load: small | full')
 -- model:
 cmd:option('-model', 'convnet', 'type of model to construct: convnet')

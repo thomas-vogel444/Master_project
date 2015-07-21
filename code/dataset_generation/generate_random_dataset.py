@@ -25,7 +25,7 @@ if __name__ == "__main__":
 	# 			Atrium: 				 2
 	# 			Boundary Non-Atrium: 	 1
 	# 			Non-Boundary Non-Atrium: 0
-	n_examples_per_CT_scan_per_label = (2500, 2500, 5000) # (n_non_bd_non_atrium, n_bd_non_atrium, n_atrium)
+	n_examples_per_CT_scan_per_label = (3500, 3500, 3500) # (n_non_bd_non_atrium, n_bd_non_atrium, n_atrium)
 
 	# ********************************************************************************************
 	# 					Separate the CT scans into a training and testing set
