@@ -45,6 +45,7 @@ print "=======> Generating the testing dataset <======="
 generated_dataset, generated_labels = df.generate_random_dataset(CT_scan_names, n_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size, z, xy_padding, z_padding)
 print "Expected number of examples generated: %s" %(sum(n_examples_per_CT_scan_per_label))
 print "Actual number of examples generated: %s" %(len(generated_labels))
+print "Number of examples in the Atrium and non-Atrium: %i, %i" %(len(np.where(generated_labels == 2)[0]), len(np.where(generated_labels == 1)[0]))
 
 i_non_bd_non_atrium_patch = 0
 i_bd_non_atrium_patch 	  = 2
@@ -68,6 +69,18 @@ plt.imshow(CT_scan.image[:,:,z], cmap = cm.Greys_r, vmin = 0, vmax = 500)
 a   = fig.add_subplot(2,4,8)
 plt.imshow(labels_with_atrium_box[:,:,z], cmap = cm.Greys_r)
 plt.show()
+
+123995 + 11005
+5391 + 129609
+
+
+
+
+
+
+
+
+
 
 
 
