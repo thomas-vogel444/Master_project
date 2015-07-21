@@ -45,13 +45,12 @@ if __name__ == "__main__":
 
 	# A bunch of experiments
 	learningRates	= (10, 1, 0.1, 0.01)
-	type 			= "float"
-	maxepoch 		= 1
-	dataset 		= os.path.abspath("../../datasets/small_CNN_datasets.hdf5")
+	maxepoch 		= 30
+	dataset 		= os.path.abspath("../../datasets/CNN_box_atrium_datasets.hdf5")
 
 	for identifier, learningRate in enumerate(learningRates):
 		result_directory = os.path.abspath(os.path.join(experiment_directory, str(identifier)))
-		train_model(learningRate = 0.1, type = type, identifier = identifier, save = result_directory, maxepoch = maxepoch, dataset = dataset)
+		train_model(learningRate = learningRate, identifier = identifier, save = result_directory, maxepoch = maxepoch, dataset = dataset)
 
 	os.chdir(experiment_directory)
 
