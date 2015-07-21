@@ -88,10 +88,10 @@ def generate_random_dataset_from_CT_scan(CT_scan, n_examples_per_label, patch_si
 
 	if len(labels) == 2:
 		random_indices = itertools.chain.from_iterable([random_3d_indices(CT_scan.labels, n_examples_per_label[label], label, dicom_index) for label in labels])
-		tri_planar_labels = np.repeat((1,2), (n_examples_per_label[0] + n_examples_per_label[1], n_examples_per_label[2]))
+		tri_planar_labels = np.repeat((1,2), n_examples_per_label)
 	elif len(labels) == 3:
 		random_indices = itertools.chain.from_iterable([random_3d_indices(CT_scan.get_labels_with_atrium_box(xy_padding, z_padding), n_examples_per_label[label], label, dicom_index) for label in labels])
-		tri_planar_labels = np.repeat((1,2), n_examples_per_label)
+		tri_planar_labels = np.repeat((1,2), (n_examples_per_label[0] + n_examples_per_label[1], n_examples_per_label[2]))
 
 	for i, index in enumerate(random_indices):
 		tri_planar_dataset[i] = generate_patches(index, CT_scan.image, patch_size)
