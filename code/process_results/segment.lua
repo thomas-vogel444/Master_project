@@ -3,6 +3,7 @@ require "torch"
 require "xlua"
 require "hdf5"
 require "image"
+require 'cunn'
 
 filename = "../../datasets/segmentation_datasets.hdf5"
 print("Loading segmentation data from: " .. filename)
