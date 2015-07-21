@@ -68,14 +68,9 @@ while true do
 end
 
 -- Appending the relevant results into a file 
-f = io.open('results/results.txt', 'a')
+print('==> saving the classification errors')
+filename = paths.concat(opt.save, 'results.txt')
+f = io.open(filename, 'a')
 writeToFile(f, classificationErrors.trainingErrors, "Training")
 writeToFile(f, classificationErrors.testErrors, "Testing")
 f:close()
-
-----------------------------------------------------------------------
--- Segmenting a given image file
-if opt.segment == true then
-	print '==> Segmenting a test image'
-	dofile 'segment.lua'
-end
