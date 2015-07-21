@@ -34,6 +34,9 @@ def train_model(seed			= 1,
 			momentum		= momentum, 
 			type			= type)
 
+	print "******************** Running the following command ********************"
+	print training_command
+	print "******************** Running the following command ********************"
 	subprocess.call(training_command, shell=True)
 
 #***************************************************************************************************************
