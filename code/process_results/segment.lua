@@ -4,7 +4,7 @@ require "xlua"
 require "hdf5"
 require "image"
 
-filename = "../../ct_atrium/datasets/segmentation_datasets.hdf5"
+filename = "../../datasets/segmentation_datasets.hdf5"
 print("Loading segmentation data from: " .. filename)
 
 ----------------------------------------------------------------------
