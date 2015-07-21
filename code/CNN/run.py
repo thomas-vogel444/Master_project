@@ -16,7 +16,7 @@ options = {
 "type": "cuda"
 }
 
-command_template = "th main.lua -seed %(seed)i -threads %(threads)i -identifier %(identifier)i -size %(size)s -model %(model)s -maxepoch %(maxepoch)i " \
+command_template = "th main.lua -seed %(seed)i -threads %(threads)i -identifier %(identifier)i -dataset %(dataset)s -size %(size)s -model %(model)s -maxepoch %(maxepoch)i " \
 "-save %(save)s -learningRate %(learningRate)f -batchSize %(batchSize)i -weightDecay %(weightDecay)f " \
 "-momentum %(momentum)f -type %(type)s"
 
