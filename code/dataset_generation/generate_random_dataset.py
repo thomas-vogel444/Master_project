@@ -32,7 +32,7 @@ if __name__ == "__main__":
 	# 			Atrium: 				 2
 	# 			Boundary Non-Atrium: 	 1
 	# 			Non-Boundary Non-Atrium: 0
-	n_examples_per_CT_scan_per_label = (3500, 3500, 3500) # (n_non_bd_non_atrium, n_bd_non_atrium, n_atrium)
+	n_examples_per_CT_scan_per_label = (3500, 3500, 7000) # (n_non_bd_non_atrium, n_bd_non_atrium, n_atrium)
 	xy_padding = 5
 	z_padding  = 5
 	# ********************************************************************************************
@@ -84,24 +84,24 @@ if __name__ == "__main__":
 
 		print "=======> Generating the segmentation dataset for fixed z = %i from CT scan %s... <=======" %(z_slice, segmented_CT_scan.name)
 		tri_planar_segmentation_dataset_fixed_z = np.zeros((segmented_CT_scan.image[:,:,0].size, 6, patch_size, patch_size))
-		# for x in x_grid:
-		# 	utils.drawProgressBar(float(x)/(dicom_height-1), 100)
-		# 	for y in y_grid:
-		# 		tri_planar_segmentation_dataset_fixed_z[y + dicom_width*x, :, :, :] = df.generate_patches((x,y,z_slice),segmented_CT_scan.image, patch_size)
+		for x in x_grid:
+			utils.drawProgressBar(float(x)/(dicom_height-1), 100)
+			for y in y_grid:
+				tri_planar_segmentation_dataset_fixed_z[y + dicom_width*x, :, :, :] = df.generate_patches((x,y,z_slice),segmented_CT_scan.image, patch_size)
 
 		print "=======> Generating the segmentation dataset for fixed y = %i from CT scan %s... <=======" %(y_slice, segmented_CT_scan.name)
 		tri_planar_segmentation_dataset_fixed_y = np.zeros((segmented_CT_scan.image[:,0,:].size, 6, patch_size, patch_size))
-		# for x in x_grid:
-		# 	utils.drawProgressBar(float(x)/(dicom_height-1), 100)
-		# 	for z in z_grid:
-		# 		tri_planar_segmentation_dataset_fixed_y[z + number_dicoms*x, :, :, :] = df.generate_patches((x,y_slice,z),segmented_CT_scan.image, patch_size)
+		for x in x_grid:
+			utils.drawProgressBar(float(x)/(dicom_height-1), 100)
+			for z in z_grid:
+				tri_planar_segmentation_dataset_fixed_y[z + number_dicoms*x, :, :, :] = df.generate_patches((x,y_slice,z),segmented_CT_scan.image, patch_size)
 
 		print "=======> Generating the segmentation dataset for fixed x = %i from CT scan %s... <=======" %(x_slice, segmented_CT_scan.name)
 		tri_planar_segmentation_dataset_fixed_x = np.zeros((segmented_CT_scan.image[0,:,:].size, 6, patch_size, patch_size))
-		# for z in z_grid:
-		# 	utils.drawProgressBar(float(z)/(number_dicoms-1), 100)
-		# 	for y in y_grid:
-		# 		tri_planar_segmentation_dataset_fixed_x[y + dicom_width*z, :, :, :] = df.generate_patches((x_slice,y,z),segmented_CT_scan.image, patch_size)
+		for z in z_grid:
+			utils.drawProgressBar(float(z)/(number_dicoms-1), 100)
+			for y in y_grid:
+				tri_planar_segmentation_dataset_fixed_x[y + dicom_width*z, :, :, :] = df.generate_patches((x_slice,y,z),segmented_CT_scan.image, patch_size)
 
 		segmentation_dataset_path = os.path.join(dataset_directory, "segmentation_datasets.hdf5")
 		f 			  		  	  = h5py.File(segmentation_dataset_path, "w")
