@@ -30,7 +30,7 @@ if __name__ == "__main__":
 		"seed"			: 1, 
 		"threads"		: 2, 
 		"identifier" 	: 1, 
-		"dataset" 		: os.path.abspath("../../datasets/small_CNN_datasets.hdf5"), 
+		"dataset" 		: os.path.abspath("../../datasets/CNN_box_atrium_datasets.hdf5"), 
 		"size" 			: "full", 
 		"model" 		: "convnet", 
 		"maxepoch"		: 1, 
