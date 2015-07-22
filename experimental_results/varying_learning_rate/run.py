@@ -33,7 +33,7 @@ if __name__ == "__main__":
 		"dataset" 		: os.path.abspath("../../datasets/CNN_box_atrium_datasets.hdf5"), 
 		"size" 			: "full", 
 		"model" 		: "convnet", 
-		"maxepoch"		: 1, 
+		"maxepoch"		: 30, 
 		"save"			: os.path.abspath(os.path.join(experiment_directory, "test_run")), 
 		"learningRate"	: 0.1, 
 		"batchSize"		: 512, 
