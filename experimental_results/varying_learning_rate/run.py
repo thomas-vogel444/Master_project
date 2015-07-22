@@ -23,7 +23,7 @@ def train_model(training_parameters):
 if __name__ == "__main__":
 	# Parameters for the set of experiments to be conducted
 	experiment_directory = os.getcwd()
-	code_directory = "../code/CNN"
+	code_directory = "../../code/CNN"
 	os.chdir(code_directory)
 
 	training_parameters = {
