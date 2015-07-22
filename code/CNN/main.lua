@@ -44,9 +44,6 @@ end
 torch.setnumthreads(opt.threads)
 torch.manualSeed(opt.seed)
 
--- Records the history of classification errors
-classificationErrors = {trainingErrors = {}, testErrors = {}}
-
 ----------------------------------------------------------------------
 print '==> executing all'
 
@@ -66,11 +63,3 @@ while true do
     	break
     end
 end
-
--- Appending the relevant results into a file 
-print('==> saving the classification errors')
-filename = paths.concat(opt.save, 'results.txt')
-f = io.open(filename, 'a')
-writeToFile(f, classificationErrors.trainingErrors, "Training")
-writeToFile(f, classificationErrors.testErrors, "Testing")
-f:close()

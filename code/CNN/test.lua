@@ -47,7 +47,6 @@ function test()
 
    -- print confusion matrix
    print(confusion)
-   table.insert(classificationErrors.testErrors, confusion.totalValid)
 
    -- update log
    testLogger:add{['% mean class accuracy (test set)'] = confusion.totalValid * 100}

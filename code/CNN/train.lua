@@ -129,7 +129,6 @@ function train()
 
     -- print confusion matrix
     print(confusion)
-    table.insert(classificationErrors.trainingErrors, confusion.totalValid)
 
     -- update logger
     trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
