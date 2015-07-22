@@ -8,9 +8,13 @@ import h5py
 import argparse
 
 if __name__ == "__main__":
+	generate_random_dataset 	  = True
+	generate_segmentation_dataset = False
+
 	# Setting Parameters
-	data_directory = "../../ct_atrium/"
-	dataset_directory = "../../datasets/"
+	data_directory 		= "../../ct_atrium/"
+	dataset_directory 	= "../../datasets/"
+	random_dataset_name = "CNN_box_atrium_datasets.hdf5"
 	
 	CT_scan_parameters_template = {
 		"CT_scan_path_template" : data_directory + "CTScan_name",
@@ -27,7 +31,8 @@ if __name__ == "__main__":
 	# 			Boundary Non-Atrium: 	 1
 	# 			Non-Boundary Non-Atrium: 0
 	n_examples_per_CT_scan_per_label = (3500, 3500, 3500) # (n_non_bd_non_atrium, n_bd_non_atrium, n_atrium)
-
+	xy_padding = 5
+	z_padding  = 5
 	# ********************************************************************************************
 	# 					Separate the CT scans into a training and testing set
 	# ********************************************************************************************
@@ -38,18 +43,16 @@ if __name__ == "__main__":
 	training_CT_scan_names = np.random.choice(CT_scan_names, n_training_CT_scans, replace=False)
 	testing_CT_scan_names  = [CT_scan_name for CT_scan_name in CT_scan_names if CT_scan_name not in training_CT_scan_names]
 
-	generate_random_dataset = False
-	generate_segmentation_dataset = True
 	# ********************************************************************************************
 	# 						Generate the training and testing datasets
 	# ********************************************************************************************
 	if generate_random_dataset == True:
 		print "=======> Generating the training dataset <======="
-		training_dataset, training_labels = df.generate_random_dataset(training_CT_scan_names, n_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size)
+		training_dataset, training_labels = df.generate_random_dataset(training_CT_scan_names, n_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size, xy_padding=xy_padding, z_padding=z_padding)
 
 		print "=======> Generating the testing dataset <======="
-		testing_dataset, testing_labels  = df.generate_random_dataset(testing_CT_scan_names, n_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size)
-		dataset_path      = os.path.join(dataset_directory, "CNN_datasets.hdf5")
+		testing_dataset, testing_labels  = df.generate_random_dataset(testing_CT_scan_names, n_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size, xy_padding=xy_padding, z_padding=z_padding)
+		dataset_path      = os.path.join(dataset_directory, random_dataset_name)
 
 		print "=======> Saving the training and testing datasets in %s <=======" %dataset_path
 		f 			  		  	  = h5py.File(dataset_path, "w")
