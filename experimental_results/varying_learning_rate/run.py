@@ -16,7 +16,7 @@ def train_model(training_parameters):
 
 	print "******************** Running the following command ********************"
 	print training_command
-	print "******************** Running the following command ********************"
+	print ""
 	subprocess.call(training_command, shell=True)
 
 #***************************************************************************************************************
@@ -39,7 +39,7 @@ if __name__ == "__main__":
 		"batchSize"		: 512, 
 		"weightDecay"	: 0.0, 
 		"momentum"		: 0.0, 
-		"type"			: "float"
+		"type"			: "cuda"
 	}
 
 	# A bunch of experiments
