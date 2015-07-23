@@ -1,23 +1,17 @@
-from string import Template
-import shutil
 import subprocess
 import os
-import pprint as pp
 """
 	Template run.py script to show you how it's done...
 """
 
 def train_model(training_parameters):
-	print type(training_parameters["momentum"])
-	print training_parameters["type"]
 	training_command = "th main.lua -seed %(seed)i -threads %(threads)i -identifier %(identifier)i -dataset %(dataset)s -size %(size)s "\
 			"-model %(model)s -maxepoch %(maxepoch)i -save %(save)s -learningRate %(learningRate)f -batchSize %(batchSize)i -weightDecay %(weightDecay)f "\
 			"-momentum %(momentum)f -type %(type)s" %training_parameters
 
-	pp.pprint(training_parameters)
 	print "******************** Running the following command ********************"
 	print training_command
-	print "******************** Running the following command ********************"
+	print
 	subprocess.call(training_command, shell=True)
 
 #***************************************************************************************************************
