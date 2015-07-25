@@ -1,11 +1,6 @@
 import jinja2
 import subprocess
 import os
-from string import Template
-import shutil
-import subprocess
-import os
-import pprint as pp
 """
 	Template run.py script to show you how it's done...
 """
@@ -17,15 +12,16 @@ def train_model(training_parameters):
 
 	print "******************** Running the following command ********************"
 	print training_command
-	print ""
+	print
 	subprocess.call(training_command, shell=True)
 
 #***************************************************************************************************************
 if __name__ == "__main__":
-	# Parameters for the set of experiments to be conducted
+	# Experiment parameters
 	experiment_directory = os.getcwd()
 	code_directory = "../../code/CNN"
 	model_template = 'model_template.lua'
+	os.chdir(code_directory)
 
 	training_parameters = {
 		"seed"			: 1, 
@@ -55,7 +51,6 @@ if __name__ == "__main__":
 	}
 
 	# Loading the model template and rendering
-	os.chdir(code_directory)
 	templateEnv = jinja2.Environment(loader = jinja2.FileSystemLoader('.'))
 	template 	= templateEnv.get_template(model_template)
 	model_text  = template.render(model_parameters)
@@ -66,13 +61,14 @@ if __name__ == "__main__":
 	f.close()
 
 	# A bunch of experiments
-	learningRates	= (1, 0.5, 0.1, 0.05, 0.01)
+	momentums	= (1, 0.5, 0.1, 0.05, 0.01)
 
-	for identifier, learningRate in enumerate(learningRates):
+	for identifier, momentum in enumerate(momentums):
 		training_parameters["identifier"] 	= identifier
 		training_parameters["save"] 		= os.path.abspath(os.path.join(experiment_directory, str(identifier)))
-		training_parameters["learningRate"] = learningRate
+		training_parameters["momentum"] = momentum
 
 		train_model(training_parameters)
 
 	os.chdir(experiment_directory)
+

@@ -4,17 +4,17 @@ require "nn"
 print '==> define parameters'
 
 -- input dimensions
-nfeats  	= 6
-patchsize   = 32
+nfeats  	= {{ nfeats }}
+patchsize   = {{ patchsize }}
 ninputs 	= nfeats*patchsize*patchsize
 
 -- hidden units, filter sizes (for ConvNet only):
-nfeaturemaps  = { 32, 64, 1000, 1000 }
-filtsize 	  = 5
-poolsize 	  = { 3, 2 }
-featuremaps_h = 2
-featuremaps_w = 2
-noutputs 	  = 2
+nfeaturemaps  = { {{ nfeaturemaps|join(', ') }} }
+filtsize 	  = {{ filtsize }}
+poolsize 	  = { {{ poolsize|join(', ') }} }
+featuremaps_h = {{ featuremaps_h }}
+featuremaps_w = {{ featuremaps_w }}
+noutputs 	  = {{ noutputs }}
 
 ----------------------------------------------------------------------
 print '==> construct model'

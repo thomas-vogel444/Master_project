@@ -1,13 +1,9 @@
 .DS_Store
 Poster
 Articles
-neural-networks-and-deep-learning
 *.pyc
+*.hdf5
 ct_atrium
-code/lua_programming
-code/example_code
-code/tutorial_supervised/data/
-results/
 code/torch-hdf5/
-code/tutorial_supervised
 code/process_results/model.net
+*test_run

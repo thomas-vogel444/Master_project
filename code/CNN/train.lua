@@ -68,7 +68,7 @@ function train()
     	-- create mini batch
         batchSize = math.min(opt.batchSize,trainingSize - t + 1)
 
-    	inputs = torch.Tensor(batchSize,nfeats,width,height)
+    	inputs = torch.Tensor(batchSize,nfeats,patchsize,patchsize)
     	targets = torch.Tensor(batchSize)
     	for i = t,math.min(t+opt.batchSize-1,trainingSize) do
         	-- load new sample
