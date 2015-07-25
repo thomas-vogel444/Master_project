@@ -56,12 +56,11 @@ if __name__ == "__main__":
 	model_text  = template.render(model_parameters)
 
 	# Saving the model in model.lua
-	f = open('model.lua', 'w')
-	f.write(model_text)
-	f.close()
+	with open('model.lua', 'w') as f:
+		f.write(model_text)
 
 	# A bunch of experiments
-	momentums	= (1, 0.5, 0.1, 0.05, 0.01)
+	momentums	= (0.5, 0.1, 0.05, 0.01)
 
 	for identifier, momentum in enumerate(momentums):
 		training_parameters["identifier"] 	= identifier
