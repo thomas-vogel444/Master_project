@@ -2,7 +2,6 @@
 Poster
 Articles
 *.pyc
-*.hdf5
 ct_atrium
 code/torch-hdf5/
 code/process_results/model.net
