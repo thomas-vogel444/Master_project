@@ -48,8 +48,8 @@ model:evaluate()
 -- Transfer to the GPU if appropriate
 if opt.type == 'cuda' then
 	model:cuda()
-	segmentation_data_gpu = segment_dataset.data:cuda()
-	prediction_gpu = prediction:cuda()
+	segment_dataset.data = segment_dataset.data:cuda()
+	prediction = prediction:cuda()
 end
 
 for t = 1,segment_dataset.size() do
@@ -57,14 +57,14 @@ for t = 1,segment_dataset.size() do
   	xlua.progress(t, segment_dataset.size())
 
   	-- get new sample
-  	local input = segmentation_data_gpu[t]
+  	local input = segment_dataset.data[t]
 
   	-- test sample
   	prediction[t] = model:forward(input)[2]
 end
 
 if opt.type == 'cuda' then
-	prediction = prediction_gpu:float()
+	prediction = prediction:float()
 end
 
 prediction = torch.round(torch.exp(prediction)) + 1
@@ -73,7 +73,7 @@ f:close()
 ----------------------------------------------------------------------
 -- 						Save the segmentation results 
 ----------------------------------------------------------------------
-print("Saving the segmentation results")
+print("Saving the segmentation results in " .. opt.predictedDataset)
 
 local f = hdf5.open(opt.predictedPath,'a')
 f:write(opt.predictedDataset, prediction)

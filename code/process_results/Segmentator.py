@@ -10,7 +10,7 @@ class Segmentator:
 	def segment(self, segmentation_dataset, predicted_dataset):
 		segmentation_command_options = self.get_segmentation_command_options(segmentation_dataset, predicted_dataset)
 		segmentation_command = "th segment.lua -segmentationFile %(segmentationFile)s -segmentationDataset %(segmentationDataset)s "\
-								"-predictedPath %(predictedPath)s -predictedDataset -%(predictedDataset)s -modelPath %(modelPath)s "\
+								"-predictedPath %(predictedPath)s -predictedDataset %(predictedDataset)s -modelPath %(modelPath)s "\
 								"-type %(type)s" %segmentation_command_options
 
 		print "******************** Running the following command ********************"
