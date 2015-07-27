@@ -14,8 +14,8 @@ classes = {'0','1'}
 confusion = optim.ConfusionMatrix(classes)
 
 -- Log results to files
-trainLogger = optim.Logger(paths.concat(opt.save, 'train.log'))
-testLogger = optim.Logger(paths.concat(opt.save, 'test.log'))
+trainLogger = optim.Logger(paths.concat(opt.savingDirectory, 'train.log'))
+testLogger = optim.Logger(paths.concat(opt.savingDirectory, 'test.log'))
 
 -- Retrieve parameters and gradients:
 -- this extracts and flattens all the trainable parameters of the mode
@@ -50,11 +50,7 @@ function train()
     model:training()
 
     -- shuffle at each epoch
-    if opt.size == "small" then
-        trainingSize = 2500
-    elseif opt.size == "full" then
-        trainingSize = trainData.size()
-    end
+    trainingSize = trainData.size()
 
     shuffle = torch.randperm(trainData.size())
 
@@ -134,7 +130,7 @@ function train()
     trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
 
     -- save/log current net
-    local filename = paths.concat(opt.save, 'model.net')
+    local filename = paths.concat(opt.savingDirectory, 'model.net')
     os.execute('mkdir -p ' .. sys.dirname(filename))
     print('==> saving model to '..filename)
     
