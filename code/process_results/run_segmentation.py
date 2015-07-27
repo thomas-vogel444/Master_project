@@ -1,10 +1,10 @@
 from Segmentator import Segmentator
 
 segmentation_parameters = {
-	"segmentationFile" 		: "../../datasets/small_segmentation_datasets.hdf5",
+	"segmentationFile" 		: "../../datasets/segmentation_datasets.hdf5",
 	"predictedPath"			: "predicted_labels.hdf5",
 	"modelPath"				: "model.net",
-	"type"					: "float"
+	"type"					: "cuda"
 }
 
 datasets = {
