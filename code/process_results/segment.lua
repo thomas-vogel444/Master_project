@@ -51,6 +51,9 @@ for t = 1,segment_dataset.size() do
 
   -- get new sample
   local input = segment_dataset.data[t]
+  if opt.type == 'cuda' then
+  	input:cuda()
+  end
 
   -- test sample
   prediction[t] = model:forward(input)[2]
