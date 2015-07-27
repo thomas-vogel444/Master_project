@@ -47,20 +47,21 @@ model:evaluate()
 
 -- Transfer to the GPU if appropriate
 if opt.type == 'cuda' then
-	segment_dataset.data:cuda()
 	model:cuda()
-	prediction:cuda()
 end
 
 for t = 1,segment_dataset.size() do
-  -- disp progress
-  xlua.progress(t, segment_dataset.size())
+  	-- disp progress
+  	xlua.progress(t, segment_dataset.size())
 
-  -- get new sample
-  local input = segment_dataset.data[t]
+  	-- get new sample
+  	local input = segment_dataset.data[t]
 
-  -- test sample
-  prediction[t] = model:forward(input)[2]
+  	if opt.type == 'cuda' then
+		input:cuda()
+	end
+  	-- test sample
+  	prediction[t] = model:forward(input)[2]
 end
 
 prediction = torch.round(torch.exp(prediction)) + 1
