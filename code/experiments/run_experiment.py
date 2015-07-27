@@ -15,7 +15,7 @@ if __name__ == "__main__":
 	}
 
 	training_parameters = {
-		"maxepoch"		: 30, 
+		"maxepoch"		: 15, 
 		"learningRate"	: 0.1, 
 		"batchSize"		: 512, 
 		"momentum"		: 0.0, 
