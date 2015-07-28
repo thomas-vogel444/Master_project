@@ -6,7 +6,7 @@ if __name__ == "__main__":
 	# Parameters for the set of experiments to be conducted
 	experiment_name 			= "varying_learning_rate"
 	varying_parameter 			= "learningRate"
-	varying_parameter_values 	= [1, 0.5, 0.1, 0.05, 0.01]
+	varying_parameter_values 	= [0.5, 0.1, 0.05, 0.01]
 
 	experiment_parameters = {
 		"experiment_code_directory"		: os.getcwd(),
