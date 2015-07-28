@@ -1,6 +1,7 @@
 from Segmentator import Segmentator
 
 segmentation_parameters = {
+	"GPU"					: 2,
 	"segmentationFile" 		: "../../datasets/segmentation_datasets.hdf5",
 	"predictedPath"			: "predicted_labels.hdf5",
 	"modelPath"				: "model.net",
