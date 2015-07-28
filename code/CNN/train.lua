@@ -131,15 +131,8 @@ function train()
     local filename = paths.concat(opt.savingDirectory, 'model.net')
     os.execute('mkdir -p ' .. sys.dirname(filename))
     print('==> saving model to '..filename)
-    
-    if opt.type == 'cuda' then
-        model_CPU = model:float()
-        torch.save(filename, model_CPU)
-    elseif opt.type == 'float' then
-        torch.save(filename, model)
-    end
 
-    -- torch.save(filename, model)
+    torch.save(filename, model)
 
     -- next epoch
     confusion:zero()
