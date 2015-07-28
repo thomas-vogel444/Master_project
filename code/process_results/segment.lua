@@ -59,7 +59,7 @@ for t = 1,segment_dataset.size() do
     local input = segment_dataset.data[t]
 
     if opt.type == 'cuda' then
-        local input = input:cuda()
+        input = input:cuda()
     end
 
   	-- test sample
