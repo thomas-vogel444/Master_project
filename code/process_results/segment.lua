@@ -48,7 +48,6 @@ model:evaluate()
 -- Transfer to the GPU if appropriate
 if opt.type == 'cuda' then
 	model:cuda()
-	segment_dataset.data = segment_dataset.data:cuda()
 	prediction = prediction:cuda()
 end
 
@@ -57,7 +56,11 @@ for t = 1,segment_dataset.size() do
   	xlua.progress(t, segment_dataset.size())
 
   	-- get new sample
-  	local input = segment_dataset.data[t]
+    local input = segment_dataset.data[t]
+
+    if opt.type == 'cuda' then
+        local input = input:cuda()
+    end
 
   	-- test sample
   	prediction[t] = model:forward(input)[2]
