@@ -20,9 +20,7 @@ testLogger = optim.Logger(paths.concat(opt.savingDirectory, 'test.log'))
 -- Retrieve parameters and gradients:
 -- this extracts and flattens all the trainable parameters of the mode
 -- into a 1-dim vector
-if model then
-	parameters,gradParameters = model:getParameters()
-end
+parameters,gradParameters = model:getParameters()
 
 ----------------------------------------------------------------------
 print '==> configuring optimizer'
@@ -134,13 +132,15 @@ function train()
     os.execute('mkdir -p ' .. sys.dirname(filename))
     print('==> saving model to '..filename)
     
-    if opt.type == 'cuda' then
-        model:float()
-        torch.save(filename, model)
-        model:cuda()
-    elseif opt.type == 'float' then
-        torch.save(filename, model)
-    end
+    -- if opt.type == 'cuda' then
+    --     model_CPU = model:float()
+    --     torch.save(filename, model_CPU)
+    --     model:cuda()
+    -- elseif opt.type == 'float' then
+    --     torch.save(filename, model)
+    -- end
+
+    torch.save(filename, model)
 
     -- next epoch
     confusion:zero()
