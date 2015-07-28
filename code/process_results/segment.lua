@@ -9,6 +9,7 @@ cmd:text()
 cmd:text('Segmentation')
 cmd:text()
 cmd:text('Options:')
+cmd:option('-GPU', 1, "Which GPU to use")
 cmd:option('-segmentationFile', "../../datasets/segmentation_datasets.hdf5", "Path to the segmentation file")
 cmd:option('-segmentationDataset', "segmentation_dataset_fixed_z", "Segmentation dataset")
 cmd:option('-predictedPath', "predicted_labels.hdf5", 'Path to the predicted file')
@@ -19,7 +20,8 @@ cmd:text()
 opt = cmd:parse(arg or {})
 
 if opt.type == 'cuda' then
-	require "cunn"
+    require "cunn"
+    cutorch.setDevice(opt.GPU)
 end
 
 ----------------------------------------------------------------------
