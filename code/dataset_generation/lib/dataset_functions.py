@@ -1,3 +1,5 @@
+from CTScanImage import CTScanImage
+import utils
 import os
 import itertools
 import re
@@ -5,7 +7,7 @@ import numpy as np
 import dicom
 import nrrd
 import Image
-from CTScanImage import CTScanImage
+
 
 def random_3d_indices(CT_scan_labels, n, target_label, z):
 	"""
@@ -94,6 +96,7 @@ def generate_random_dataset_from_CT_scan(CT_scan, n_examples_per_label, patch_si
 		tri_planar_labels = np.repeat((1,2), (n_examples_per_label[0] + n_examples_per_label[1], n_examples_per_label[2]))
 
 	for i, index in enumerate(random_indices):
+		utils.drawProgressBar(float(i)/(sum(n_examples_per_label)-1), 100)
 		tri_planar_dataset[i] = generate_patches(index, CT_scan.image, patch_size)
 
 	return tri_planar_dataset, tri_planar_labels
