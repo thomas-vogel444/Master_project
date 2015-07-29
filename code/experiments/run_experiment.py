@@ -4,9 +4,9 @@ import os
 #***************************************************************************************************************
 if __name__ == "__main__":
 	# Parameters for the set of experiments to be conducted
-	experiment_name 			= "varying_learning_rate"
-	varying_parameter 			= "learningRate"
-	varying_parameter_values 	= [0.5, 0.1, 0.05, 0.01]
+	experiment_name 			= "varying_first_layer_nfeaturemaps"
+	varying_parameter 			= "nfeaturemaps"
+	varying_parameter_values 	= [[32,64,1000,1000], [64,64,1000,1000], [96,64,1000,1000], [128,64,1000,1000]]
 
 	experiment_parameters = {
 		"experiment_code_directory"		: os.getcwd(),
