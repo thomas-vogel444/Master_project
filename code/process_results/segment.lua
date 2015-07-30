@@ -156,7 +156,7 @@ img = img:float()
 mask = mask:float()
 img = blendImages(img, mask, 0.4)
 print("Saving the segmented image...")
-image.save("img.png", img)
+image.save(opt.imagePath .. ".png", img)
 
 
 

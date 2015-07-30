@@ -18,5 +18,7 @@ segmentation_particulars = [["segmentation_dataset_fixed_z", "labels_fixed_z", "
 
 segmentator = Segmentator(segmentation_parameters)
 
+segmentation_directory = "../../experimental_results/varying_learning_rate/0"
+
 for segmentation_particular in segmentation_particulars:
-	segmentator.segment(segmentation_particular)
+	segmentator.segment(segmentation_particular, segmentation_directory)
