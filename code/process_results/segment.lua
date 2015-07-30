@@ -16,6 +16,7 @@ cmd:option('-segmentationLabels', "segmentation_labels_fixed_z", "Segmentation l
 cmd:option('-segmentationValues', "segmentation_values_fixed_z", "Segmentation values")
 cmd:option('-predictedPath', "predicted_labels.hdf5", 'Path to the predicted file')
 cmd:option('-predictedDataset', "predicted_labels_fixed_z", 'Dataset name contaiing the predicted labels')
+cmd:option('-imagePath', 'mask_fixed_z')
 cmd:option('-modelPath', "model.net", 'Paths to the model file')
 cmd:option('-type', 'float', 'type: float | cuda')
 cmd:text()

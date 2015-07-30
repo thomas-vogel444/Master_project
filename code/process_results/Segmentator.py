@@ -11,8 +11,8 @@ class Segmentator:
 		segmentation_command_options = self.get_segmentation_command_options(segmentation_particular)
 		segmentation_command = "th segment.lua -GPU %(GPU)i -segmentationFile %(segmentationFile)s -segmentationLabels %(segmentationLabels)s "\
 								"-segmentationValues %(segmentationValues)s -segmentationDataset %(segmentationDataset)s "\
-								"-predictedPath %(predictedPath)s -predictedDataset %(predictedDataset)s -modelPath %(modelPath)s "\
-								"-type %(type)s" %segmentation_command_options
+								"-predictedPath %(predictedPath)s -predictedDataset %(predictedDataset)s -imagePath %(imagePath)s "\
+								"-modelPath %(modelPath)s -type %(type)s" %segmentation_command_options
 
 		print "******************** Running the following command ********************"
 		print segmentation_command
@@ -24,4 +24,5 @@ class Segmentator:
 					{"segmentationDataset"	: segmentation_particular[0]}.items() + 
 					{"segmentationLabels"	: segmentation_particular[1]}.items() + 
 					{"segmentationValues"	: segmentation_particular[2]}.items() + 
-					{"predictedDataset"		: segmentation_particular[3]}.items())
+					{"predictedDataset"		: segmentation_particular[3]}.items() +
+					{"imagePath"			: segmentation_particular[4]}.items())

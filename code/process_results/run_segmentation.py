@@ -12,9 +12,9 @@ segmentation_parameters = {
 	"type"					: "cuda"
 }
 
-segmentation_particulars = [["segmentation_dataset_fixed_z", "labels_fixed_z", "values_fixed_z", "predicted_labels_fixed_z"],
-							["segmentation_dataset_fixed_y", "labels_fixed_y", "values_fixed_y", "predicted_labels_fixed_y"],
-							["segmentation_dataset_fixed_x", "labels_fixed_x", "values_fixed_x", "predicted_labels_fixed_x"]]
+segmentation_particulars = [["segmentation_dataset_fixed_z", "labels_fixed_z", "values_fixed_z", "predicted_labels_fixed_z", "image_fixed_z"],
+							["segmentation_dataset_fixed_y", "labels_fixed_y", "values_fixed_y", "predicted_labels_fixed_y", "image_fixed_y"],
+							["segmentation_dataset_fixed_x", "labels_fixed_x", "values_fixed_x", "predicted_labels_fixed_x", "image_fixed_x"]]
 
 segmentator = Segmentator(segmentation_parameters)
 
