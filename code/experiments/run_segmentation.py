@@ -1,10 +1,13 @@
 import os
 from Segmentator import Segmentator
 
+# Command line arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('-c', '--code_path', 	default = '../CNN/segment.lua')
+parser.add_argument('-m', '--model_path', 	default = '../../experimental_results/test_experiment/0')
+parser.add_argument('-s', '--dataset_path', default = '../../datasets/segmentation_datasets.hdf5')
+args = parser.parse_args()
 
-segmentation_code_path	= "../CNN/segment.lua"
-model_directory 		= "../../experimental_results/varying_learning_rate/0"
-segmentation_file_path 	= "../../datasets/segmentation_datasets.hdf5"
-
-segmentator = Segmentator(segmentation_file_path, segmentation_code_path)
-segmentator.segment(model_directory)
+# Segment stuff...
+segmentator = Segmentator(args.dataset_path, args.code_path)
+segmentator.segment(args.model_path)
