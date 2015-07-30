@@ -9,6 +9,7 @@ class Segmentator:
 			os.remove(self.segmentation_parameter_template["predictedPath"])
 
 	def segment(self, name_extension):
+		segmentation_command_options = self.get_segmentation_command_options(name_extension)
 		segmentation_command = "th segment.lua -GPU %(GPU)i -segmentationFile %(segmentationFile)s -segmentationLabels %(segmentationLabels)s "\
 								"-segmentationValues %(segmentationValues)s -segmentationDataset %(segmentationDataset)s "\
 								"-predictedPath %(predictedPath)s -predictedDataset %(predictedDataset)s -imagePath %(imagePath)s "\
