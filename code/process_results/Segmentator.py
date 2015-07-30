@@ -6,7 +6,7 @@ class Segmentator:
 	"""
 		Segmentator is responsible for running the segmentation routine segment.lua using a given model.
 	"""
-	self.name_extensions = ["fixed_z", "fixed_y", "fixed_x"]
+	name_extensions = ["fixed_z", "fixed_y", "fixed_x"]
 
 	def __init__(self, model_directory, segmentation_dataset):
 		self.segmentation_parameter_template = {
@@ -25,17 +25,18 @@ class Segmentator:
 		if os.path.isfile(self.segmentation_parameter_template["predictedPath"]):
 			os.remove(self.segmentation_parameter_template["predictedPath"])
 
-	def segment(self, name_extension):
-		segmentation_command_options = self.get_segmentation_command_options(name_extension)
-		segmentation_command = "th segment.lua -GPU %(GPU)i -segmentationFile %(segmentationFile)s -segmentationLabels %(segmentationLabels)s "\
-								"-segmentationValues %(segmentationValues)s -segmentationDataset %(segmentationDataset)s "\
-								"-predictedPath %(predictedPath)s -predictedDataset %(predictedDataset)s -imagePath %(imagePath)s "\
-								"-modelPath %(modelPath)s -type %(type)s" %segmentation_command_options
+	def segment(self):
+		for name_extension in self.name_extensions:
+			segmentation_command_options = self.get_segmentation_command_options(name_extension)
+			segmentation_command = "th segment.lua -GPU %(GPU)i -segmentationFile %(segmentationFile)s -segmentationLabels %(segmentationLabels)s "\
+									"-segmentationValues %(segmentationValues)s -segmentationDataset %(segmentationDataset)s "\
+									"-predictedPath %(predictedPath)s -predictedDataset %(predictedDataset)s -imagePath %(imagePath)s "\
+									"-modelPath %(modelPath)s -type %(type)s" %segmentation_command_options
 
-		print "******************** Running the following command ********************"
-		print segmentation_command
-		print 
-		subprocess.call(segmentation_command, shell=True)
+			print "******************** Running the following command ********************"
+			print segmentation_command
+			print 
+			subprocess.call(segmentation_command, shell=True)
 
 	def get_segmentation_command_options(self, name_extension):
 		command_options = dict(self.segmentation_parameter_template)
