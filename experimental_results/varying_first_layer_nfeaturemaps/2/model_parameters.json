@@ -6,7 +6,7 @@
     "featuremaps_h": 2,
     "patchsize": 32,
     "nfeaturemaps": [
-        92,
+        96,
         64,
         1000,
         1000
