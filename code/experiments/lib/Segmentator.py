@@ -58,7 +58,7 @@ class Segmentator:
 		"""
 			Customises the command option values for each segmentation dataset.
 		"""
-		command_options = segmentation_parameters
+		command_options = dict(segmentation_parameters)
 
 		command_options["segmentationDataset"] 	= command_options["segmentationDataset"].replace("NAME", name_extension)
 		command_options["segmentationLabels"] 	= command_options["segmentationLabels"].replace("NAME", name_extension)

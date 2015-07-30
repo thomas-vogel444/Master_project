@@ -31,7 +31,7 @@ class Experiment:
 			model.train()
 
 			# Produce the segmentation images
-			segmentator.segment(saving_directory)
+			self.segmentator.segment(saving_directory)
 
 			# Post training step
 			self.save_as_json(model.training_parameters, "training_parameters.json", saving_directory)
