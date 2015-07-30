@@ -9,9 +9,10 @@ import h5py
 # ********************************************************************************************
 # 										Setting parameters
 # ********************************************************************************************
-data_directory 		= "../../ct_atrium/"
-dataset_directory 	= "../../datasets/"
-random_dataset_name = "segmentation_datasets.hdf5"
+data_directory 				= "../../ct_atrium/"
+dataset_directory 			= "../../datasets/"
+segmentation_filename 		= "segmentation_datasets.hdf5"
+segmentation_dataset_path 	= os.path.join(dataset_directory, segmentation_filename)
 
 patch_size 					= 32
 testing_CT_scans_directory	= os.path.join(data_directory, "testing")
@@ -57,7 +58,6 @@ for z in range(number_dicoms):
 # ********************************************************************************************
 # 								Saving the segmentation datasets
 # ********************************************************************************************
-segmentation_dataset_path = os.path.join(dataset_directory, "segmentation_datasets.hdf5")
 f 			  		  	  = h5py.File(segmentation_dataset_path, "w")
 
 print "=======> Saving the segmentation datasets for fixed z in %s <=======" %segmentation_dataset_path
