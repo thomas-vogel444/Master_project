@@ -10,7 +10,7 @@ if __name__ == "__main__":
 	varying_parameter_values 	= [0.1, 0.05, 0.01]
 	training_dataset_path		= os.path.abspath("../../datasets/small_CNN_datasets.hdf5")
 	segmentation_code_path		= "../CNN/segment.lua"
-	segmentation_file_path 		= "../../datasets/small_segmentation_datasets.hdf5"
+	segmentation_file_path 		= "../../datasets/segmentation_datasets.hdf5"
 
 	experiment_parameters = {
 		"experiment_code_directory"		: os.getcwd(),
