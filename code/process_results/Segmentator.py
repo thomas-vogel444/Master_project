@@ -41,7 +41,7 @@ class Segmentator:
 			print "******************** Running the following command ********************"
 			print segmentation_command
 			print 
-			# subprocess.call(segmentation_command, shell=True)
+			subprocess.call(segmentation_command, shell=True)
 
 	def get_segmentation_parameters(self, model_directory):
 		"""
@@ -49,8 +49,8 @@ class Segmentator:
 		"""
 		segmentation_parameters = dict(self.segmentation_parameter_template)
 		segmentation_parameters["predictedPath"] 	= segmentation_parameters["predictedPath"].replace("MODEL_DIRECTORY", model_directory)
-		segmentation_parameters["modelPath"] 		= segmentation_parameters["predictedPath"].replace("MODEL_DIRECTORY", model_directory)
-		segmentation_parameters["imagePath"] 		= segmentation_parameters["predictedPath"].replace("MODEL_DIRECTORY", model_directory)
+		segmentation_parameters["modelPath"] 		= segmentation_parameters["modelPath"].replace("MODEL_DIRECTORY", model_directory)
+		segmentation_parameters["imagePath"] 		= segmentation_parameters["imagePath"].replace("MODEL_DIRECTORY", model_directory)
 		return segmentation_parameters
 
 	def get_segmentation_command_options(self, segmentation_parameters, name_extension):
