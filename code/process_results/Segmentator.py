@@ -27,9 +27,9 @@ class Segmentator:
 			Segments the three segmentation datasets in the segmentation hdf5 file.
 		"""
 		segmentation_parameters 	 = self.get_segmentation_parameters(model_directory)
-		if os.path.isfile(self.segmentation_parameter_template["predictedPath"]):
-			os.remove(self.segmentation_parameter_template["predictedPath"])
-		
+		if os.path.isfile(segmentation_parameters["predictedPath"]):
+			os.remove(segmentation_parameters["predictedPath"])
+
 		for name_extension in self.name_extensions:	
 			segmentation_command_options = self.get_segmentation_command_options(segmentation_parameters, name_extension)
 
