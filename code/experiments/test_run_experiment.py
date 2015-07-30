@@ -5,11 +5,12 @@ import os
 #***************************************************************************************************************
 if __name__ == "__main__":
 	# Parameters for the set of experiments to be conducted
-	experiment_name 			= "varying_first_layer_nfeaturemaps"
-	varying_parameter 			= "nfeaturemaps"
-	varying_parameter_values 	= [[32,64,1000,1000], [64,64,1000,1000], [96,64,1000,1000], [128,64,1000,1000]]
+	experiment_name 			= "test_experiment"
+	varying_parameter 			= "learningRate"
+	varying_parameter_values 	= [0.1, 0.05, 0.01]
+	training_dataset_path		= os.path.abspath("../../datasets/small_CNN_datasets.hdf5")
 	segmentation_code_path		= "../CNN/segment.lua"
-	segmentation_file_path 		= "../../datasets/segmentation_datasets.hdf5"
+	segmentation_file_path 		= "../../datasets/small_segmentation_datasets.hdf5"
 
 	experiment_parameters = {
 		"experiment_code_directory"		: os.getcwd(),
@@ -22,7 +23,7 @@ if __name__ == "__main__":
 		"learningRate"	: 0.1, 
 		"batchSize"		: 512, 
 		"momentum"		: 0.0, 
-		"dataset" 		: os.path.abspath("../../datasets/CNN_box_atrium_datasets.hdf5"),
+		"dataset" 		: training_dataset_path,
 		"type"			: "cuda"
 	}
 

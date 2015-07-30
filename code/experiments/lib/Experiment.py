@@ -8,6 +8,7 @@ class Experiment:
 	def __init__(self, experiment_parameters, base_model_generator, varying_parameter, varying_parameter_values):
 		self.experiment_parameters		= experiment_parameters
 		self.base_model_generator		= base_model_generator
+		self.segmentator 				= segmentator
 		self.varying_parameter 			= varying_parameter
 		self.varying_parameter_values 	= varying_parameter_values
 
@@ -21,15 +22,22 @@ class Experiment:
 		# Change directory to the code directory
 		os.chdir(self.experiment_parameters["NN_code_directory"])
 
-		# Train a new model for every parameter value that needs varying
+		# Train a new model for every parameter value that needs varying and produce segmentation images
 		for identifier, varying_parameter_value in enumerate(self.varying_parameter_values):
 			saving_directory = self.get_model_saving_directory(identifier)
 			
+			# Train the model
 			model = self.base_model_generator.new_model(saving_directory, varying_parameter=self.varying_parameter, varying_parameter_value=varying_parameter_value)
 			model.train()
 
+			# Produce the segmentation images
+			segmentator.segment(saving_directory)
+
+			# Post training step
 			self.save_as_json(model.training_parameters, "training_parameters.json", saving_directory)
 			self.save_as_json(model.model_parameters, "model_parameters.json", saving_directory)
+
+
 
 		# Come back to the experiment directory
 		os.chdir(self.experiment_parameters["experiment_code_directory"])

@@ -8,10 +8,11 @@ class Segmentator:
 	"""
 	name_extensions = ["fixed_z", "fixed_y", "fixed_x"]
 
-	def __init__(self, segmentation_dataset):
+	def __init__(self, segmentation_file_path, segmentation_code_path):
 		self.segmentation_parameter_template = {
+				"segmentationCode"		: segmentation_code_path,
 				"GPU"					: 2,
-				"segmentationFile" 		: segmentation_dataset,
+				"segmentationFile" 		: segmentation_file_path,
 				"segmentationDataset"	: "segmentation_dataset_NAME",
 				"segmentationLabels"	: "labels_NAME",
 				"segmentationValues"	: "values_NAME",
@@ -33,7 +34,7 @@ class Segmentator:
 		for name_extension in self.name_extensions:	
 			segmentation_command_options = self.get_segmentation_command_options(segmentation_parameters, name_extension)
 
-			segmentation_command = "th segment.lua -GPU %(GPU)i -segmentationFile %(segmentationFile)s -segmentationLabels %(segmentationLabels)s "\
+			segmentation_command = "th %(segmentationCode)s -GPU %(GPU)i -segmentationFile %(segmentationFile)s -segmentationLabels %(segmentationLabels)s "\
 									"-segmentationValues %(segmentationValues)s -segmentationDataset %(segmentationDataset)s "\
 									"-predictedPath %(predictedPath)s -predictedDataset %(predictedDataset)s -imagePath %(imagePath)s "\
 									"-modelPath %(modelPath)s -type %(type)s" %segmentation_command_options
