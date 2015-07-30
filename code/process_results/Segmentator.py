@@ -3,8 +3,25 @@ import subprocess
 import os
 
 class Segmentator:
-	def __init__(self, segmentation_parameter_template):
-		self.segmentation_parameter_template = segmentation_parameter_template
+	"""
+		Segmentator is responsible for running the segmentation routine segment.lua using a given model.
+	"""
+	self.name_extensions = ["fixed_z", "fixed_y", "fixed_x"]
+
+	def __init__(self, model_directory, segmentation_dataset):
+		self.segmentation_parameter_template = {
+				"GPU"					: 2,
+				"segmentationFile" 		: segmentation_dataset,
+				"segmentationDataset"	: "segmentation_dataset_NAME",
+				"segmentationLabels"	: "labels_NAME",
+				"segmentationValues"	: "values_NAME",
+				"predictedPath"			: os.path.join(model_directory, "predicted_labels.hdf5"),
+				"predictedDataset"		: "predicted_labels_NAME",
+				"modelPath"				: os.path.join(model_directory, "model.net"),
+				"imagePath"				: os.path.join(model_directory, "image_NAME.png"),
+				"type"					: "cuda"
+			}
+
 		if os.path.isfile(self.segmentation_parameter_template["predictedPath"]):
 			os.remove(self.segmentation_parameter_template["predictedPath"])
 
