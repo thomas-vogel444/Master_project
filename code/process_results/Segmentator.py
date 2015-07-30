@@ -22,15 +22,15 @@ class Segmentator:
 				"type"					: "cuda"
 			}
 
-		if os.path.isfile(self.segmentation_parameter_template["predictedPath"]):
-			os.remove(self.segmentation_parameter_template["predictedPath"])
-
 	def segment(self, model_directory):
 		"""
 			Segments the three segmentation datasets in the segmentation hdf5 file.
 		"""
-		for name_extension in self.name_extensions:
-			segmentation_parameters 	 = self.get_segmentation_parameters(model_directory)	
+		segmentation_parameters 	 = self.get_segmentation_parameters(model_directory)
+		if os.path.isfile(self.segmentation_parameter_template["predictedPath"]):
+			os.remove(self.segmentation_parameter_template["predictedPath"])
+		
+		for name_extension in self.name_extensions:	
 			segmentation_command_options = self.get_segmentation_command_options(segmentation_parameters, name_extension)
 
 			segmentation_command = "th segment.lua -GPU %(GPU)i -segmentationFile %(segmentationFile)s -segmentationLabels %(segmentationLabels)s "\
