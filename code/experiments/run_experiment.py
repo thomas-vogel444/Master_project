@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
 	base_model_generator = BaseModelGenerator(training_parameters, model_parameters)
 	segmentator 		 = Segmentator(segmentation_file_path, segmentation_code_path)
-	experiment 			 = Experiment(experiment_parameters, base_model_generator, varying_parameter, varying_parameter_values)
+	experiment 			 = Experiment(experiment_parameters, base_model_generator, segmentator, varying_parameter, varying_parameter_values)
 	experiment.run_experiment()
 
 

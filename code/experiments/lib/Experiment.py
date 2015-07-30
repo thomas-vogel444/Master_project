@@ -5,7 +5,7 @@ import pprint as pp
 import shutil
 
 class Experiment:
-	def __init__(self, experiment_parameters, base_model_generator, varying_parameter, varying_parameter_values):
+	def __init__(self, experiment_parameters, base_model_generator, segmentator, varying_parameter, varying_parameter_values):
 		self.experiment_parameters		= experiment_parameters
 		self.base_model_generator		= base_model_generator
 		self.segmentator 				= segmentator
