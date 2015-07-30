@@ -1,3 +1,4 @@
+import argparse
 import os
 from lib.Segmentator import Segmentator
 
