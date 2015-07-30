@@ -1,5 +1,5 @@
 import os
-from Segmentator import Segmentator
+from lib.Segmentator import Segmentator
 
 # Command line arguments
 parser = argparse.ArgumentParser()
