@@ -12,6 +12,7 @@ cmd:text('CNN for CT scan')
 cmd:text()
 cmd:text('Options:')
 -- global:
+cmd:option('-GPU', 1, "Which GPU to use")
 cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
 cmd:option('-threads', 2, 'number of threads')
 -- data:
@@ -35,6 +36,7 @@ if opt.type == 'cuda' then
    print('==> switching to CUDA')
    require 'cunn'
    torch.setdefaulttensortype('torch.FloatTensor')
+   cunn.setDevice(opt.GPU)
 end
 torch.setnumthreads(opt.threads)
 torch.manualSeed(opt.seed)

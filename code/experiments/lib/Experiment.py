@@ -92,7 +92,7 @@ class Model:
 			Calls the linux command to train a neural network.
 		"""
 		command_options = self.get_training_command_options()
-		training_command = "th main.lua -dataset %(dataset)s -maxepoch %(maxepoch)i -savingDirectory %(savingDirectory)s "\
+		training_command = "th main.lua -GPU %(GPU_identifier)i -dataset %(dataset)s -maxepoch %(maxepoch)i -savingDirectory %(savingDirectory)s "\
 							"-learningRate %(learningRate)f -batchSize %(batchSize)i "\
 							"-momentum %(momentum)f -type %(type)s" %command_options
 		subprocess.call(training_command, shell=True)
@@ -102,3 +102,7 @@ class Model:
 			The linux command invoking the lua code to train the NN requires the inclusion of the saving directory in its options.
 		"""
 		return dict(self.training_parameters.items() + {"savingDirectory": self.saving_directory}.items())
+
+
+
+

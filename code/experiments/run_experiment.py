@@ -25,7 +25,8 @@ if __name__ == "__main__":
 		"batchSize"		: 512, 
 		"momentum"		: 0.0, 
 		"dataset" 		: os.path.abspath("../../datasets/CNN_box_atrium_datasets.hdf5"),
-		"type"			: "cuda"
+		"type"			: "cuda",
+		"GPU_identifier": 2
 	}
 
 	model_parameters = {
