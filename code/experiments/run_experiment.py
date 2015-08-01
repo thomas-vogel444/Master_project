@@ -7,8 +7,9 @@ if __name__ == "__main__":
 	# Parameters for the set of experiments to be conducted
 	experiment_name 			= "box_atrium_vs_random"
 	varying_parameter 			= "dataset"
-	varying_parameter_values 	= [os.path.abspath("../../datasets/CNN_random_datasets.hdf5"),
-								   os.path.abspath("../../datasets/CNN_box_atrium_datasets.hdf5")]
+	varying_parameter_values 	= [os.path.abspath("../../datasets/CNN_no_atrium_box_datasets.hdf5"),
+								   os.path.abspath("../../datasets/CNN_small_atrium_box_datasets.hdf5"),
+								   os.path.abspath("../../datasets/CNN_large_atrium_box_datasets.hdf5")]
 	segmentation_code_path		= "../CNN/segment.lua"
 	segmentation_file_path 		= "../../datasets/segmentation_datasets.hdf5"
 

@@ -7,13 +7,13 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import lib.dataset_functions as df
 
-data_directory = "../../ct_atrium/"
+training_data_directory = "../../ct_atrium/Training/"
 
 CT_scan_parameters_template = {
-		"CT_scan_path_template" : data_directory + "CTScan_name",
-		"NRRD_path_template"    : data_directory + "CTScan_name/CTScan_name.nrrd",
-		"DICOM_directory"		: data_directory + "CTScan_name/DICOMS",
-		"DICOM_path_template"   : data_directory + "CTScan_name/DICOMS/DICOM_name",
+		"CT_scan_path_template" : training_data_directory + "CTScan_name",
+		"NRRD_path_template"    : training_data_directory + "CTScan_name/CTScan_name.nrrd",
+		"DICOM_directory"		: training_data_directory + "CTScan_name/DICOMS",
+		"DICOM_path_template"   : training_data_directory + "CTScan_name/DICOMS/DICOM_name",
 		"CT_directory_pattern"  : re.compile("[0-9]{8}")
 		}
 
@@ -21,7 +21,7 @@ CT_scan_name = "14032003"
 CT_scan = CTScanImage.CTScanImage(CT_scan_name, CT_scan_parameters_template)
 
 x, y, z 	= 250, 250, 30
-xy_padding  = 20
+xy_padding  = 50
 z_padding   = 10
 labels_with_atrium_box = CT_scan.get_labels_with_atrium_box(xy_padding, z_padding)
 
