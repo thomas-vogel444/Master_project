@@ -94,10 +94,10 @@ if opt.type == 'cuda' then
 	prediction = prediction:float()
 end
 
-prediction = torch.round(torch.exp(prediction)) + 1
+prediction = torch.round(torch.exp(prediction))
 rows, cols = values:size(1), values:size(2)
 prediction_2d = torch.reshape(prediction, rows, cols)
-
+print(prediction_2d)
 ----------------------------------------------------------------------
 -- 						Save the segmentation results 
 ----------------------------------------------------------------------
@@ -123,11 +123,11 @@ img[{3, {}, {}}] = values
 mask = torch.Tensor(3, rows, cols)
 for r=1,rows do
   for c=1,cols do
-      if (labels[{r,c}] == 1 and prediction_2d[{r,c}] == labels[{r,c}]) then
+      if (labels[{r,c}] == 0 and prediction_2d[{r,c}] == labels[{r,c}]) then
           mask[{1,r,c}] = 1
           mask[{2,r,c}] = 0
           mask[{3,r,c}] = 0
-      elseif (labels[{r,c}] == 2 and prediction_2d[{r,c}] == labels[{r,c}]) then
+      elseif (labels[{r,c}] == 1 and prediction_2d[{r,c}] == labels[{r,c}]) then
           mask[{1,r,c}] = 0
           mask[{2,r,c}] = 1
           mask[{3,r,c}] = 0
