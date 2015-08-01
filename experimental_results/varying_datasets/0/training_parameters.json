@@ -1,8 +1,8 @@
 {
     "batchSize": 512,
-    "dataset": "/home/tv15/master_project/datasets/small_CNN_datasets.hdf5",
+    "dataset": "/home/tv15/master_project/datasets/CNN_no_atrium_box_datasets.hdf5",
     "learningRate": 0.1,
-    "maxepoch": 1,
+    "maxepoch": 15,
     "GPU_identifier": 2,
     "type": "cuda",
     "momentum": 0.0
