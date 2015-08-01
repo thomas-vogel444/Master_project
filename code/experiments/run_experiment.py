@@ -5,9 +5,10 @@ import os
 #***************************************************************************************************************
 if __name__ == "__main__":
 	# Parameters for the set of experiments to be conducted
-	experiment_name 			= "varying_first_layer_nfeaturemaps"
-	varying_parameter 			= "nfeaturemaps"
-	varying_parameter_values 	= [[32,64,1000,1000], [64,64,1000,1000], [96,64,1000,1000], [128,64,1000,1000]]
+	experiment_name 			= "box_atrium_vs_random"
+	varying_parameter 			= "dataset"
+	varying_parameter_values 	= [os.path.abspath("../../datasets/CNN_random_datasets.hdf5"),
+								   os.path.abspath("../../datasets/CNN_box_atrium_datasets.hdf5")]
 	segmentation_code_path		= "../CNN/segment.lua"
 	segmentation_file_path 		= "../../datasets/segmentation_datasets.hdf5"
 
