@@ -95,6 +95,8 @@ if opt.type == 'cuda' then
 end
 
 prediction = torch.round(torch.exp(prediction)) + 1
+rows, cols = values:size(1), values:size(2)
+prediction_2d = torch.reshape(prediction, rows, cols)
 
 ----------------------------------------------------------------------
 -- 						Save the segmentation results 
@@ -102,14 +104,12 @@ prediction = torch.round(torch.exp(prediction)) + 1
 print("Saving the segmentation results in " .. opt.predictedDataset)
 
 local f = hdf5.open(opt.predictedPath,'a')
-f:write(opt.predictedDataset, prediction)
+f:write(opt.predictedDataset, prediction_2d)
 f:close()
 
 ----------------------------------------------------------------------
 --        Create a RGB image from the values
 ----------------------------------------------------------------------
-local rows, cols = values:size(1), values:size(2)
-prediction_2d = torch.reshape(prediction, rows, cols)
 img  = torch.Tensor(3, rows, cols)
   
 img[{1, {}, {}}] = values

@@ -36,7 +36,7 @@ if opt.type == 'cuda' then
    print('==> switching to CUDA')
    require 'cunn'
    torch.setdefaulttensortype('torch.FloatTensor')
-   cunn.setDevice(opt.GPU)
+   cutorch.setDevice(opt.GPU)
 end
 torch.setnumthreads(opt.threads)
 torch.manualSeed(opt.seed)
