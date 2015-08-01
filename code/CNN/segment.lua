@@ -97,7 +97,7 @@ end
 prediction = torch.round(torch.exp(prediction))
 rows, cols = values:size(1), values:size(2)
 prediction_2d = torch.reshape(prediction, rows, cols)
-print(prediction_2d)
+
 ----------------------------------------------------------------------
 -- 						Save the segmentation results 
 ----------------------------------------------------------------------
