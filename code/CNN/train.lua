@@ -1,8 +1,8 @@
 ----------------------------------------------------------------------
 -- CUDA?
 if opt.type == 'cuda' then
-	model:cuda()
-	criterion:cuda()
+    model:cuda()
+    criterion:cuda()
 end
 
 ----------------------------------------------------------------------
@@ -26,10 +26,10 @@ parameters,gradParameters = model:getParameters()
 print '==> configuring optimizer'
 
 optimState = {
-	learningRate = opt.learningRate,
-	weightDecay = opt.weightDecay,
-	momentum = opt.momentum,
-	learningRateDecay = 1e-7
+    learningRate = opt.learningRate,
+    weightDecay = opt.weightDecay,
+    momentum = opt.momentum,
+    learningRateDecay = 1e-7
 }
 optimMethod = optim.sgd
 
@@ -56,30 +56,30 @@ function train()
     print('==> doing epoch on training data:')
     print("==> online epoch # " .. epoch .. ' [batchSize = ' .. opt.batchSize .. ']')
     for t = 1,trainingSize,opt.batchSize do
-    	-- disp progress
-    	xlua.progress(t, trainingSize)
+        -- disp progress
+        xlua.progress(t, trainingSize)
 
-    	-- create mini batch
+        -- create mini batch
         batchSize = math.min(opt.batchSize,trainingSize - t + 1)
 
-    	inputs = torch.Tensor(batchSize,nfeats,patchsize,patchsize)
-    	targets = torch.Tensor(batchSize)
-    	for i = t,math.min(t+opt.batchSize-1,trainingSize) do
-        	-- load new sample
-        	inputs[{{i%batchSize + 1},{},{},{}}] = trainData.data[shuffle[i]]
+        inputs = torch.Tensor(batchSize,nfeats,patchsize,patchsize)
+        targets = torch.Tensor(batchSize)
+        for i = t,math.min(t+opt.batchSize-1,trainingSize) do
+            -- load new sample
+            inputs[{{i%batchSize + 1},{},{},{}}] = trainData.data[shuffle[i]]
             targets[i%batchSize + 1]             = trainData.labels[shuffle[i]]
-    	end
+        end
 
         if opt.type == 'cuda' then 
             inputs    = inputs:cuda() 
             targets   = targets:cuda()
         end
 
-    	-- create closure to evaluate f(X) and df/dX
-    	local feval = function(x)
+        -- create closure to evaluate f(X) and df/dX
+        local feval = function(x)
             -- get new parameters
             if x ~= parameters then
-            	parameters:copy(x)
+                parameters:copy(x)
             end
 
             -- reset gradients
@@ -88,32 +88,21 @@ function train()
             -- f is the average of all criterions
             local f = 0
 
-            local outputs = model:forward(inputs)
-            local err = criterion:forward(outputs, targets)
-
-            f = torch.sum(err)
-
-            -- estimate df/dW
-            local df_do = criterion:backward(outputs, targets)
-            model:backward(inputs, df_do)
-
-            confusion:add(outputs, targets)
-
             -- evaluate function for complete mini batch
-            -- for i = 1,inputs:size()[1] do
-            	-- estimate f
-            --	local output = model:forward(inputs[i])
-            --    local err = criterion:forward(output, targets[i])
+            for i = 1,inputs:size()[1] do
+                -- estimate f
+                local output = model:forward(inputs[i])
+                local err = criterion:forward(output, targets[i])
 
-            --	f = f + err
+                f = f + err
 
-            	-- estimate df/dW
-            --	local df_do = criterion:backward(output, targets[i])
-            --	model:backward(inputs[i], df_do)
+                -- estimate df/dW
+                local df_do = criterion:backward(output, targets[i])
+                model:backward(inputs[i], df_do)
 
-            	-- update confusion
-            	--confusion:add(output, targets[i])
-            --end
+                -- update confusion
+                confusion:add(output, targets[i])
+            end
 
             -- normalize gradients and f(X)
             gradParameters:div(inputs:size()[1])
@@ -123,11 +112,11 @@ function train()
             return f,gradParameters
         end
 
-    	-- optimize on current mini-batch
-    	optimMethod(feval, parameters, optimState)
-	end
+        -- optimize on current mini-batch
+        optimMethod(feval, parameters, optimState)
+    end
 
-	-- time taken
+    -- time taken
     time = sys.clock() - time
     time = time / trainingSize
     print("\n==> time to learn 1 sample = " .. (time*1000) .. 'ms')
