@@ -88,21 +88,32 @@ function train()
             -- f is the average of all criterions
             local f = 0
 
-            -- evaluate function for complete mini batch
-            for i = 1,inputs:size()[1] do
-            	-- estimate f
-            	local output = model:forward(inputs[i])
-                local err = criterion:forward(output, targets[i])
+            local outputs = model:forward(inputs)
+            local err = criterion:forward(outputs, targets)
 
-            	f = f + err
+            f = torch.sum(err)
+
+            -- estimate df/dW
+            local df_do = criterion:backward(outputs, targets)
+            model:backward(inputs, df_do)
+
+            confusion:add(outputs, targets)
+
+            -- evaluate function for complete mini batch
+            -- for i = 1,inputs:size()[1] do
+            	-- estimate f
+            --	local output = model:forward(inputs[i])
+            --    local err = criterion:forward(output, targets[i])
+
+            --	f = f + err
 
             	-- estimate df/dW
-            	local df_do = criterion:backward(output, targets[i])
-            	model:backward(inputs[i], df_do)
+            --	local df_do = criterion:backward(output, targets[i])
+            --	model:backward(inputs[i], df_do)
 
             	-- update confusion
-            	confusion:add(output, targets[i])
-            end
+            	--confusion:add(output, targets[i])
+            --end
 
             -- normalize gradients and f(X)
             gradParameters:div(inputs:size()[1])
