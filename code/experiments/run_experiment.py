@@ -5,9 +5,9 @@ import os
 #***************************************************************************************************************
 if __name__ == "__main__":
 	# Parameters for the set of experiments to be conducted
-	experiment_name 			= "varying_first_layer_nfeaturemaps"
+	experiment_name 			= "varying_second_layer_nfeaturemaps"
 	varying_parameter 			= "nfeaturemaps"
-	varying_parameter_values 	= [[32,64,1000,1000], [64,64,1000,1000], [96,64,1000,1000], [128,64,1000,1000]]
+	varying_parameter_values 	= [[32,32,1000,1000], [32,64,1000,1000], [32,96,1000,1000], [32,128,1000,1000]]
 	segmentation_code_path		= "../CNN/segment.lua"
 	segmentation_file_path 		= "../../datasets/segmentation_datasets.hdf5"
 
@@ -24,7 +24,7 @@ if __name__ == "__main__":
 		"momentum"		: 0.0, 
 		"dataset" 		: os.path.abspath("../../datasets/CNN_small_atrium_box_datasets.hdf5"),
 		"type"			: "cuda",
-		"GPU_identifier": 2
+		"GPU_identifier": 3
 	}
 
 	model_parameters = {
