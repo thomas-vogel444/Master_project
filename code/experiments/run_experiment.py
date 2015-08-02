@@ -5,9 +5,9 @@ import os
 #***************************************************************************************************************
 if __name__ == "__main__":
 	# Parameters for the set of experiments to be conducted
-	experiment_name 			= "varying_second_layer_nfeaturemaps"
+	experiment_name 			= "varying_third_layer_nfeaturemaps"
 	varying_parameter 			= "nfeaturemaps"
-	varying_parameter_values 	= [[32,32,1000,1000], [32,64,1000,1000], [32,96,1000,1000], [32,128,1000,1000]]
+	varying_parameter_values 	= [[32,64,500,1000], [32,64,1000,1000], [32,64,1500,1000], [32,64,2000,1000]]
 	segmentation_code_path		= "../CNN/segment.lua"
 	segmentation_file_path 		= "../../datasets/segmentation_datasets.hdf5"
 
