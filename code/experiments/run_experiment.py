@@ -5,11 +5,9 @@ import os
 #***************************************************************************************************************
 if __name__ == "__main__":
 	# Parameters for the set of experiments to be conducted
-	experiment_name 			= "box_atrium_vs_random"
-	varying_parameter 			= "dataset"
-	varying_parameter_values 	= [os.path.abspath("../../datasets/CNN_no_atrium_box_datasets.hdf5"),
-								   os.path.abspath("../../datasets/CNN_small_atrium_box_datasets.hdf5"),
-								   os.path.abspath("../../datasets/CNN_large_atrium_box_datasets.hdf5")]
+	experiment_name 			= "varying_learning_rate"
+	varying_parameter 			= "learningRate"
+	varying_parameter_values 	= [.5, .1, .05, .01, .005]
 	segmentation_code_path		= "../CNN/segment.lua"
 	segmentation_file_path 		= "../../datasets/segmentation_datasets.hdf5"
 
@@ -24,7 +22,7 @@ if __name__ == "__main__":
 		"learningRate"	: 0.1, 
 		"batchSize"		: 512, 
 		"momentum"		: 0.0, 
-		"dataset" 		: os.path.abspath("../../datasets/CNN_box_atrium_datasets.hdf5"),
+		"dataset" 		: os.path.abspath("../../datasets/CNN_small_atrium_box_datasets.hdf5"),
 		"type"			: "cuda",
 		"GPU_identifier": 2
 	}
