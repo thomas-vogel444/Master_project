@@ -1,6 +1,5 @@
 from lib.Segmentator import Segmentator
 from lib.Experiment import Experiment, Model
-from jinja2 import Environment, FileSystemLoader
 import os
 
 #***************************************************************************************************************
@@ -12,8 +11,9 @@ if __name__ == "__main__":
 	experiment_results_directory= os.path.join(os.path.abspath("../../experimental_results"), experiment_name)
 	
 	NN_code_directory 			= os.path.abspath("../CNN")
-	model_template_directory 	= os.path.join(NN_code_directory, "model_templates")
+	model_templates_directory 	= os.path.join(NN_code_directory, "model_templates")
 	models_directory			= os.path.join(NN_code_directory, "models")
+	model_path  				= os.path.join(models_directory, "test_model.lua")
 
 	segmentation_code_path		= os.path.join(NN_code_directory, "segment.lua")
 	segmentation_file_path 		= os.path.abspath("../../datasets/segmentation_datasets.hdf5")
@@ -21,8 +21,8 @@ if __name__ == "__main__":
 	training_parameters = {
 		"type"				: "cuda",
 		"GPU_identifier"	: 1,
-		"savingDirectory"	: experiment_results_directory
-		"modelPath"			: 
+		"savingDirectory"	: experiment_results_directory,
+		"modelPath"			: model_path,
 		"maxepoch"			: 1, 
 		"learningRate"		: 0.1, 
 		"batchSize"			: 512, 
@@ -31,8 +31,8 @@ if __name__ == "__main__":
 	}
 
 	model_parameters = {
-		"modelTemplate" : os.path.join(model_template_directory, "model_template.lua")
-		"modelPath"		: os.path.join(models_directory, "test_model.lua")
+		"modelTemplate" : os.path.join(model_templates_directory, "model_template.lua"),
+		"modelPath"		: model_path,
 		"nfeats"  		: 6,
 		"patchsize"  	: 32,
 		"nfeaturemaps"  : [32,64,1000,1000],
@@ -42,11 +42,6 @@ if __name__ == "__main__":
 		"featuremaps_w" : 2,
 		"noutputs" 	  	: 2
 	}
-
-	# Generate the model source file
-	template_environment = Environment(loader = FileSystemLoader(model_parameters["modelTemplate"]))
-	with open(model_parameters["modelPath"], 'w') as f:
-	    f.write(template_environment.render(model_parameters))
 
 	# ************************************************************************************************
 	# 									Parameters for the segmentation
