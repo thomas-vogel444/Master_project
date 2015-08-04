@@ -31,16 +31,17 @@ if __name__ == "__main__":
 	}
 
 	model_parameters = {
-		"modelTemplate" : os.path.join(model_templates_directory, "model_template.lua"),
-		"modelPath"		: model_path,
-		"nfeats"  		: 6,
-		"patchsize"  	: 32,
-		"nfeaturemaps"  : [32,64,1000,1000],
-		"filtsize" 	  	: 5,
-		"poolsize" 	  	: [3,2],
-		"featuremaps_h" : 2,
-		"featuremaps_w" : 2,
-		"noutputs" 	  	: 2
+		"modelTemplateDirectory": model_templates_directory,
+		"modelTemplate" 		: os.path.join(model_templates_directory, "model_template.lua"),
+		"modelPath"				: model_path,
+		"nfeats"  				: 6,
+		"patchsize"  			: 32,
+		"nfeaturemaps"  		: [32,64,1000,1000],
+		"filtsize" 	  			: 5,
+		"poolsize" 	  			: [3,2],
+		"featuremaps_h" 		: 2,
+		"featuremaps_w" 		: 2,
+		"noutputs" 	  			: 2
 	}
 
 	# ************************************************************************************************

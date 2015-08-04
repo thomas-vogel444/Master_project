@@ -39,9 +39,11 @@ class Experiment:
 		"""
 			Generates the model source file from a model template filling in the model values with those in model parameters.
 		"""
-		template_environment = jinja2.Environment(loader = jinja2.FileSystemLoader(self.model.model_parameters["modelTemplate"]))
-		with open(self.model.model_parameters["modelPath"], 'w') as f:
-		    f.write(template_environment.render(self.model.model_parameters))
+		template_environment = jinja2.Environment(loader = jinja2.FileSystemLoader(self.model.model_parameters["modelTemplateDirectory"]))
+		model_template 		 = template_environment.get_template(self.model.model_parameters["modelTemplate"])
+
+		with open(self.model.model_parameters["modelPath"], 'w+') as f:
+		    f.write(model_template.render(self.model.model_parameters))
 
 	def save_as_json(self, parameters, filename, saving_directory):
 		"""
