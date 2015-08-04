@@ -8,7 +8,7 @@ class Segmentator:
 	name_extensions = ["fixed_z", "fixed_y", "fixed_x"]
 
 	def __init__(self, segmentation_parameters):
-		self.segmentation_command_line_options = {
+		self.segmentation_parameters = {
 				"GPU"					: segmentation_parameters["GPU"],
 				"segmentationCode"		: segmentation_parameters["segmentationCode"],
 				"segmentationFile" 		: segmentation_parameters["segmentationFile"],
@@ -26,11 +26,11 @@ class Segmentator:
 		"""
 			Segments the three segmentation datasets in the segmentation hdf5 file.
 		"""
-		if os.path.isfile(segmentation_parameters["predictedPath"]):
-			os.remove(segmentation_parameters["predictedPath"])
+		if os.path.isfile(self.segmentation_parameters["predictedPath"]):
+			os.remove(self.segmentation_parameters["predictedPath"])
 
 		for name_extension in self.name_extensions:	
-			segmentation_command_options = self.get_segmentation_command_options(segmentation_parameters, name_extension)
+			segmentation_command_options = self.get_segmentation_command_options(name_extension)
 
 			segmentation_command = "th %(segmentationCode)s -GPU %(GPU)i -segmentationFile %(segmentationFile)s -segmentationLabels %(segmentationLabels)s "\
 									"-segmentationValues %(segmentationValues)s -segmentationDataset %(segmentationDataset)s "\
@@ -42,11 +42,11 @@ class Segmentator:
 			print 
 			subprocess.call(segmentation_command, shell=True)
 
-	def get_segmentation_command_options(self, segmentation_parameters, name_extension):
+	def get_segmentation_command_options(self, name_extension):
 		"""
 			Customises the command option values for each segmentation dataset.
 		"""
-		command_options = dict(segmentation_parameters)
+		command_options = dict(self.segmentation_parameters)
 
 		command_options["segmentationDataset"] 	= command_options["segmentationDataset"].replace("NAME", name_extension)
 		command_options["segmentationLabels"] 	= command_options["segmentationLabels"].replace("NAME", name_extension)

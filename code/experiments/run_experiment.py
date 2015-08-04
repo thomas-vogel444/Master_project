@@ -51,7 +51,7 @@ if __name__ == "__main__":
 		"GPU"				: 2,
 		"segmentationCode"	: segmentation_code_path,
 		"segmentationFile" 	: segmentation_file_path,
-		"modelPath" 		: os.path.join(experiment_results_directory, "model.net")
+		"modelDirectory"	: experiment_results_directory
 	}
 
 	# ************************************************************************************************

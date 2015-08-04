@@ -49,7 +49,7 @@ class Experiment:
 		"""
 			Saves a dictionary of parameters into a json file in a given saving directory.
 		"""
-		json_path = os.path.join(self.training_parameters["savingDirectory"], filename)
+		json_path = os.path.join(self.model.training_parameters["savingDirectory"], filename)
 		with open(json_path, 'w') as file:
 			json.dump(parameters, file, indent=4, separators=(',', ': '))
 
