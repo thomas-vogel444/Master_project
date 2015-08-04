@@ -17,6 +17,8 @@ cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
 cmd:option('-threads', 2, 'number of threads')
 -- data:
 cmd:option('-dataset', '../../datasets/CNN_datasets.hdf5', 'Dataset path')
+-- model:
+cmd:option('-modelPath', 'model.lua', 'Model file name')
 -- training:
 cmd:option('-maxepoch', 30, 'Maximum number of epoch on which to train the NN')
 cmd:option('-savingDirectory', 'results', 'subdirectory to save/log experiments in')
@@ -45,7 +47,7 @@ torch.manualSeed(opt.seed)
 print '==> executing all'
 
 dofile 'data.lua'
-dofile 'model.lua'
+dofile opt.modelPath
 dofile 'train.lua'
 dofile 'test.lua'
 
