@@ -22,7 +22,7 @@ class Segmentator:
 				"type"					: "cuda"
 			}
 
-	def segment(self, model_directory):
+	def segment(self):
 		"""
 			Segments the three segmentation datasets in the segmentation hdf5 file.
 		"""

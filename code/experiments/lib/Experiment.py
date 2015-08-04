@@ -26,11 +26,11 @@ class Experiment:
 		os.chdir(self.NN_code_directory)
 		
 		# Train the model
-		model.train()
+		self.model.train()
 
 		# Post training step
-		self.save_as_json(model.training_parameters, "training_parameters.json", saving_directory)
-		self.save_as_json(model.model_parameters, "model_parameters.json", saving_directory)
+		self.save_as_json(self.model.training_parameters, "training_parameters.json")
+		self.save_as_json(self.model.model_parameters, "model_parameters.json")
 
 		# Come back to the original directory
 		os.chdir(current_working_directory)
@@ -45,11 +45,11 @@ class Experiment:
 		with open(self.model.model_parameters["modelPath"], 'w+') as f:
 		    f.write(model_template.render(self.model.model_parameters))
 
-	def save_as_json(self, parameters, filename, saving_directory):
+	def save_as_json(self, parameters, filename):
 		"""
 			Saves a dictionary of parameters into a json file in a given saving directory.
 		"""
-		json_path = os.path.join(saving_directory, filename)
+		json_path = os.path.join(self.training_parameters["savingDirectory"], filename)
 		with open(json_path, 'w') as file:
 			json.dump(parameters, file, indent=4, separators=(',', ': '))
 
@@ -65,9 +65,8 @@ class Model:
 		"""
 			Calls the linux command to train a neural network.
 		"""
-		command_options = self.get_training_command_options()
 		training_command = "th main.lua -GPU %(GPU_identifier)i -dataset %(dataset)s -modelPath %(modelPath)s -maxepoch %(maxepoch)i "\
 							"-savingDirectory %(savingDirectory)s -learningRate %(learningRate)f -batchSize %(batchSize)i "\
-							"-momentum %(momentum)f -type %(type)s" %command_options
+							"-momentum %(momentum)f -type %(type)s" %self.training_parameters
 		subprocess.call(training_command, shell=True)
 

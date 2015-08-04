@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
 	model_parameters = {
 		"modelTemplateDirectory": model_templates_directory,
-		"modelTemplate" 		: os.path.join(model_templates_directory, "model_template.lua"),
+		"modelTemplate" 		: "model_template.lua",
 		"modelPath"				: model_path,
 		"nfeats"  				: 6,
 		"patchsize"  			: 32,
@@ -62,11 +62,5 @@ if __name__ == "__main__":
 	experiment.run_experiment()
 
 	# Produce some segmentation results
-	for segmentation_type in segmentation_types:
-		segmentation_parameters["segmentationDataset"]	= segmentation_parameters["segmentationDataset"].replace("NAME", segmentation_type)
-		segmentation_parameters["segmentationLabels"]	= segmentation_parameters["segmentationLabels"].replace("NAME", segmentation_type)
-		segmentation_parameters["segmentationValues"]	= segmentation_parameters["segmentationValues"].replace("NAME", segmentation_type)
-		segmentation_parameters["predictedDataset"]		= segmentation_parameters["predictedDataset"].replace("NAME", segmentation_type)
-
-		segmentator = Segmentator(segmentation_parameters)
-		segmentator.segment()
+	segmentator = Segmentator(segmentation_parameters)
+	segmentator.segment()
