@@ -2,7 +2,6 @@ import jinja2
 import json
 import subprocess
 import os
-import pprint as pp	
 import shutil
 
 class Experiment:
@@ -30,7 +29,8 @@ class Experiment:
 
 		# Post training step
 		self.save_as_json(self.model.training_parameters, "training_parameters.json")
-		self.save_as_json(self.model.model_parameters, "model_parameters.json")
+		self.save_model()
+		# self.save_as_json(self.model.model_parameters, "model_parameters.json")
 
 		# Come back to the original directory
 		os.chdir(current_working_directory)
@@ -52,6 +52,12 @@ class Experiment:
 		json_path = os.path.join(self.model.training_parameters["savingDirectory"], filename)
 		with open(json_path, 'w') as file:
 			json.dump(parameters, file, indent=4, separators=(',', ': '))
+
+	def save_model(self):
+		"""
+			Saves the model code in the saving directory of the experiment.
+		"""
+		shutil.move(self.model.model_parameters["modelPath"], self.model.training_parameters["savingDirectory"])
 
 class Model:
 	"""

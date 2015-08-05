@@ -7,33 +7,27 @@ if __name__ == "__main__":
 	# ************************************************************************************************
 	# 						Base parameters for the set of experiments to be conducted
 	# ************************************************************************************************
-	experiment_name 			= "test_experiment/0"
-	experiment_results_directory= os.path.join(os.path.abspath("../../experimental_results"), experiment_name)
+	experiment_name 				= "test_experiment/0"
+	model_name 						= "test_model.lua"
+	NN_code_directory 				= os.path.abspath("../CNN")
+	experimental_results_directory  = os.path.abspath("../../experimental_results")
 	
-	NN_code_directory 			= os.path.abspath("../CNN")
-	model_templates_directory 	= os.path.join(NN_code_directory, "model_templates")
-	models_directory			= os.path.join(NN_code_directory, "models")
-	model_path  				= os.path.join(models_directory, "test_model.lua")
-
-	segmentation_code_path		= os.path.join(NN_code_directory, "segment.lua")
-	segmentation_file_path 		= os.path.abspath("../../datasets/segmentation_datasets.hdf5")
-
 	training_parameters = {
 		"type"				: "cuda",
 		"GPU_identifier"	: 1,
-		"savingDirectory"	: experiment_results_directory,
-		"modelPath"			: model_path,
-		"maxepoch"			: 1, 
+		"savingDirectory"	: os.path.join(experimental_results_directory, experiment_name),
+		"modelPath"			: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
+		"maxepoch"			: 5, 
 		"learningRate"		: 0.1, 
 		"batchSize"			: 512, 
 		"momentum"			: 0.0, 
-		"dataset" 			: os.path.abspath("../../datasets/CNN_small_atrium_box_datasets_110000.hdf5.hdf5"),
+		"dataset" 			: os.path.abspath("../../datasets/CNN_small_atrium_box_datasets_44000.hdf5"),
 	}
 
 	model_parameters = {
-		"modelTemplateDirectory": model_templates_directory,
+		"modelTemplateDirectory": os.path.join(NN_code_directory, "model_templates"),
 		"modelTemplate" 		: "model_template.lua",
-		"modelPath"				: model_path,
+		"modelPath"				: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
 		"nfeats"  				: 6,
 		"patchsize"  			: 32,
 		"nfeaturemaps"  		: [32,64,1000,1000],
@@ -49,9 +43,9 @@ if __name__ == "__main__":
 	# ************************************************************************************************
 	segmentation_parameters = {
 		"GPU"				: 2,
-		"segmentationCode"	: segmentation_code_path,
-		"segmentationFile" 	: segmentation_file_path,
-		"modelDirectory"	: experiment_results_directory
+		"segmentationCode"	: os.path.join(NN_code_directory, "segment.lua"),
+		"segmentationFile" 	: os.path.abspath("../../datasets/segmentation_datasets.hdf5"),
+		"modelDirectory"	: os.path.join(experimental_results_directory, experiment_name)
 	}
 
 	# ************************************************************************************************
