@@ -13,12 +13,10 @@ class Segmentator:
 				"segmentationCode"		: segmentation_parameters["segmentationCode"],
 				"segmentationFile" 		: segmentation_parameters["segmentationFile"],
 				"segmentationDataset"	: "segmentation_dataset_NAME",
-				"segmentationLabels"	: "labels_NAME",
 				"segmentationValues"	: "values_NAME",
 				"predictedPath"			: os.path.join(segmentation_parameters["modelDirectory"], "predicted_labels.hdf5"),
 				"predictedDataset"		: "predicted_labels_NAME",
 				"modelPath"				: os.path.join(segmentation_parameters["modelDirectory"], "model.net"),
-				"imagePath"				: os.path.join(segmentation_parameters["modelDirectory"], "image_NAME.png"),
 				"type"					: "cuda"
 			}
 
@@ -32,14 +30,11 @@ class Segmentator:
 		for name_extension in self.name_extensions:	
 			segmentation_command_options = self.get_segmentation_command_options(name_extension)
 
-			segmentation_command = "th %(segmentationCode)s -GPU %(GPU)i -segmentationFile %(segmentationFile)s -segmentationLabels %(segmentationLabels)s "\
+			segmentation_command = "th %(segmentationCode)s -GPU %(GPU)i -segmentationFile %(segmentationFile)s "\
 									"-segmentationValues %(segmentationValues)s -segmentationDataset %(segmentationDataset)s "\
-									"-predictedPath %(predictedPath)s -predictedDataset %(predictedDataset)s -imagePath %(imagePath)s "\
+									"-predictedPath %(predictedPath)s -predictedDataset %(predictedDataset)s "\
 									"-modelPath %(modelPath)s -type %(type)s" %segmentation_command_options
 
-			print "******************** Running the following command ********************"
-			print segmentation_command
-			print 
 			subprocess.call(segmentation_command, shell=True)
 
 	def get_segmentation_command_options(self, name_extension):
@@ -49,11 +44,9 @@ class Segmentator:
 		command_options = dict(self.segmentation_parameters)
 
 		command_options["segmentationDataset"] 	= command_options["segmentationDataset"].replace("NAME", name_extension)
-		command_options["segmentationLabels"] 	= command_options["segmentationLabels"].replace("NAME", name_extension)
 		command_options["segmentationValues"] 	= command_options["segmentationValues"].replace("NAME", name_extension)
 		command_options["segmentationLabels"] 	= command_options["segmentationLabels"].replace("NAME", name_extension)
 		command_options["predictedDataset"] 	= command_options["predictedDataset"].replace("NAME", name_extension)
 		command_options["modelPath"] 			= command_options["modelPath"].replace("NAME", name_extension)
-		command_options["imagePath"] 			= command_options["imagePath"].replace("NAME", name_extension)
 
 		return command_options
