@@ -10,5 +10,12 @@ parser.add_argument('-s', '--dataset_path', default = '../../datasets/segmentati
 args = parser.parse_args()
 
 # Segment stuff...
-segmentator = Segmentator(args.dataset_path, args.code_path)
-segmentator.segment(args.model_path)
+segmentation_parameters = {
+		"GPU"				: 1,
+		"segmentationCode"	: args.code_path,
+		"segmentationFile" 	: args.dataset_path,
+		"modelDirectory"	: args.model_path
+	}
+
+segmentator = Segmentator(segmentation_parameters)
+segmentator.segment()

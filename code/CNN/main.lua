@@ -47,7 +47,7 @@ torch.manualSeed(opt.seed)
 print '==> executing all'
 
 dofile 'data.lua'
-dofile opt.modelPath
+dofile(opt.modelPath)
 dofile 'train.lua'
 dofile 'test.lua'
 
