@@ -7,5 +7,5 @@
     "batchSize": 512,
     "type": "cuda",
     "momentum": 0.0,
-    "dataset": "/home/tv15/master_project/datasets/CNN_small_atrium_box_datasets_44000.hdf5"
+    "dataset": "/home/tv15/master_project/datasets/CNN_small_atrium_box_datasets_176000.hdf5"
 }
