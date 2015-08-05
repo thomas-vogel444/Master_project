@@ -10,11 +10,11 @@ if __name__ == "__main__":
 	# Setting Parameters
 	data_directory 		= "../../ct_atrium/"
 	dataset_directory 	= "../../datasets/"
-	random_dataset_name = "small_CNN_datasets.hdf5"
+	random_dataset_name = "CNN_small_atrium_box_datasets_1408000.hdf5"
 
 	patch_size 							= 32
-	n_examples_per_CT_scan_per_label 	= (500, 500, 3500) # (n_non_bd_non_atrium, n_bd_non_atrium, n_atrium)
-	xy_padding, z_padding  				= 5, 5
+	n_examples_per_CT_scan_per_label 	= (16000, 16000, 32000) # (n_non_bd_non_atrium, n_bd_non_atrium, n_atrium)
+	xy_padding, z_padding  				= 5, 1
 
 	# ********************************************************************************************
 	# 						Generate the training and testing datasets
