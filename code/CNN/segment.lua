@@ -48,6 +48,7 @@ labels = f:read(opt.segmentationLabels):all():float()
 -- Load the real values
 print("Loading the segmented image...")
 values = f:read(opt.segmentationValues):all():float()
+values:div(255)
 f:close()
 
 ----------------------------------------------------------------------
