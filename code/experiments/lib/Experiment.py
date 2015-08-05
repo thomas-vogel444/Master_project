@@ -30,7 +30,6 @@ class Experiment:
 		# Post training step
 		self.save_as_json(self.model.training_parameters, "training_parameters.json")
 		self.save_model()
-		# self.save_as_json(self.model.model_parameters, "model_parameters.json")
 
 		# Come back to the original directory
 		os.chdir(current_working_directory)
@@ -57,6 +56,9 @@ class Experiment:
 		"""
 			Saves the model code in the saving directory of the experiment.
 		"""
+		if os.path.isfile(self.model.model_parameters["modelPath"]):
+			os.remove(self.model.model_parameters["modelPath"])
+			
 		shutil.move(self.model.model_parameters["modelPath"], self.model.training_parameters["savingDirectory"])
 
 class Model:

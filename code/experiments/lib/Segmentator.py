@@ -45,7 +45,6 @@ class Segmentator:
 
 		command_options["segmentationDataset"] 	= command_options["segmentationDataset"].replace("NAME", name_extension)
 		command_options["segmentationValues"] 	= command_options["segmentationValues"].replace("NAME", name_extension)
-		command_options["segmentationLabels"] 	= command_options["segmentationLabels"].replace("NAME", name_extension)
 		command_options["predictedDataset"] 	= command_options["predictedDataset"].replace("NAME", name_extension)
 		command_options["modelPath"] 			= command_options["modelPath"].replace("NAME", name_extension)
 
