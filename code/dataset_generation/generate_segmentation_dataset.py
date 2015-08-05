@@ -50,10 +50,10 @@ for x in range(dicom_height):
 
 print "=======> Generating the segmentation dataset for fixed x = %i from CT scan %s... <=======" %(x_slice, segmented_CT_scan.name)
 tri_planar_segmentation_dataset_fixed_x = np.zeros((segmented_CT_scan.image[0,:,:].size, 6, patch_size, patch_size))
-for z in range(number_dicoms):
-	utils.drawProgressBar(float(z)/(number_dicoms-1), 100)
-	for y in range(dicom_width):
-		tri_planar_segmentation_dataset_fixed_x[y + dicom_width*z, :, :, :] = df.generate_patches((x_slice,y,z),segmented_CT_scan.image, patch_size)
+for y in range(dicom_width):
+	utils.drawProgressBar(float(y)/(dicom_width-1), 100)
+	for z in range(number_dicoms):
+		tri_planar_segmentation_dataset_fixed_x[z + number_dicoms*y, :, :, :] = df.generate_patches((x_slice,y,z),segmented_CT_scan.image, patch_size)
 
 # ********************************************************************************************
 # 								Saving the segmentation datasets
