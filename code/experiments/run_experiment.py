@@ -7,8 +7,8 @@ if __name__ == "__main__":
 	# ************************************************************************************************
 	# 						Base parameters for the set of experiments to be conducted
 	# ************************************************************************************************
-	experiment_name 				= "test_experiment/0"
-	model_name 						= "test_model.lua"
+	experiment_name 				= "varying_datasets/0"
+	model_name 						= "varying_datasets_model.lua"
 	NN_code_directory 				= os.path.abspath("../CNN")
 	dataset_directory				= os.path.abspath("../../../datasets")
 	experimental_results_directory  = os.path.abspath("../../experimental_results")
@@ -22,7 +22,7 @@ if __name__ == "__main__":
 		"learningRate"		: 0.1, 
 		"batchSize"			: 512, 
 		"momentum"			: 0.0, 
-		"dataset" 			: os.path.join(dataset_directory,"CNN_small_atrium_box_datasets_44000.hdf5")
+		"dataset" 			: os.path.join(dataset_directory,"CNN_small_atrium_box_datasets_300000.hdf5")
 	}
 
 	model_parameters = {
