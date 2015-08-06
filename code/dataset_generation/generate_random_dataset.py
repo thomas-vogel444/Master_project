@@ -14,8 +14,8 @@ if __name__ == "__main__":
 
 	patch_size 									= 32
 	sampling_type								= "With_Atrium_Box"		# options: Random, With_Atrium_Box, Without_Atrium_Box
-	n_training_examples_per_CT_scan_per_label 	= (160, 160, 320) 		# (n_non_bd_non_atrium, n_bd_non_atrium, n_atrium)
-	n_testing_examples_per_CT_scan_per_label	= sum(n_training_examples_per_CT_scan_per_label)
+	n_training_examples_per_CT_scan_per_label 	= (3750, 3750, 7500) 		# (n_non_bd_non_atrium, n_bd_non_atrium, n_atrium)
+	n_testing_examples_per_CT_scan_per_label	= 100000
 	xy_padding, z_padding  						= 5, 1
 
 	# ********************************************************************************************
