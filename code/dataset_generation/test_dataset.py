@@ -6,7 +6,7 @@ import h5py
 from lib.CTScanImage import CTScanImage
 import lib.dataset_functions as df
 
-data_directory = "../../ct_atrium/"
+data_directory = "../../ct_atrium/Training/"
 
 CT_scan_parameters_template = {
 		"CT_scan_path_template" : data_directory + "CTScan_name",
@@ -21,7 +21,7 @@ patch_size = 32
 z = 30
 
 # Generate a test dataset from a single DICOM image from a single CT scan
-CT_scan_names = ["14032003", "14012303"]
+CT_scan_names = ["14032003", "13061101"]
 
 print "=======> Generating the testing dataset <======="
 generated_dataset, generated_labels = df.generate_random_dataset(CT_scan_names, n_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size, z)

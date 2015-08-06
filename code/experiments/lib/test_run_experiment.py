@@ -1,5 +1,5 @@
-from lib.Segmentator import Segmentator
-from lib.Experiment import Experiment, Model
+from Segmentator import Segmentator
+from Experiment import Experiment, Model
 import os
 
 #***************************************************************************************************************
@@ -9,9 +9,9 @@ if __name__ == "__main__":
 	# ************************************************************************************************
 	experiment_name 				= "test_experiment/0"
 	model_name 						= "test_model.lua"
-	NN_code_directory 				= os.path.abspath("../CNN")
+	NN_code_directory 				= os.path.abspath("../../CNN")
 	dataset_directory				= os.path.abspath("../../../datasets")
-	experimental_results_directory  = os.path.abspath("../../experimental_results")
+	experimental_results_directory  = os.path.abspath("../../../experimental_results")
 	
 	training_parameters = {
 		"type"				: "cuda",
@@ -22,7 +22,7 @@ if __name__ == "__main__":
 		"learningRate"		: 0.1, 
 		"batchSize"			: 512, 
 		"momentum"			: 0.0, 
-		"dataset" 			: os.path.join(dataset_directory,"CNN_small_atrium_box_datasets_44000.hdf5")
+		"dataset" 			: os.path.join(dataset_directory, "CNN_small_atrium_box_datasets_44000.hdf5")
 	}
 
 	model_parameters = {
@@ -45,7 +45,7 @@ if __name__ == "__main__":
 	segmentation_parameters = {
 		"GPU"				: 2,
 		"segmentationCode"	: os.path.join(NN_code_directory, "segment.lua"),
-		"segmentationFile" 	: os.path.join(dataset_directory,"datasets/segmentation_datasets.hdf5"),
+		"segmentationFile" 	: os.path.join(dataset_directory, "datasets/segmentation_datasets.hdf5"),
 		"modelDirectory"	: os.path.join(experimental_results_directory, experiment_name)
 	}
 
@@ -59,3 +59,4 @@ if __name__ == "__main__":
 	# Produce some segmentation results
 	segmentator = Segmentator(segmentation_parameters)
 	segmentator.segment()
+

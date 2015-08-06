@@ -5,7 +5,7 @@ import re
 import lib.dataset_functions as df
 from lib.CTScanImage import CTScanImage
 
-data_directory = "../../ct_atrium/"
+data_directory = "../../ct_atrium/Training/"
 
 CT_scan_parameters_template = {
 		"CT_scan_path_template" : data_directory + "CTScan_name",
@@ -26,7 +26,7 @@ z = 40
 
 # Get the patches at a given voxel
 patch_size = 32
-patches = df.generate_patches(x,y,z, CT_scan.image, patch_size)
+patches = df.generate_patches((x,y,z), CT_scan.image, patch_size)
 
 # Plot 3 patches next to their respective DICOM slice.
 fig = plt.figure()

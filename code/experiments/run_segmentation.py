@@ -2,9 +2,11 @@ import argparse
 import os
 from lib.Segmentator import Segmentator
 
+# Parameters
+code_path = os.path.abspath("../CNN/segment.lua")
+
 # Command line arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('-c', '--code_path', 	default = '../CNN/segment.lua')
 parser.add_argument('-m', '--model_path', 	default = '../../experimental_results/test_experiment/0')
 parser.add_argument('-s', '--dataset_path', default = '../../datasets/segmentation_datasets.hdf5')
 args = parser.parse_args()
@@ -12,7 +14,7 @@ args = parser.parse_args()
 # Segment stuff...
 segmentation_parameters = {
 		"GPU"				: 1,
-		"segmentationCode"	: args.code_path,
+		"segmentationCode"	: code_path,
 		"segmentationFile" 	: args.dataset_path,
 		"modelDirectory"	: args.model_path
 	}
