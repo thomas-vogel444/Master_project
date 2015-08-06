@@ -1,6 +1,7 @@
 import os
 import re
 import numpy as np
+import utils
 import dicom
 import nrrd
 
@@ -8,18 +9,26 @@ class CTScanImage:
 	""" 
 		Class representing the CT scan.
 	"""
-	name   	    = None
-	parameters  = None
-	labels 	    = None
-	NRRD_header = None
-	image       = None
+	def __init__(self, name, parameters_template, xy_padding=0, z_padding=0):
+		self.name 				 	  	= name
+		self.parameters 		 	  	= self.get_parameters(parameters_template)
+		self.dicoms 			 	  	= self.get_DICOM_names()
+		self.labels, self.NRRD_header 	= self.get_NRRD_image()
+		self.image 					  	= self.get_CT_scan_array()
+		self.labels_with_atrium_box 	= self.get_labels_with_atrium_box(xy_padding, z_padding)
 
-	def __init__(self, name, parameters_template):
-		self.name 				 	  = name
-		self.parameters 		 	  = self.get_parameters(parameters_template)
-		self.dicoms 			 	  = self.get_DICOM_names()
-		self.labels, self.NRRD_header = self.get_NRRD_image()
-		self.image 					  = self.get_CT_scan_array()
+	def sample_CT_scan_indices(self, sampling_type, n, target_label=None, z=None):
+		"""
+			Sample where appropriate, either randomly, with or without an atrium box.
+		"""
+		if sampling_type == "Random":
+			indices_3d = utils.random_3d_indices(np.zeros(self.labels.shape), n, 0, z)
+		elif sampling_type == "With_Atrium_Box":
+			indices_3d = utils.random_3d_indices(self.labels_with_atrium_box, n, target_label, z)
+		elif sampling_type == "Without_Atrium_Box":
+			indices_3d = utils.random_3d_indices(self.labels, n, target_label, z)
+
+		return indices_3d
 
 	def get_parameters(self, data_parameters_template):
 		return {
@@ -70,8 +79,8 @@ class CTScanImage:
 				Non_Atrium inside boundary 	: 1
 				Atrium 						: 2
 		"""
-		dimensions = self.labels.shape
-		atrium_indices = np.where(self.labels == 1)
+		dimensions 		= self.labels.shape
+		atrium_indices 	= np.where(self.labels == 1)
 
 		x_min = np.max(((np.min(atrium_indices[0]) - xy_padding), 0))
 		x_max = np.min(((np.max(atrium_indices[0]) + xy_padding), dimensions[0]))

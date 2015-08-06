@@ -10,11 +10,13 @@ if __name__ == "__main__":
 	# Setting Parameters
 	data_directory 		= "../../ct_atrium/"
 	dataset_directory 	= "../../datasets/"
-	random_dataset_name = "CNN_small_atrium_box_datasets_1408000.hdf5"
+	random_dataset_name = "small_CNN_datasets.hdf5"
 
-	patch_size 							= 32
-	n_examples_per_CT_scan_per_label 	= (16000, 16000, 32000) # (n_non_bd_non_atrium, n_bd_non_atrium, n_atrium)
-	xy_padding, z_padding  				= 5, 1
+	patch_size 									= 32
+	sampling_type								= "With_Atrium_Box"		# options: Random, With_Atrium_Box, Without_Atrium_Box
+	n_training_examples_per_CT_scan_per_label 	= (160, 160, 320) 		# (n_non_bd_non_atrium, n_bd_non_atrium, n_atrium)
+	n_testing_examples_per_CT_scan_per_label	= sum(n_training_examples_per_CT_scan_per_label)
+	xy_padding, z_padding  						= 5, 1
 
 	# ********************************************************************************************
 	# 						Generate the training and testing datasets
@@ -38,9 +40,21 @@ if __name__ == "__main__":
 
 		print "=======> Generating the %s dataset <======="%CT_scan_type
 		CT_scan_names		= [directory for directory in os.listdir(CT_scans_directory) if CT_scan_parameters_template["CT_directory_pattern"].match(directory)]
-		dataset, labels 	= df.generate_random_dataset(CT_scan_names, n_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size, xy_padding=xy_padding, z_padding=z_padding)
+		
+		if CT_scan_type == "training":
+			dataset, labels = df.generate_random_dataset(CT_scan_names, n_training_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size, sampling_type, xy_padding=xy_padding, z_padding=z_padding)
+		elif CT_scan_type == "testing":
+			dataset, labels = df.generate_random_dataset(CT_scan_names, n_testing_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size, "Random")
 
 		dataset_hdf5 	  	  = f.create_dataset("%s_dataset"%CT_scan_type, dataset.shape, dtype="uint32")
 		dataset_hdf5[...]     = dataset
 		labels_hdf5 	  	  = f.create_dataset("%s_labels"%CT_scan_type, labels.shape, dtype="uint8")
 		labels_hdf5[...]  	  = labels
+
+
+
+
+
+
+
+
