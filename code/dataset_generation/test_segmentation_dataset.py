@@ -16,7 +16,6 @@ CT_scan_parameters_template = {
 			}
 testing_CT_scan_names = [directory for directory in os.listdir(testing_CT_scans_directory) if CT_scan_parameters_template["CT_directory_pattern"].match(directory)]
 testing_CT_scan_name  = testing_CT_scan_names[0]
-print testing_CT_scan_name
 
 segmented_CT_scan			  		 	 = CTScanImage(testing_CT_scan_name, CT_scan_parameters_template)
 dicom_height, dicom_width, number_dicoms = segmented_CT_scan.image.shape
