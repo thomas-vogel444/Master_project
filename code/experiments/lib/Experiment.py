@@ -74,7 +74,8 @@ class Model:
 							"-batchSize %(batchSize)i -momentum %(momentum)f -type %(type)s" %self.training_parameters
 		
 		# Call the training command
-		subprocess.call(training_command, shell=True)
+		FNULL = open(os.devnull, 'w')
+		subprocess.call(training_command, shell=True, stdout=FNULL, stderr=subprocess.STDOUT)
 
 		# Come back to the original directory
 		os.chdir(current_working_directory)
