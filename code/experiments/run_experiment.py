@@ -69,7 +69,7 @@ if __name__ == "__main__":
 	model_parameters["dataset"] 		  	= os.path.join(dataset_directory, "small_test_datasets.hdf5")
 	training_parameters["GPU_identifier"] 	= 1
 
-    t = threading.Thread(target=start_experiment, args=(training_parameters, model_parameters, segmentation_parameters,))
+    t = threading.Thread(target=start_experiment, args=(training_parameters, model_parameters, segmentation_parameters))
     threads.append(t)
     t.start()
 
@@ -78,7 +78,7 @@ if __name__ == "__main__":
 	model_parameters["dataset"] = os.path.join(dataset_directory, "small_test_datasets.hdf5")
 	training_parameters["GPU_identifier"] 	= 2
 	
-	t = threading.Thread(target=start_experiment, args=(training_parameters, model_parameters, segmentation_parameters,))
+	t = threading.Thread(target=start_experiment, args=(training_parameters, model_parameters, segmentation_parameters))
     threads.append(t)
     t.start()
 
@@ -87,7 +87,7 @@ if __name__ == "__main__":
 	model_parameters["dataset"] = os.path.join(dataset_directory, "small_test_datasets.hdf5")
 	training_parameters["GPU_identifier"] 	= 3
 
-	t = threading.Thread(target=start_experiment, args=(training_parameters, model_parameters, segmentation_parameters,))
+	t = threading.Thread(target=start_experiment, args=(training_parameters, model_parameters, segmentation_parameters))
     threads.append(t)
     t.start()
 
