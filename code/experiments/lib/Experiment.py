@@ -8,21 +8,15 @@ class Experiment:
 	"""
 		This class is responsible for handling all the logistics involved in training a Neural Network.
 	"""
-	def __init__(self, NN_code_directory, model):
-		self.NN_code_directory	= NN_code_directory
-		self.model 				= model
+	def __init__(self, model):
+		self.model = model
 
 	def run_experiment(self):
 		"""
 			Sets up the logistics for training a model, trains the model, and finish with some post-training logistics.
 		"""
-		current_working_directory = os.getcwd()
-
 		# Generate the model source file
 		self.generate_model_source_file()
-
-		# Change directory to the code directory
-		os.chdir(self.NN_code_directory)
 		
 		# Train the model
 		self.model.train()
@@ -30,9 +24,6 @@ class Experiment:
 		# Post training step
 		self.save_as_json(self.model.training_parameters, "training_parameters.json")
 		self.save_model()
-
-		# Come back to the original directory
-		os.chdir(current_working_directory)
 
 	def generate_model_source_file(self):
 		"""
@@ -73,8 +64,16 @@ class Model:
 		"""
 			Calls the linux command to train a neural network.
 		"""
-		training_command = "th main.lua -GPU %(GPU_identifier)i -dataset %(dataset)s -modelPath %(modelPath)s -maxepoch %(maxepoch)i "\
-							"-savingDirectory %(savingDirectory)s -learningRate %(learningRate)f -batchSize %(batchSize)i "\
-							"-momentum %(momentum)f -type %(type)s" %self.training_parameters
+		# Change directory to the code directory
+		current_working_directory = os.getcwd()
+		os.chdir(self.model_parameters["NN_code_directory"])
+
+		training_command  = "th main.lua -GPU_id %(GPU_identifier)i -number_of_GPUs %(number_of_GPUs)i -dataset %(dataset)s -modelPath %(modelPath)s "\
+							"-maxepoch %(maxepoch)i -savingDirectory %(savingDirectory)s -learningRate %(learningRate)f "\
+							"-batchSize %(batchSize)i -momentum %(momentum)f -type %(type)s" %self.training_parameters
+		
+		# Call the training command
 		subprocess.call(training_command, shell=True)
 
+		# Come back to the original directory
+		os.chdir(current_working_directory)
