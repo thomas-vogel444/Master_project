@@ -11,9 +11,10 @@ if __name__ == "__main__":
 	NN_code_directory 				= os.path.abspath("../CNN")
 	dataset_directory				= os.path.abspath("../../datasets")
 	experimental_results_directory  = os.path.abspath("../../experimental_results")
-	model_name 						= model_template.replace("_template", "")
 
 	def get_base_parameters(experiment_name, model_template):
+		model_name 						= model_template.replace("_template", "")
+		
 		base_training_parameters = {
 			"type"				: "cuda",
 			"GPU_identifier"	: 1,
