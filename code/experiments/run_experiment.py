@@ -1,5 +1,6 @@
 from lib.Segmentator import Segmentator
 from lib.Experiment import Experiment, Model
+import threading
 import os
 
 #***************************************************************************************************************
@@ -7,12 +8,12 @@ if __name__ == "__main__":
 	# ************************************************************************************************
 	# 						Base parameters for the set of experiments to be conducted
 	# ************************************************************************************************
-	def get_base_parameters(experiment_name, model_template):
-		NN_code_directory 				= os.path.abspath("../CNN")
-		dataset_directory				= os.path.abspath("../../datasets")
-		experimental_results_directory  = os.path.abspath("../../experimental_results")
-		model_name 						= model_template.replace("_template", "")
+	NN_code_directory 				= os.path.abspath("../CNN")
+	dataset_directory				= os.path.abspath("../../datasets")
+	experimental_results_directory  = os.path.abspath("../../experimental_results")
+	model_name 						= model_template.replace("_template", "")
 
+	def get_base_parameters(experiment_name, model_template):
 		base_training_parameters = {
 			"type"				: "cuda",
 			"GPU_identifier"	: 1,
@@ -23,7 +24,7 @@ if __name__ == "__main__":
 			"learningRate"		: 0.1, 
 			"batchSize"			: 512, 
 			"momentum"			: 0.0, 
-			"dataset" 			: os.path.join(dataset_directory,"CNN_small_atrium_box_datasets_300000.hdf5")
+			"dataset" 			: os.path.join(dataset_directory,"CNN_small_atrium_box_datasets.hdf5")
 		}
 
 		base_model_parameters = {
@@ -44,10 +45,10 @@ if __name__ == "__main__":
 		base_segmentation_parameters = {
 			"GPU"				: 2,
 			"segmentationCode"	: os.path.join(NN_code_directory, "segment.lua"),
-			"segmentationFile" 	: os.path.join(dataset_directory,"datasets/segmentation_datasets.hdf5"),
+			"segmentationFile" 	: os.path.join(dataset_directory,"segmentation_datasets.hdf5"),
 			"modelDirectory"	: os.path.join(experimental_results_directory, experiment_name)
 		}
-		return base_training_parameters, base_model_parameters, base_segmentation_parameters
+		return dict(base_training_parameters), dict(base_model_parameters), dict(base_segmentation_parameters)
 
 	def start_experiment(training_parameters, model_parameters, segmentation_parameters):
 		model 		= Model(training_parameters, model_parameters)
@@ -60,8 +61,34 @@ if __name__ == "__main__":
 	# ************************************************************************************************
 	# 										Run the experiments for varying parameters
 	# ************************************************************************************************
-	experiment_name = "varying_datasets/no_box_atrium"
-	model_template 	= "model_template.lua"
-	
+	threads = []
+
+	experiment_name = "test_experiment/1"
+	model_template 	= "model_template.lua"	
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(experiment_name, model_template)
-	start_experiment(training_parameters, model_parameters, segmentation_parameters)
+	model_parameters["dataset"] 		  	= os.path.join(dataset_directory, "small_test_datasets.hdf5")
+	training_parameters["GPU_identifier"] 	= 1
+
+    t = threading.Thread(target=start_experiment, args=(training_parameters, model_parameters, segmentation_parameters,))
+    threads.append(t)
+    t.start()
+
+	experiment_name = "test_experiment/2"
+	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(experiment_name, model_template)
+	model_parameters["dataset"] = os.path.join(dataset_directory, "small_test_datasets.hdf5")
+	training_parameters["GPU_identifier"] 	= 2
+	
+	t = threading.Thread(target=start_experiment, args=(training_parameters, model_parameters, segmentation_parameters,))
+    threads.append(t)
+    t.start()
+
+	experiment_name = "test_experiment/3"
+	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(experiment_name, model_template)
+	model_parameters["dataset"] = os.path.join(dataset_directory, "small_test_datasets.hdf5")
+	training_parameters["GPU_identifier"] 	= 3
+
+	t = threading.Thread(target=start_experiment, args=(training_parameters, model_parameters, segmentation_parameters,))
+    threads.append(t)
+    t.start()
+
+
