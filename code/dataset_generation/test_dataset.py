@@ -17,7 +17,7 @@ CT_scan_parameters_template = {
 		}
 
 n_examples_per_CT_scan_per_label 	= (2, 2)
-sampling_type						= "Random"
+sampling_type						= "Without_Atrium_Box"
 patch_size 							= 32
 z 									= 30
 
@@ -29,6 +29,8 @@ generated_dataset, generated_labels = df.generate_random_dataset(CT_scan_names, 
 
 print "Expected number of examples generated: %s" %(sum(n_examples_per_CT_scan_per_label)*len(CT_scan_names))
 print "Actual number of examples generated: %s" %(len(generated_labels))
+print "Generated labels: "
+print generated_labels
 
 # Saving the datasets
 f 							  = h5py.File("generated_dataset.hdf5", "w")
