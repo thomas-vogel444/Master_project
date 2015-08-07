@@ -47,9 +47,10 @@ class Experiment:
 		"""
 			Saves the model code in the saving directory of the experiment.
 		"""
-		if os.path.isfile(self.model.model_parameters["modelPath"]):
-			os.remove(self.model.model_parameters["modelPath"])
-			
+		model_filename = os.path.basename(self.model.model_parameters["modelPath"])
+		if os.path.isfile(os.path.join(self.model.training_parameters["savingDirectory"], model_filename)):
+			os.remove(os.path.join(self.model.training_parameters["savingDirectory"], model_filename))
+
 		shutil.move(self.model.model_parameters["modelPath"], self.model.training_parameters["savingDirectory"])
 
 class Model:
