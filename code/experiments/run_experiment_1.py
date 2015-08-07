@@ -65,5 +65,5 @@ if __name__ == "__main__":
 	experiment_name = "test_experiment/1"
 	model_template 	= "model_template.lua"	
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(experiment_name, model_template)
-	model_parameters["dataset"] 		  	= os.path.join(dataset_directory, "small_test_datasets.hdf5")
+	training_parameters["dataset"] 		  	= os.path.join(dataset_directory, "small_test_datasets.hdf5")
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
