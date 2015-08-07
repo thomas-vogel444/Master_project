@@ -12,15 +12,15 @@ if __name__ == "__main__":
 	dataset_directory				= os.path.abspath("../../datasets")
 	experimental_results_directory  = os.path.abspath("../../experimental_results")
 
-	def get_base_parameters(experiment_name, model_template):
-		model_name 						= model_template.replace("_template", "")
+	def get_base_parameters(experiment_name, model_template, model_identifier = ""):
+		model_name 						= model_template.replace("_template", model_identifier)
 		base_training_parameters = {
 			"type"				: "cuda",
 			"GPU_identifier"	: 2,
 			"number_of_GPUs"	: 1,
 			"savingDirectory"	: os.path.join(experimental_results_directory, experiment_name),
 			"modelPath"			: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
-			"maxepoch"			: 1, 
+			"maxepoch"			: 15, 
 			"learningRate"		: 0.1, 
 			"batchSize"			: 512, 
 			"momentum"			: 0.0, 
@@ -60,12 +60,13 @@ if __name__ == "__main__":
 		segmentator = Segmentator(segmentation_parameters)
 		segmentator.segment()
 	# ************************************************************************************************
-	# 										Run the experiments for varying parameters
+	# 										Run the experiments 
 	# ************************************************************************************************
-	experiment_name = "test_experiment/2"
+	experiment_name = "varying_datasets/large_atrium_box"
 	model_template 	= "model_template.lua"	
-	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(experiment_name, model_template)
-	training_parameters["dataset"] 		  	= os.path.join(dataset_directory, "small_test_datasets.hdf5")
+	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(experiment_name, model_template, "_large_atrium_box_")
+	training_parameters["dataset"] 		  	= os.path.join(dataset_directory, "CNN_large_atrium_box_datasets.hdf5")
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
+
 
 
