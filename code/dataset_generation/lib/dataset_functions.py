@@ -93,7 +93,7 @@ def generate_random_dataset_from_CT_scan(CT_scan, n_examples_per_label, patch_si
 		utils.drawProgressBar(float(i)/(sum(n_examples_per_label)-1), 100)
 		tri_planar_dataset[i] 	= generate_patches(index, CT_scan.image, patch_size)
 		x,y,z = index
-		tri_planar_labels[i]	= CT_scan.labels[x,y,z]
+		tri_planar_labels[i]	= CT_scan.labels[x,y,z] + 1   # The training algorithm requires class labels to be 1 or 2 not 0 and 1
 
 	return tri_planar_dataset, tri_planar_labels
 

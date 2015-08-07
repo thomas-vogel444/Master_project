@@ -10,7 +10,7 @@ if __name__ == "__main__":
 	# Setting Parameters
 	data_directory 		= "../../ct_atrium/"
 	dataset_directory 	= "../../datasets/"
-	random_dataset_name = "small_CNN_datasets.hdf5"
+	random_dataset_name = "CNN_small_atrium_box_datasets.hdf5"
 
 	patch_size 									= 32
 	sampling_type								= "With_Atrium_Box"		# options: Random, With_Atrium_Box, Without_Atrium_Box

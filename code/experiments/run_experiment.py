@@ -10,7 +10,7 @@ if __name__ == "__main__":
 	experiment_name 				= "varying_datasets/0"
 	model_name 						= "varying_datasets_model.lua"
 	NN_code_directory 				= os.path.abspath("../CNN")
-	dataset_directory				= os.path.abspath("../../../datasets")
+	dataset_directory				= os.path.abspath("../../datasets")
 	experimental_results_directory  = os.path.abspath("../../experimental_results")
 	
 	training_parameters = {
