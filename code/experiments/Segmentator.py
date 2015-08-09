@@ -30,7 +30,7 @@ class Segmentator:
 		for name_extension in self.name_extensions:	
 			segmentation_command_options = self.get_segmentation_command_options(name_extension)
 
-			segmentation_command = "th %(segmentationCode)s -GPU %(GPU)i -segmentationFile %(segmentationFile)s "\
+			segmentation_command = "th %(segmentationCode)s -GPU_id %(GPU_id)i -number_of_GPUs %(number_of_GPUs)i -segmentationFile %(segmentationFile)s "\
 									"-segmentationValues %(segmentationValues)s -segmentationDataset %(segmentationDataset)s "\
 									"-predictedPath %(predictedPath)s -predictedDataset %(predictedDataset)s "\
 									"-modelPath %(modelPath)s -type %(type)s" %segmentation_command_options

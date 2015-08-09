@@ -44,7 +44,8 @@ if __name__ == "__main__":
 		}
 
 		base_segmentation_parameters = {
-			"GPU"				: 2,
+			"GPU_id"			: 2,
+			"number_of_GPUs"	: 2,
 			"segmentationCode"	: os.path.join(NN_code_directory, "segment.lua"),
 			"segmentationFile" 	: os.path.join(dataset_directory,"segmentation_datasets.hdf5"),
 			"modelDirectory"	: os.path.join(experimental_results_directory, experiment_name)
