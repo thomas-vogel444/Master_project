@@ -1,9 +1,6 @@
 ----------------------------------------------------------------------
--- CUDA?
-if opt.type == 'cuda' then
-    model:cuda()
-    criterion:cuda()
-end
+model:cuda()
+criterion:cuda()
 
 ----------------------------------------------------------------------
 print '==> defining some tools'
@@ -26,7 +23,6 @@ optimState = {
     momentum = opt.momentum,
     learningRateDecay = 1e-7
 }
-optimMethod = optim.sgd
 
 -- Multi-GPU set up
 if opt.number_of_GPUs > 1 then
@@ -41,6 +37,9 @@ if opt.number_of_GPUs > 1 then
 
     model = GPU_network
 end
+
+-- Optimizer
+optimator = nn.Optim(model, optim_state)
 
 -- Retrieve parameters and gradients:
 -- this extracts and flattens all the trainable parameters of the mode
@@ -76,7 +75,7 @@ function train()
     print("==> online epoch # " .. epoch .. ' [batchSize = ' .. opt.batchSize .. ']')
     for t = 1,trainingSize,opt.batchSize do
         -- disp progress
-        xlua.progress(t, trainingSize)
+        xlua.progress(t, math.min(t+opt.batchSize-1,trainingSize))
 
         -- create mini batch
         batchSize = math.min(opt.batchSize,trainingSize - t + 1)
@@ -89,50 +88,10 @@ function train()
             targets[i%batchSize + 1]             = trainData.labels[shuffle[i]]
         end
 
-        if opt.type == 'cuda' then 
-            inputs    = inputs:cuda() 
-            targets   = targets:cuda()
-        end
-
-        -- create closure to evaluate f(X) and df/dX
-        local feval = function(x)
-            -- get new parameters
-            if x ~= parameters then
-                parameters:copy(x)
-            end
-
-            -- reset gradients
-            gradParameters:zero()
-
-            -- f is the average of all criterions
-            local f = 0
-
-            -- evaluate function for complete mini batch
-            for i = 1,inputs:size()[1] do
-                -- estimate f
-                local output = model:forward(inputs[i])
-                local err = criterion:forward(output, targets[i])
-
-                f = f + err
-
-                -- estimate df/dW
-                local df_do = criterion:backward(output, targets[i])
-                model:backward(inputs[i], df_do)
-
-                -- update confusion
-                confusion:add(output, targets[i])
-            end
-
-            -- normalize gradients and f(X)
-            gradParameters:div(inputs:size()[1])
-            f = f/inputs:size()[1]
-
-            -- return f and df/dX
-            return f,gradParameters
-        end
-
-        -- optimize on current mini-batch
-        optimMethod(feval, parameters, optimState)
+        inputs    = inputs:cuda() 
+        targets   = targets:cuda()
+  
+        f, outputs = optimator:optimize(optim.sgd, inputs, targets, criterion)
 
         if opt.num_gpu > 1 then cutorch.synchronize() end
     end

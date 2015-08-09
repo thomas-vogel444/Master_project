@@ -3,6 +3,10 @@ require 'nn'
 require 'torch'
 require 'optim'
 require 'xlua'
+require 'cunn'
+require 'fbcunn'
+require 'fbnn'
+require 'cudnn'
 
 print '==> processing options'
 
@@ -27,23 +31,12 @@ cmd:option('-learningRate', 0.01, 'learning rate at t=0')
 cmd:option('-batchSize', 512, 'mini-batch size (1 = pure stochastic)')
 cmd:option('-weightDecay', 0.000, 'weight decay (SGD only)')
 cmd:option('-momentum', 0.000, 'momentum (SGD only)')
-cmd:option('-type', 'float', 'type: double | float | cuda')
 cmd:text()
 opt = cmd:parse(arg or {})
 
--- nb of threads and fixed seed (for repeatable experiments)
-print('==> switching to floats')
+print('==> switching to CUDA')
 torch.setdefaulttensortype('torch.FloatTensor')
-
-if opt.type == 'cuda' then
-   	print('==> switching to CUDA')
-   	require 'cunn'
-   	require 'fbcunn'
-	require 'fbnn'
-	require 'cudnn'
-   	torch.setdefaulttensortype('torch.FloatTensor')
-   	cutorch.setDevice(opt.GPU)
-end
+cutorch.setDevice(opt.GPU_id)
 torch.setnumthreads(opt.threads)
 torch.manualSeed(opt.seed)
 

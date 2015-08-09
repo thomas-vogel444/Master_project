@@ -26,21 +26,29 @@ function test()
    -- test over test data
    print('==> testing on test set:') 
 
-   for t = 1,testData.size() do
-      -- disp progress
-      xlua.progress(t, testData.size())
+   local batchSize = 512 * opt.number_of_GPUs
 
-      -- get new sample
-      local input = testData.data[t]
-      if opt.type == 'cuda' then input = input:cuda() end
-      local target = testData.labels[t]
+   for t = 1,testData.size(),batchSize do
+      -- disp progress
+      xlua.progress(math.min(t + batchSize -1, testData.size()), testData.size())
+
+       -- load new sample
+       local inputs = testData.data[{{t, math.min(t + batchSize - 1, testData.size())},{},{},{}}]
+       local targets = testData.labels[{{t, math.min(t + batchSize - 1, testData.size())}}]
+
+       if opt.type == 'cuda' then
+           inputs = inputs:cuda()
+       end
 
       -- test sample
-      local pred = model:forward(input)
-      confusion:add(pred, target)
+      prediction[{{t, math.min(t + batchSize - 1, testData.size())}}] = model:forward(inputs)[{{},{2}}]
+
+      confusion:batchAdd(prediction, targets)
    end
+
+
    if opt.num_gpu > 1 then cutorch.synchronize() end
-   
+
    -- timing
    time = sys.clock() - time
    time = time / testData.size()
