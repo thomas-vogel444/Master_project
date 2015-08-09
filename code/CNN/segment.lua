@@ -23,6 +23,9 @@ opt = cmd:parse(arg or {})
 
 if opt.type == 'cuda' then
     require "cunn"
+    require "cudnn"
+    require "fbcunn"
+    require "fbnn"
     cutorch.setDevice(opt.GPU_id)
 end
 
@@ -48,6 +51,8 @@ segment_dataset.data:div(segment_dataset.data:std())
 --            Segment the dataset
 ----------------------------------------------------------------------
 -- Copying the model onto all the GPUs required
+model = torch.load(opt.modelPath):float()
+
 if opt.number_of_GPUs > 1 then
     print('Using data parallel')
     local GPU_network = nn.DataParallel(1):cuda()
@@ -63,7 +68,6 @@ end
 
 -- Classify every voxel in the segmentation dataset
 print("Segmenting the image using the model in " .. opt.modelPath)
-model = torch.load(opt.modelPath):float()
 
 prediction = torch.zeros(segment_dataset.size())
 model:evaluate()
@@ -74,25 +78,21 @@ if opt.type == 'cuda' then
 	prediction = prediction:cuda()
 end
 
-local batchSize = 1024
+local batchSize = 512*opt.number_of_GPUs
 
 for t = 1,segment_dataset.size(),batchSize do
   	-- disp progress
-  	xlua.progress(t, segment_dataset.size())
-
-  	-- get new sample
-    inputs = torch.Tensor(batchSize,nfeats,patchsize,patchsize)
+  	xlua.progress(math.min(t + batchSize -1, segment_dataset.size()), segment_dataset.size())
 
     -- load new sample
-    inputs[{{t, math.min(t + batchSize - 1), segment_dataset.size()},{},{},{}}] = 
-                segment_dataset.data[{{t, math.min(t + batchSize - 1), segment_dataset.size()},{},{},{}}]
+    inputs =  segment_dataset.data[{{t, math.min(t + batchSize - 1, segment_dataset.size())},{},{},{}}]
 
     if opt.type == 'cuda' then
         inputs = inputs:cuda()
     end
 
   	-- test sample
-  	prediction[{{t, math.min(t + batchSize - 1), segment_dataset.size()}}] = model:forward(inputs)[2]
+  	prediction[{{t, math.min(t + batchSize - 1, segment_dataset.size())}}] = model:forward(inputs)[{{},{2}}]
 end
 
 cutorch.synchronize()
