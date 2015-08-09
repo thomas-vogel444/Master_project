@@ -9,8 +9,8 @@ import h5py
 # ********************************************************************************************
 # 										Setting parameters
 # ********************************************************************************************
-data_directory 				= "../../ct_atrium/"
-dataset_directory 			= "../../datasets/"
+data_directory 				= "../ct_atrium/"
+dataset_directory 			= "../datasets/"
 segmentation_filename 		= "segmentation_datasets.hdf5"
 segmentation_dataset_path 	= os.path.join(dataset_directory, segmentation_filename)
 

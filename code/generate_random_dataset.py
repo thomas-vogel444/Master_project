@@ -8,8 +8,8 @@ import h5py
 
 if __name__ == "__main__":
 	# Setting Parameters
-	data_directory 		= "../../ct_atrium/"
-	dataset_directory 	= "../../datasets/"
+	data_directory 		= "../ct_atrium/"
+	dataset_directory 	= "../datasets/"
 	random_dataset_name = "CNN_small_atrium_box_datasets.hdf5"
 
 	patch_size 									= 32

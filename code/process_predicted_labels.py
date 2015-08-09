@@ -5,7 +5,7 @@ import Image
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
-experiment_directory = "../../experimental_results/varying_datasets/1"
+experiment_directory = "../experimental_results/varying_datasets/1"
 predicted_labels_path = os.path.join(experiment_directory, "predicted_labels.hdf5")
 
 #******************************************************************************
