@@ -1,0 +1,12 @@
+{
+    "batchSize": 512,
+    "dataset": "/home/tv15/master_project/datasets/CNN_no_atrium_box_datasets.hdf5",
+    "savingDirectory": "/home/tv15/master_project/experimental_results/varying_datasets/no_atrium_box",
+    "modelPath": "/home/tv15/master_project/code/CNN/models/model_no_atrium_box_.lua",
+    "learningRate": 0.1,
+    "maxepoch": 15,
+    "GPU_identifier": 3,
+    "type": "cuda",
+    "momentum": 0.0,
+    "number_of_GPUs": 1
+}
