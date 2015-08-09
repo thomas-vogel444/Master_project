@@ -1,11 +1,14 @@
+import sys
+sys.path.append("..")
+import dataset_functions as df
+from CTScanImage import CTScanImage
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
 import re
-import lib.dataset_functions as df
-from lib.CTScanImage import CTScanImage
+import dataset_functions as df
 
-data_directory = "../../ct_atrium/Training/"
+data_directory = "../../../ct_atrium/training/"
 
 CT_scan_parameters_template = {
 		"CT_scan_path_template" : data_directory + "CTScan_name",

@@ -1,11 +1,14 @@
-from lib.CTScanImage import CTScanImage
+import sys
+sys.path.append("..")
+from CTScanImage import CTScanImage
 import re
 import h5py
 import os
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
-data_directory 				= "../../ct_atrium/"
+data_directory 				= "../../../ct_atrium/"
+segmentation_dataset_path 	= "../../../datasets/segmentation_datasets.hdf5"
 testing_CT_scans_directory	= os.path.join(data_directory, "testing")
 CT_scan_parameters_template = {
 				"CT_scan_path_template" : os.path.join(testing_CT_scans_directory, "CTScan_name"),
@@ -39,7 +42,6 @@ plt.imshow(segmented_CT_scan.labels[x_slice,:,:], cmap = cm.Greys_r)
 plt.show()
 
 # import the image and labels
-segmentation_dataset_path = "../../datasets/segmentation_datasets.hdf5"
 f_segmentation = h5py.File(segmentation_dataset_path, "r")
 true_labels_fixed_z = f_segmentation["labels_fixed_z"]
 true_labels_fixed_y = f_segmentation["labels_fixed_y"]

@@ -1,13 +1,16 @@
+import sys
+sys.path.append("..")
+import dataset_functions as df
+from CTScanImage import CTScanImage
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-import lib.CTScanImage as CTScanImage
 import re
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-import lib.dataset_functions as df
 
-training_data_directory = "../../ct_atrium/Training/"
+
+training_data_directory = "../../../ct_atrium/training/"
 
 CT_scan_parameters_template = {
 		"CT_scan_path_template" : training_data_directory + "CTScan_name",
@@ -21,7 +24,7 @@ CT_scan_name = "14032003"
 xy_padding  = 50
 z_padding   = 10
 
-CT_scan = CTScanImage.CTScanImage(CT_scan_name, CT_scan_parameters_template, xy_padding, z_padding)
+CT_scan = CTScanImage(CT_scan_name, CT_scan_parameters_template, xy_padding, z_padding)
 labels_with_atrium_box = CT_scan.labels_with_atrium_box
 
 x, y, z 	= 250, 250, 30

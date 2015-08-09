@@ -1,12 +1,13 @@
+import sys
+sys.path.append("..")
+from CTScanImage import CTScanImage
 import re
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import numpy as np
 import h5py
-from lib.CTScanImage import CTScanImage
-import lib.dataset_functions as df
 
-data_directory = "../../ct_atrium/Training/"
+data_directory = "../../../ct_atrium/training/"
 
 CT_scan_parameters_template = {
 		"CT_scan_path_template" : data_directory + "CTScan_name",
@@ -16,8 +17,8 @@ CT_scan_parameters_template = {
 		"CT_directory_pattern"  : re.compile("[0-9]{8}")
 		}
 
-n_examples_per_CT_scan_per_label 	= (2, 2)
-sampling_type						= "Without_Atrium_Box"
+n_examples_per_CT_scan_per_label 	= (2, 2, 2)
+sampling_type						= "With_Atrium_Box"
 patch_size 							= 32
 z 									= 30
 

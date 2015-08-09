@@ -6,3 +6,4 @@ ct_atrium
 code/torch-hdf5/
 code/process_results/model.net
 *test_run
+datasets

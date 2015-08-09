@@ -1,10 +1,12 @@
+import sys
+sys.path.append("..")
 from CTScanImage import CTScanImage
 import re
 import os
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
-data_directory = "../../../ct_atrium/Testing/"
+data_directory = "../../../ct_atrium/testing/"
 
 CT_scan_parameters_template = {
 		"CT_scan_path_template" : data_directory + "CTScan_name",
