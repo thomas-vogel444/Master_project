@@ -9,7 +9,8 @@ class Segmentator:
 
 	def __init__(self, segmentation_parameters):
 		self.segmentation_parameters = {
-				"GPU"					: segmentation_parameters["GPU"],
+				"GPU_id"				: segmentation_parameters["GPU_id"],
+				"number_of_GPUs"		: segmentation_parameters["number_of_GPUs"],
 				"segmentationCode"		: segmentation_parameters["segmentationCode"],
 				"segmentationFile" 		: segmentation_parameters["segmentationFile"],
 				"segmentationDataset"	: "segmentation_dataset_NAME",
