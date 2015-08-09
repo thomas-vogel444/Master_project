@@ -39,7 +39,8 @@ function test()
       local pred = model:forward(input)
       confusion:add(pred, target)
    end
-
+   if opt.num_gpu > 1 then cutorch.synchronize() end
+   
    -- timing
    time = sys.clock() - time
    time = time / testData.size()

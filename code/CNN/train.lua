@@ -17,11 +17,6 @@ confusion = optim.ConfusionMatrix(classes)
 trainLogger = optim.Logger(paths.concat(opt.savingDirectory, 'train.log'))
 testLogger = optim.Logger(paths.concat(opt.savingDirectory, 'test.log'))
 
--- Retrieve parameters and gradients:
--- this extracts and flattens all the trainable parameters of the mode
--- into a 1-dim vector
-parameters,gradParameters = model:getParameters()
-
 ----------------------------------------------------------------------
 print '==> configuring optimizer'
 
@@ -32,6 +27,30 @@ optimState = {
     learningRateDecay = 1e-7
 }
 optimMethod = optim.sgd
+
+-- Multi-GPU set up
+if opt.number_of_GPUs > 1 then
+    print('Using data parallel')
+    local GPU_network = nn.DataParallel(1):cuda()
+    for i = 1, opt.number_of_GPUs do
+        local current_GPU = math.fmod(opt.GPU_id + (i-1)-1, cutorch.getDeviceCount())+1
+        cutorch.setDevice(current_GPU)
+        GPU_network:add(model:clone():cuda(), current_GPU)
+    end
+    cutorch.setDevice(opt.GPU_id)
+
+    model = GPU_network
+end
+
+-- Retrieve parameters and gradients:
+-- this extracts and flattens all the trainable parameters of the mode
+if opt.number_of_GPUs > 1 then
+    parameters, gradParameters = model:get(1):getParameters()
+    cutorch.synchronize()
+    model:cuda()  -- get it back on the right GPUs
+else
+    parameters, gradParameters = model:getParameters()
+end
 
 ----------------------------------------------------------------------
 print '==> defining training procedure'
@@ -114,6 +133,8 @@ function train()
 
         -- optimize on current mini-batch
         optimMethod(feval, parameters, optimState)
+
+        if opt.num_gpu > 1 then cutorch.synchronize() end
     end
 
     -- time taken

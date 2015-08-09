@@ -74,8 +74,8 @@ model:evaluate()
 
 -- Transfer to the GPU if appropriate
 if opt.type == 'cuda' then
-	model:cuda()
-	prediction = prediction:cuda()
+    model:cuda()
+    prediction = prediction:cuda()
 end
 
 local batchSize = 512*opt.number_of_GPUs

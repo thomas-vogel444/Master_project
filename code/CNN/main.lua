@@ -12,9 +12,10 @@ cmd:text('CNN for CT scan')
 cmd:text()
 cmd:text('Options:')
 -- global:
-cmd:option('-GPU', 1, "Which GPU to use")
+cmd:option('-GPU_id', 1, "Which GPU to use")
+cmd:option('-number_of_GPUs', 1, "Which GPU to use")
 cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
-cmd:option('-threads', 2, 'number of threads')
+cmd:option('-threads', 4, 'number of threads')
 -- data:
 cmd:option('-dataset', '../../datasets/CNN_datasets.hdf5', 'Dataset path')
 -- model:
@@ -35,10 +36,13 @@ print('==> switching to floats')
 torch.setdefaulttensortype('torch.FloatTensor')
 
 if opt.type == 'cuda' then
-   print('==> switching to CUDA')
-   require 'cunn'
-   torch.setdefaulttensortype('torch.FloatTensor')
-   cutorch.setDevice(opt.GPU)
+   	print('==> switching to CUDA')
+   	require 'cunn'
+   	require 'fbcunn'
+	require 'fbnn'
+	require 'cudnn'
+   	torch.setdefaulttensortype('torch.FloatTensor')
+   	cutorch.setDevice(opt.GPU)
 end
 torch.setnumthreads(opt.threads)
 torch.manualSeed(opt.seed)
