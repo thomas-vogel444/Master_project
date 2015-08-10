@@ -1,8 +1,4 @@
 ----------------------------------------------------------------------
-model:cuda()
-criterion:cuda()
-
-----------------------------------------------------------------------
 print '==> defining some tools'
 
 classes = {'0','1'}
@@ -38,8 +34,11 @@ if opt.number_of_GPUs > 1 then
     model = GPU_network
 end
 
+model:cuda()
+criterion:cuda()
+
 -- Optimizer
-optimator = nn.Optim(model, optim_state)
+optimator = nn.Optim(model, optimState)
 
 -- Retrieve parameters and gradients:
 -- this extracts and flattens all the trainable parameters of the mode
@@ -53,7 +52,6 @@ end
 
 ----------------------------------------------------------------------
 print '==> defining training procedure'
-
 function train()
 
     -- epoch tracker
@@ -66,8 +64,6 @@ function train()
     model:training()
 
     -- shuffle at each epoch
-    trainingSize = trainData.size()
-
     shuffle = torch.randperm(trainData.size())
 
     -- do one epoch
@@ -75,16 +71,20 @@ function train()
     print("==> online epoch # " .. epoch .. ' [batchSize = ' .. opt.batchSize .. ']')
     for t = 1,trainingSize,opt.batchSize do
         -- disp progress
-        xlua.progress(t, math.min(t+opt.batchSize-1,trainingSize))
+        xlua.progress(math.min(t+opt.batchSize-1,trainingSize), trainingSize)
 
         -- create mini batch
-        batchSize = math.min(opt.batchSize,trainingSize - t + 1)
+	if t < (trainingSize - opt.batchSize) then
+		batchSize = opt.batchSize
+	else
+		batchSize = trainingSize - opt.batchSize - math.fmod((trainingSize - opt.batchSize),opt.number_of_GPUs)
+	end
 
         inputs = torch.Tensor(batchSize,nfeats,patchsize,patchsize)
         targets = torch.Tensor(batchSize)
         for i = t,math.min(t+opt.batchSize-1,trainingSize) do
             -- load new sample
-            inputs[{{i%batchSize + 1},{},{},{}}] = trainData.data[shuffle[i]]
+            inputs[{{i%batchSize + 1},{},{},{}}] = trainData.data[shuffle[i]]:clone()
             targets[i%batchSize + 1]             = trainData.labels[shuffle[i]]
         end
 
@@ -92,8 +92,13 @@ function train()
         targets   = targets:cuda()
   
         f, outputs = optimator:optimize(optim.sgd, inputs, targets, criterion)
+	
+        if opt.number_of_GPUs > 1 then cutorch.synchronize() end
 
-        if opt.num_gpu > 1 then cutorch.synchronize() end
+	outputs = outputs:cuda()
+	targets = targets:cuda()
+
+	confusion:batchAdd(outputs, targets)	
     end
 
     -- time taken
@@ -106,13 +111,6 @@ function train()
 
     -- update logger
     trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
-
-    -- save/log current net
-    local filename = paths.concat(opt.savingDirectory, 'model.net')
-    os.execute('mkdir -p ' .. sys.dirname(filename))
-    print('==> saving model to '..filename)
-
-    torch.save(filename, model)
 
     -- next epoch
     confusion:zero()

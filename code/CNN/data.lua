@@ -19,6 +19,7 @@ testingLabels   = f:read("testing_labels"):all():float()
 trainData.data   = trainingDataset:div(255)
 trainData.labels = trainingLabels
 trainData.size   = function() return(trainingDataset:size()[1]) end
+trainingSize     = trainData.size()
 
 testData.data   = testingDataset:div(255)
 testData.labels = testingLabels

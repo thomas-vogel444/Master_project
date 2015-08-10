@@ -49,7 +49,7 @@ dofile 'train.lua'
 dofile 'test.lua'
 
 ----------------------------------------------------------------------
--- print '==> training!'
+print '==> training!'
 
 maxEpoch = opt.maxepoch
 while true do
@@ -59,3 +59,10 @@ while true do
     	break
     end
 end
+
+----------------------------------------------------------------------
+local filename = paths.concat(opt.savingDirectory, 'model.net')
+
+print('==> saving model to '..filename)
+os.execute('mkdir -p ' .. sys.dirname(filename))
+torch.save(filename, model)

@@ -1,6 +1,6 @@
-from lib.Segmentator import Segmentator
-from lib.Experiment import Experiment
-from lib.Model import Model
+from experiments.Segmentator import Segmentator
+from experiments.Experiment import Experiment
+from experiments.Model import Model
 import threading
 import os
 
@@ -18,12 +18,12 @@ if __name__ == "__main__":
 		base_training_parameters = {
 			"type"				: "cuda",
 			"GPU_identifier"	: 1,
-			"number_of_GPUs"	: 1,
+			"number_of_GPUs"	: 4,
 			"savingDirectory"	: os.path.join(experimental_results_directory, experiment_name),
 			"modelPath"			: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
-			"maxepoch"			: 1, 
+			"maxepoch"			: 3, 
 			"learningRate"		: 0.1, 
-			"batchSize"			: 512, 
+			"batchSize"			: 500*4, 
 			"momentum"			: 0.0, 
 			"dataset" 			: os.path.join(dataset_directory,"CNN_small_atrium_box_datasets.hdf5")
 		}
@@ -44,8 +44,8 @@ if __name__ == "__main__":
 		}
 
 		base_segmentation_parameters = {
-			"GPU_id"			: 2,
-			"number_of_GPUs"	: 2,
+			"GPU_id"			: 1,
+			"number_of_GPUs"	: 4,
 			"segmentationCode"	: os.path.join(NN_code_directory, "segment.lua"),
 			"segmentationFile" 	: os.path.join(dataset_directory,"segmentation_datasets.hdf5"),
 			"modelDirectory"	: os.path.join(experimental_results_directory, experiment_name)

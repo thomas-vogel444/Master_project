@@ -1,4 +1,5 @@
-
+import os
+import subprocess
 
 class Model:
 	"""
@@ -27,7 +28,7 @@ class Model:
 		"""
 		training_command  = "th main.lua -GPU_id %(GPU_identifier)i -number_of_GPUs %(number_of_GPUs)i -dataset %(dataset)s -modelPath %(modelPath)s "\
 							"-maxepoch %(maxepoch)i -savingDirectory %(savingDirectory)s -learningRate %(learningRate)f "\
-							"-batchSize %(batchSize)i -momentum %(momentum)f -type %(type)s" %self.training_parameters
-		
+							"-batchSize %(batchSize)i -momentum %(momentum)f" %self.training_parameters
+
 		# Call the training command
 		subprocess.call(training_command, shell=True)
