@@ -77,7 +77,7 @@ function train()
 	if t < (trainingSize - opt.batchSize) then
 		batchSize = opt.batchSize
 	else
-		batchSize = trainingSize - opt.batchSize - math.fmod((trainingSize - opt.batchSize),opt.number_of_GPUs)
+		batchSize = trainingSize - t - math.fmod((trainingSize - t),opt.number_of_GPUs)
 	end
 
         inputs = torch.Tensor(batchSize,nfeats,patchsize,patchsize)
@@ -90,7 +90,7 @@ function train()
 
         inputs    = inputs:cuda() 
         targets   = targets:cuda()
-  
+ 	
         f, outputs = optimator:optimize(optim.sgd, inputs, targets, criterion)
 	
         if opt.number_of_GPUs > 1 then cutorch.synchronize() end

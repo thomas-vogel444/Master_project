@@ -17,17 +17,14 @@ cmd:option('-segmentationValues', "segmentation_values_fixed_z", "Segmentation v
 cmd:option('-predictedPath', "predicted_labels.hdf5", 'Path to the predicted file')
 cmd:option('-predictedDataset', "predicted_labels_fixed_z", 'Dataset name contaiing the predicted labels')
 cmd:option('-modelPath', "model.net", 'Paths to the model file')
-cmd:option('-type', 'float', 'type: float | cuda')
 cmd:text()
 opt = cmd:parse(arg or {})
 
-if opt.type == 'cuda' then
-    require "cunn"
-    require "cudnn"
-    require "fbcunn"
-    require "fbnn"
-    cutorch.setDevice(opt.GPU_id)
-end
+require "cunn"
+require "cudnn"
+require "fbcunn"
+require "fbnn"
+cutorch.setDevice(opt.GPU_id)
 
 ----------------------------------------------------------------------
 -- 						     Load and normalizing the dataset
@@ -51,20 +48,7 @@ segment_dataset.data:div(segment_dataset.data:std())
 --            Segment the dataset
 ----------------------------------------------------------------------
 -- Copying the model onto all the GPUs required
-model = torch.load(opt.modelPath):float()
-
-if opt.number_of_GPUs > 1 then
-    print('Using data parallel')
-    local GPU_network = nn.DataParallel(1):cuda()
-    for i = 1, opt.number_of_GPUs do
-        local current_GPU = math.fmod(opt.GPU_id + (i-1)-1, cutorch.getDeviceCount())+1
-        cutorch.setDevice(current_GPU)
-        GPU_network:add(model:clone():cuda(), current_GPU)
-    end
-    cutorch.setDevice(opt.GPU_id)
-
-    model = GPU_network
-end
+model = torch.load(opt.modelPath)
 
 -- Classify every voxel in the segmentation dataset
 print("Segmenting the image using the model in " .. opt.modelPath)
@@ -72,13 +56,11 @@ print("Segmenting the image using the model in " .. opt.modelPath)
 prediction = torch.zeros(segment_dataset.size())
 model:evaluate()
 
--- Transfer to the GPU if appropriate
-if opt.type == 'cuda' then
-    model:cuda()
-    prediction = prediction:cuda()
-end
+-- Transfer to the GPU
+model:cuda()
+prediction = prediction:cuda()
 
-local batchSize = 512*opt.number_of_GPUs
+local batchSize = 1500*opt.number_of_GPUs
 
 for t = 1,segment_dataset.size(),batchSize do
   	-- disp progress
@@ -87,19 +69,14 @@ for t = 1,segment_dataset.size(),batchSize do
     -- load new sample
     inputs =  segment_dataset.data[{{t, math.min(t + batchSize - 1, segment_dataset.size())},{},{},{}}]
 
-    if opt.type == 'cuda' then
         inputs = inputs:cuda()
-    end
 
-  	-- test sample
-  	prediction[{{t, math.min(t + batchSize - 1, segment_dataset.size())}}] = model:forward(inputs)[{{},{2}}]
+	prediction[{{t, math.min(t + batchSize - 1, segment_dataset.size())}}] = model:forward(inputs)[{{},{2}}]
 end
 
 cutorch.synchronize()
 
-if opt.type == 'cuda' then
-	prediction = prediction:float()
-end
+prediction = prediction:float()
 
 prediction = torch.round(torch.exp(prediction))
 rows, cols = values:size(1), values:size(2)

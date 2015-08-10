@@ -1,15 +1,4 @@
 ----------------------------------------------------------------------
--- This script implements a test procedure, to report accuracy
--- on the test data. Nothing fancy here...
---
--- Clement Farabet
-----------------------------------------------------------------------
-
-require 'torch'   -- torch
-require 'xlua'    -- xlua provides useful tools, like progress bars
-require 'optim'   -- an optimization package, for online and batch methods
-
-----------------------------------------------------------------------
 print '==> defining test procedure'
 
 -- test function
@@ -36,7 +25,7 @@ function test()
        if t < (testData.size() - opt.batchSize) then
                 batchSize = opt.batchSize
        else
-                batchSize = testData.size() - math.fmod(testData.size(),opt.number_of_GPUs)
+                batchSize = testData.size() - t - math.fmod(testData.size() - t,opt.number_of_GPUs)
        end
        -- load new sample
        local inputs = testData.data[{{t, math.min(t + batchSize - 1, testData.size())},{},{},{}}]

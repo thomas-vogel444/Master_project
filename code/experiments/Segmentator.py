@@ -18,7 +18,6 @@ class Segmentator:
 				"predictedPath"			: os.path.join(segmentation_parameters["modelDirectory"], "predicted_labels.hdf5"),
 				"predictedDataset"		: "predicted_labels_NAME",
 				"modelPath"				: os.path.join(segmentation_parameters["modelDirectory"], "model.net"),
-				"type"					: "cuda"
 			}
 
 	def segment(self):
@@ -34,7 +33,7 @@ class Segmentator:
 			segmentation_command = "th %(segmentationCode)s -GPU_id %(GPU_id)i -number_of_GPUs %(number_of_GPUs)i -segmentationFile %(segmentationFile)s "\
 									"-segmentationValues %(segmentationValues)s -segmentationDataset %(segmentationDataset)s "\
 									"-predictedPath %(predictedPath)s -predictedDataset %(predictedDataset)s "\
-									"-modelPath %(modelPath)s -type %(type)s" %segmentation_command_options
+									"-modelPath %(modelPath)s" %segmentation_command_options
 
 			subprocess.call(segmentation_command, shell=True)
 

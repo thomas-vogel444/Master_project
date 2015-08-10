@@ -16,14 +16,13 @@ if __name__ == "__main__":
 	def get_base_parameters(experiment_name, model_template):
 		model_name 						= model_template.replace("_template", "")
 		base_training_parameters = {
-			"type"				: "cuda",
 			"GPU_identifier"	: 1,
 			"number_of_GPUs"	: 4,
 			"savingDirectory"	: os.path.join(experimental_results_directory, experiment_name),
 			"modelPath"			: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
-			"maxepoch"			: 3, 
+			"maxepoch"			: 20, 
 			"learningRate"		: 0.1, 
-			"batchSize"			: 500*4, 
+			"batchSize"			: 1500*4, 
 			"momentum"			: 0.0, 
 			"dataset" 			: os.path.join(dataset_directory,"CNN_small_atrium_box_datasets.hdf5")
 		}
@@ -67,7 +66,6 @@ if __name__ == "__main__":
 	experiment_name = "test_experiment/1"
 	model_template 	= "model_template.lua"	
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(experiment_name, model_template)
-	training_parameters["dataset"] 		  	= os.path.join(dataset_directory, "small_test_datasets.hdf5")
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
 

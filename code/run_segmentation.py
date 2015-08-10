@@ -13,8 +13,8 @@ args = parser.parse_args()
 
 # Segment stuff...
 segmentation_parameters = {
-		"GPU_id"			: 1,
-		"number_of_GPUs"	: 3,
+		"GPU_id"		: 1,
+		"number_of_GPUs"	: 4,
 		"segmentationCode"	: code_path,
 		"segmentationFile" 	: args.dataset_path,
 		"modelDirectory"	: args.model_path
