@@ -4,7 +4,7 @@
     "savingDirectory": "/home/tv15/master_project/experimental_results/test_experiment/1",
     "modelPath": "/home/tv15/master_project/code/CNN/models/model.lua",
     "learningRate": 0.1,
-    "maxepoch": 30,
+    "maxepoch": 50,
     "GPU_identifier": 1,
     "momentum": 0.0,
     "number_of_GPUs": 4
