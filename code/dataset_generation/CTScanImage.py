@@ -17,6 +17,13 @@ class CTScanImage:
 		self.image 					  	= self.get_CT_scan_array()
 		self.labels_with_atrium_box 	= self.get_labels_with_atrium_box(xy_padding, z_padding)
 
+	def get_label(self, coordinates):
+		"""
+			Returns the label for a given set of coordinates. 
+		"""
+		x, y, z = coordinates
+		return self.labels[x, y, z]
+
 	def sample_CT_scan_indices(self, sampling_type, n, target_label=None, z=None):
 		"""
 			Sample where appropriate, either randomly, with or without an atrium box.
@@ -54,7 +61,7 @@ class CTScanImage:
 			Wrapper around nrrd.read so as to return the transpose of the array.
 		"""
 		CT_scan_labels, CT_scan_nrrd_header = nrrd.read(self.parameters["NRRD_path"])
-		CT_scan_labels = np.transpose(CT_scan_labels, (1,0,2))
+		CT_scan_labels = np.transpose(CT_scan_labels, (1,0,2)) + 1
 		return CT_scan_labels, CT_scan_nrrd_header
 
 	def get_CT_scan_array(self):	
@@ -75,9 +82,9 @@ class CTScanImage:
 	def get_labels_with_atrium_box(self, xy_padding, z_padding):
 		"""
 			Returns a modified labels 3D matrix where the labels denote:
-				Non-Atrium outside boundary	: 0
-				Non_Atrium inside boundary 	: 1
-				Atrium 						: 2
+				Non-Atrium outside boundary	: 1
+				Non_Atrium inside boundary 	: 2
+				Atrium 						: 3
 		"""
 		dimensions 		= self.labels.shape
 		atrium_indices 	= np.where(self.labels == 1)

@@ -1,4 +1,6 @@
 import utils
+from multiprocessing import Pool
+from multiprocessing.dummy import Pool as ThreadPool 
 import itertools
 import numpy as np
 
@@ -41,26 +43,22 @@ class DatasetGenerator:
 		patches[5] = self.generate_compressed_patch((y,z), "x", x)
 		return patches
 
-	def generate_random_dataset(self, n_examples_per_label, sampling_type, dicom_index=None):
+	def generate_random_dataset(self, n_examples_per_label, sampling_type, dicom_index=None, multithreaded=True):
 		"""
 			Generates a random dataset from a CT scan.
 		"""
-		tri_planar_dataset    = np.zeros((sum(n_examples_per_label), 6, self.patch_size, self.patch_size))
-		tri_planar_labels     = np.zeros(sum(n_examples_per_label))
-
 		# For each index sampled generate 3 patches centred at the voxel of interest
-		labels = range(len(n_examples_per_label))
-		random_indices = [self.CT_scan.sample_CT_scan_indices(sampling_type, n_examples_per_label[label], label, dicom_index) for label in labels]
+		labels = range(1, len(n_examples_per_label) + 1)	# Should be (1,2,3) or (1,2) if the sampling type is "With_Atrium" or "Without_Atrium" respectively
+		random_indices = [self.CT_scan.sample_CT_scan_indices(sampling_type, n_examples_per_label[label-1], label, dicom_index) for label in labels]
 
-		# Generates the datasets and labels of the sample points
-		for i, index in enumerate(itertools.chain.from_iterable(random_indices)):
-			# Progress bar
-			utils.drawProgressBar(float(i)/(sum(n_examples_per_label)-1), 100)
+		# Set up the multiprocessing stuff
+		if multithreaded == True:
+			pool = ThreadPool() 
+			tri_planar_dataset 	= pool.map(self.generate_example_inputs, itertools.chain.from_iterable(random_indices))
+		else:
+			tri_planar_dataset 	= map(self.generate_example_inputs, itertools.chain.from_iterable(random_indices))
 
-			# Generate the triplanar dataset and labels
-			tri_planar_dataset[i] 	= self.generate_example_inputs(index)
-			x,y,z = index
-			tri_planar_labels[i]	= self.CT_scan.labels[x,y,z] + 1   # The training algorithm requires class labels to be 1 or 2 not 0 and 1
+		tri_planar_labels	= map(self.CT_scan.get_label, itertools.chain.from_iterable(random_indices))
 
-		return tri_planar_dataset, tri_planar_labels
+		return np.array(tri_planar_dataset), np.array(tri_planar_labels)
 
