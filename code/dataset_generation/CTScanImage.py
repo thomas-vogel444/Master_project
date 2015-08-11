@@ -87,7 +87,7 @@ class CTScanImage:
 				Atrium 						: 3
 		"""
 		dimensions 		= self.labels.shape
-		atrium_indices 	= np.where(self.labels == 1)
+		atrium_indices 	= np.where(self.labels == 2)
 
 		x_min = np.max(((np.min(atrium_indices[0]) - xy_padding), 0))
 		x_max = np.min(((np.max(atrium_indices[0]) + xy_padding), dimensions[0]))

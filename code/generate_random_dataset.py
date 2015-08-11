@@ -1,5 +1,5 @@
 from dataset_generation.CTScanImage import CTScanImage
-from dataset_generation.DatasetGenerator import DatasetGenerator
+import dataset_generation.dataset_functions as df
 import os
 import re
 import numpy as np
@@ -16,9 +16,7 @@ def generate_dataset(CT_scan_names, n_examples_per_label, CT_scan_parameters_tem
 	for i, CT_scan_name in enumerate(CT_scan_names):
 		print "Generating datasets from CT scan %s" %CT_scan_name
 		CT_scan 			= CTScanImage(CT_scan_name, CT_scan_parameters_template, xy_padding, z_padding)
-		dataset_generator 	= DatasetGenerator(CT_scan, patch_size)
-		
-		CT_scan_dataset, CT_scan_labels = dataset_generator.generate_random_dataset(n_examples_per_label, sampling_type, dicom_index)
+		CT_scan_dataset, CT_scan_labels = df.generate_dataset_from_CT_scan(CT_scan, patch_size, n_examples_per_label, sampling_type, dicom_index)
 
 		n_examples = len(CT_scan_labels)
 		dataset[(i*n_examples):((i+1)*n_examples)], labels[(i*n_examples):((i+1)*n_examples)] = CT_scan_dataset, CT_scan_labels		
@@ -61,9 +59,9 @@ if __name__ == "__main__":
 		CT_scan_names		= [directory for directory in os.listdir(CT_scans_directory) if CT_scan_parameters_template["CT_directory_pattern"].match(directory)]
 		
 		if CT_scan_type == "training":
-			dataset, labels = df.generate_dataset(CT_scan_names, n_training_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size, sampling_type, xy_padding=xy_padding, z_padding=z_padding)
+			dataset, labels = generate_dataset(CT_scan_names, n_training_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size, sampling_type, xy_padding=xy_padding, z_padding=z_padding)
 		elif CT_scan_type == "testing":
-			dataset, labels = df.generate_dataset(CT_scan_names, n_testing_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size, "Random")
+			dataset, labels = generate_dataset(CT_scan_names, n_testing_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size, "Random")
 
 		dataset_hdf5 	  	  = f.create_dataset("%s_dataset"%CT_scan_type, dataset.shape, dtype="uint32")
 		dataset_hdf5[...]     = dataset

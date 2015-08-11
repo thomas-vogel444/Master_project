@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 from CTScanImage import CTScanImage
-from DatasetGenerator import DatasetGenerator
+import dataset_functions as df
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
@@ -24,9 +24,8 @@ z 				= 40
 patch_size 		= 32
 
 CT_scan 			= CTScanImage(CT_scan_name, CT_scan_parameters_template)
-dataset_generator 	= DatasetGenerator(CT_scan, patch_size)
 
-patches = dataset_generator.generate_example_inputs((x,y,z))
+patches = df.generate_example_inputs((x,y,z), CT_scan, patch_size)
 
 # Plot 3 patches next to their respective DICOM slice.
 fig = plt.figure()

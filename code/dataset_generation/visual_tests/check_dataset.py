@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 from CTScanImage import CTScanImage
-from DatasetGenerator import DatasetGenerator
+import dataset_functions as df
 import re
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
@@ -29,11 +29,10 @@ CT_scan_parameters_template = {
 CT_scan_names = [directory for directory in os.listdir(data_directory) if CT_scan_parameters_template["CT_directory_pattern"].match(directory)]
 CT_scan_name  = CT_scan_names[0]
 
-CT_scan 			= CTScanImage(CT_scan_name, CT_scan_parameters_template)
-dataset_generator 	= DatasetGenerator(CT_scan, patch_size)
+CT_scan = CTScanImage(CT_scan_name, CT_scan_parameters_template)
 
 print "=======> Generating the testing dataset <======="
-generated_dataset, generated_labels = dataset_generator.generate_random_dataset(n_examples_per_CT_scan_per_label, sampling_type, dicom_index=z)
+generated_dataset, generated_labels = df.generate_dataset_from_CT_scan(CT_scan, patch_size, n_examples_per_CT_scan_per_label, sampling_type, dicom_index=z)
 
 print "Expected number of examples generated: %s" %(sum(n_examples_per_CT_scan_per_label))
 print "Actual number of examples generated: %s" %(len(generated_labels))

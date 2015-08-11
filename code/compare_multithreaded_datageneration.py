@@ -1,5 +1,5 @@
 from dataset_generation.CTScanImage import CTScanImage
-from dataset_generation.DatasetGenerator import DatasetGenerator
+import dataset_generation.dataset_functions as df
 import time
 import re
 import numpy as np
@@ -26,19 +26,17 @@ CT_scan_names = [directory for directory in os.listdir(data_directory) if CT_sca
 CT_scan_name  = CT_scan_names[0]
 
 CT_scan 			= CTScanImage(CT_scan_name, CT_scan_parameters_template)
-dataset_generator 	= DatasetGenerator(CT_scan, patch_size)
 
 start_time = time.clock()
-generated_dataset, generated_labels = dataset_generator.generate_random_dataset(n_examples_per_CT_scan_per_label, sampling_type, multithreaded=False)
+generated_dataset, generated_labels = df.generate_dataset_from_CT_scan(CT_scan, patch_size, n_examples_per_CT_scan_per_label, sampling_type, multithreaded=False)
 total_time = time.clock() - start_time
 print "Without multithreading, it takes %f seconds to generate %i examples"%(total_time, sum(n_examples_per_CT_scan_per_label)) 
 
 
 CT_scan_name  		= CT_scan_names[1]
 CT_scan 			= CTScanImage(CT_scan_name, CT_scan_parameters_template)
-dataset_generator 	= DatasetGenerator(CT_scan, patch_size)
 
 start_time = time.clock()
-generated_dataset, generated_labels = dataset_generator.generate_random_dataset(n_examples_per_CT_scan_per_label, sampling_type, dicom_index=z, multithreaded=True)
+generated_dataset, generated_labels = df.generate_dataset_from_CT_scan(CT_scan, patch_size, n_examples_per_CT_scan_per_label, sampling_type, multithreaded=True)
 total_time = time.clock() - start_time
 print "With multithreading, it takes %f seconds to generate %i examples"%(total_time, sum(n_examples_per_CT_scan_per_label))
