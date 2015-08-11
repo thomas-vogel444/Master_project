@@ -1,6 +1,6 @@
-from lib.CTScanImage import CTScanImage
-import lib.dataset_functions as df
-import lib.utils as utils
+from dataset_generation.CTScanImage import CTScanImage
+from dataset_generation.DatasetGenerator import DatasetGenerator
+import dataset_generation.utils as utils
 import os
 import re
 import numpy as np
@@ -27,33 +27,35 @@ CT_scan_parameters_template = {
 
 testing_CT_scan_name		= [directory for directory in os.listdir(testing_CT_scans_directory) if CT_scan_parameters_template["CT_directory_pattern"].match(directory)][0]
 
-segmented_CT_scan 		 	= CTScanImage(testing_CT_scan_name, CT_scan_parameters_template)
-dicom_height, dicom_width, number_dicoms = segmented_CT_scan.image.shape
-x_slice, y_slice, z_slice 				 = (250, 250, 30)
+segmented_CT_scan 		 				 = CTScanImage(testing_CT_scan_name, CT_scan_parameters_template)
+dataset_generator 						 = DatasetGenerator(segmented_CT_scan, patch_size)
 
 # ********************************************************************************************
 # 								Generate the segmentation datasets
 # ********************************************************************************************
+dicom_height, dicom_width, number_dicoms = segmented_CT_scan.image.shape
+x_slice, y_slice, z_slice 				 = (250, 250, 30)
+
 print "=======> Generating the segmentation dataset for fixed z = %i from CT scan %s... <=======" %(z_slice, segmented_CT_scan.name)
 tri_planar_segmentation_dataset_fixed_z = np.zeros((segmented_CT_scan.image[:,:,0].size, 6, patch_size, patch_size))
 for x in range(dicom_height):
 	utils.drawProgressBar(float(x)/(dicom_height-1), 100)
 	for y in range(dicom_width):
-		tri_planar_segmentation_dataset_fixed_z[y + dicom_width*x, :, :, :] = df.generate_patches((x,y,z_slice),segmented_CT_scan.image, patch_size)
+		tri_planar_segmentation_dataset_fixed_z[y + dicom_width*x, :, :, :] = dataset_generator.generate_example_inputs((x,y,z_slice))
 
 print "=======> Generating the segmentation dataset for fixed y = %i from CT scan %s... <=======" %(y_slice, segmented_CT_scan.name)
 tri_planar_segmentation_dataset_fixed_y = np.zeros((segmented_CT_scan.image[:,0,:].size, 6, patch_size, patch_size))
 for x in range(dicom_height):
 	utils.drawProgressBar(float(x)/(dicom_height-1), 100)
 	for z in range(number_dicoms):
-		tri_planar_segmentation_dataset_fixed_y[z + number_dicoms*x, :, :, :] = df.generate_patches((x,y_slice,z),segmented_CT_scan.image, patch_size)
+		tri_planar_segmentation_dataset_fixed_y[z + number_dicoms*x, :, :, :] = dataset_generator.generate_example_inputs((x,y_slice,z))
 
 print "=======> Generating the segmentation dataset for fixed x = %i from CT scan %s... <=======" %(x_slice, segmented_CT_scan.name)
 tri_planar_segmentation_dataset_fixed_x = np.zeros((segmented_CT_scan.image[0,:,:].size, 6, patch_size, patch_size))
 for y in range(dicom_width):
 	utils.drawProgressBar(float(y)/(dicom_width-1), 100)
 	for z in range(number_dicoms):
-		tri_planar_segmentation_dataset_fixed_x[z + number_dicoms*y, :, :, :] = df.generate_patches((x_slice,y,z),segmented_CT_scan.image, patch_size)
+		tri_planar_segmentation_dataset_fixed_x[z + number_dicoms*y, :, :, :] = dataset_generator.generate_example_inputs((x_slice,y,z))
 
 # ********************************************************************************************
 # 								Saving the segmentation datasets

@@ -1,12 +1,11 @@
 import sys
 sys.path.append("..")
-import dataset_functions as df
 from CTScanImage import CTScanImage
+from DatasetGenerator import DatasetGenerator
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
 import re
-import dataset_functions as df
 
 data_directory = "../../../ct_atrium/training/"
 
@@ -18,18 +17,16 @@ CT_scan_parameters_template = {
 		"CT_directory_pattern"  : re.compile("[0-9]{8}")
 		}
 
-CT_scan_name = "14022803" 
+CT_scan_name 	= "14022803" 
+x 				= 250
+y 				= 200
+z 				= 40
+patch_size 		= 32
 
-CT_scan = CTScanImage(CT_scan_name, CT_scan_parameters_template)
+CT_scan 			= CTScanImage(CT_scan_name, CT_scan_parameters_template)
+dataset_generator 	= DatasetGenerator(CT_scan, patch_size)
 
-# Coordinates of a given voxel
-x = 250
-y = 200
-z = 40
-
-# Get the patches at a given voxel
-patch_size = 32
-patches = df.generate_patches((x,y,z), CT_scan.image, patch_size)
+patches = dataset_generator.generate_example_inputs((x,y,z))
 
 # Plot 3 patches next to their respective DICOM slice.
 fig = plt.figure()
