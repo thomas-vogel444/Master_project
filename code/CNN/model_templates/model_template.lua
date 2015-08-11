@@ -38,7 +38,7 @@ model:add(nn.Linear(nfeaturemaps[3], nfeaturemaps[4]))
 model:add(nn.ReLU())
 -- model:add(nn.Tanh())
 model:add(nn.Dropout(0.5))
-model:add(nn.Linear(nfeaturemaps[3], noutputs))
+model:add(nn.Linear(nfeaturemaps[4], noutputs))
 
 model:add(nn.LogSoftMax())
 
