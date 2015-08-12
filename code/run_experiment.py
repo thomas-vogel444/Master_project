@@ -20,7 +20,7 @@ if __name__ == "__main__":
 			"number_of_GPUs"	: 4,
 			"savingDirectory"	: os.path.join(experimental_results_directory, experiment_name),
 			"modelPath"			: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
-			"maxepoch"			: 20, 
+			"maxepoch"			: 1, 
 			"learningRate"		: 0.1, 
 			"batchSize"			: 1500*4, 
 			"momentum"			: 0.0, 
@@ -32,13 +32,11 @@ if __name__ == "__main__":
 			"modelTemplateDirectory": os.path.join(NN_code_directory, "model_templates"),
 			"modelTemplate" 		: model_template,
 			"modelPath"				: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
-			"nfeats"  				: 6,
-			"patchsize"  			: 32,
-			"nfeaturemaps"  		: [32,64,1000,1000],
+			"nfeaturemaps"  		: [32,64,1000,500],
 			"filtsize" 	  			: 5,
-			"poolsize" 	  			: [3,2],
-			"featuremaps_h" 		: 2,
-			"featuremaps_w" 		: 2,
+			"poolsize" 	  			: [2,2],
+			"featuremaps_h" 		: 5,
+			"featuremaps_w" 		: 5,
 			"noutputs" 	  			: 2
 		}
 

@@ -1,12 +1,5 @@
-require "nn"
-
 ----------------------------------------------------------------------
 print '==> define parameters'
-
--- input dimensions
-nfeats  	= {{ nfeats }}
-patchsize   = {{ patchsize }}
-ninputs 	= nfeats*patchsize*patchsize
 
 -- hidden units, filter sizes (for ConvNet only):
 nfeaturemaps  = { {{ nfeaturemaps|join(', ') }} }
