@@ -1,0 +1,12 @@
+\BOOKMARK [0][-]{chapter.1}{Background Material: on convolutional neural networks}{}% 1
+\BOOKMARK [1][-]{section.1.1}{Convolutional Neural Networks}{chapter.1}% 2
+\BOOKMARK [2][-]{subsection.1.1.1}{Convolution}{section.1.1}% 3
+\BOOKMARK [2][-]{subsection.1.1.2}{Activation}{section.1.1}% 4
+\BOOKMARK [2][-]{subsection.1.1.3}{Subsampling/pooling}{section.1.1}% 5
+\BOOKMARK [2][-]{subsection.1.1.4}{Typical Architecture}{section.1.1}% 6
+\BOOKMARK [0][-]{chapter.2}{Setting up the problem}{}% 7
+\BOOKMARK [1][-]{section.2.1}{Data}{chapter.2}% 8
+\BOOKMARK [1][-]{section.2.2}{The Tri-Planar Method}{chapter.2}% 9
+\BOOKMARK [1][-]{section.2.3}{Technological Details}{chapter.2}% 10
+\BOOKMARK [2][-]{subsection.2.3.1}{Libraries}{section.2.3}% 11
+\BOOKMARK [2][-]{subsection.2.3.2}{Computer Power}{section.2.3}% 12

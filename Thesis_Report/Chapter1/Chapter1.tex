@@ -1,0 +1,20 @@
+\chapter{Background Material: on convolutional neural networks}
+
+A convolutional neural network (CNN) is a specialised kind of feed-forward Neural Network that replaces standard matrix multiplication for a convolution. A convolutional layer has three components: a convolution part, an activation part, and a subsampling/pooling part.
+
+\section{Convolutional Neural Networks}
+
+\subsection{Convolution}
+The input is processed by several kernels with learnable weights, each producing a set of outputs called feature maps. This leverages three ideas:
+
+\begin{itemize}
+	\item sparse interaction: every output node is connected to a local sub- set of inputs.	\item parameter sharing: the same kernel is used for every output node in a given feature map.	\item translational equivariance: shifting the input results in an equiv- alent shift in the output.
+\end{itemize}
+\subsection{Activation}Every node in the feature map is passed to an activation function, usually a Tanh unit or a Rectified Linear unit.
+
+\subsection{Subsampling/pooling}
+Reduces the output with a local summary statistic, e.g. maximum or average. This reduces the layer size and adds local translational invariance.
+
+\subsection{Typical Architecture}
+
+The architecture considered consists in an input layer which are square patches centred at the voxel of interest, two convolutional layers, a fully connected layer, and an output layer. Each layer in turn represents more abstract features the deeper its location in the architecture.Compared to a deep multiple layer perceptron, this architecture has the ad- vantage of being memory and computationally efficient.

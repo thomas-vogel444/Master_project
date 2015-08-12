@@ -1,0 +1,146 @@
+\documentclass[11pt,a4,twosided,singlespacing,titlepagenumber=on]{scrreprt}
+%%%obsolete starting points. (ignore)
+%\documentclass[a4paper,12pt,singlespace,report]{memoir}
+%\documentclass[a4,11pt,singlespace,MSc]{icldt}
+
+\usepackage[T1]{fontenc} % Handles accents etc better in the invisible details of the pdf output.
+\usepackage[latin1]{inputenc} % May or may not be needed. Says that your *.tex file is a text file with ASCII latin1 encoding. You could use e.g. utf8 instead for easier accents etc.
+\usepackage[UKenglish]{babel} % Let LaTeX know what language the text is in so it can select the correct hyphenation pattern etc
+
+%%% American Mathematical Society packages
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage{amsbsy}
+
+%%% Graphics packages
+\usepackage{graphicx}
+%\graphicspath{{figures/}} % Useful if you have lots of images and want to keep thinks tidy by having a subfolder for images
+\usepackage{tikz} %For creating vector-graphics diagrams, flowcharts etc directly in LaTeX (takes some time to learn)
+\usepackage[absolute]{textpos} % Used to position the Imperial College logo. You can comment this line and the next line out if you don't use the logo.
+
+%%% Referencing and cross-referencing
+\usepackage[colorlinks=false,pdfborder={0 0 0},plainpages=false,pdfpagelabels]{hyperref} % If you click on an item in the table of contents or a referenced equation/figure number, the PDF will go to the desired page. Neat isn't it?
+\usepackage[round,authoryear,sort]{natbib} % Enable bibtex-based bibliography generation
+%\usepackage[square,numbers,sort&compress]{natbib} % If you want numbered referencing instead of author-year style.
+
+%\setcounter{secnumdepth}{3} %If you want subsubsections to be numbered
+\numberwithin{equation}{chapter} % Reset equation numbers after each chapter.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Define how to create the title page  %%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\newcommand*{\supervisor}[1]{\gdef\@supervisor{#1}}
+\newcommand*{\CID}[1]{\gdef\@CID{#1}}
+\newcommand*{\logoimg}[1]{\gdef\@logoimg{#1}}
+\renewcommand{\maketitle}{
+\begin{titlepage}
+\ifdefined\@logoimg
+\begin{textblock*}{8cm}(1.75cm,1.75cm)
+\includegraphics[width=70mm]{\@logoimg}
+\end{textblock*}
+\vspace*{1cm}
+\else
+%\vspace*{0cm}
+\fi
+\begin{center}
+\vspace*{\stretch{0.1}}
+Imperial College London\\
+Derpartment of Mathematics\par
+\vspace*{\stretch{1}} % This inserts vertical space and allows you to specify a relative size for the vertical spaces.
+{\titlefont\Huge \@title\par} % If your title is long, you may wish to use \huge instead of \Huge.
+\vspace*{\stretch{2}}
+{\Large \@author \par}
+\vspace*{1em}
+{\large CID: \@CID \par}
+\vspace*{\stretch{0.5}}
+{\large Supervised by \@supervisor \par}
+\vspace*{\stretch{3}}
+{\Large \@date \par}
+\vspace*{\stretch{1}}
+{\large Submitted in partial fulfilment of the requirements for the
+MSc in Statistics of Imperial College London}
+\vspace*{\stretch{0.1}}
+\end{center}%
+\end{titlepage}%
+}
+\makeatother
+
+%%% And the plagiarism declaration
+\newcommand*{\declaration}{%
+\vspace*{0.3\textheight}
+The work contained in this thesis is my own work unless
+otherwise stated.\\
+\vspace*{0.1\textheight}\\
+\hspace*{0.25\textwidth}Signed: \hspace{0.25\textwidth} Date:
+\clearpage}
+
+%%% And the abstract page
+\renewenvironment{abstract}%
+{\chapter*{Abstract}\thispagestyle{plain}}%
+{\clearpage}
+%%% And why not change the quote environment
+\newenvironment{myquote}%
+{\begin{quote}{\Large{}``}}%
+{\ifhmode\unskip\fi{\Large{}''}\end{quote}}
+
+
+
+
+%%% Actual words used in the title page
+\title{Segmentation of CT scans into Atrium/non Atrium}
+\author{Thomas Vogel}
+\CID{}
+\supervisor{Prof Giovanni Montana}
+\date{\today}
+\logoimg{Imperial__4_colour_process.jpg}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% End of preamble and start of document %%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\maketitle %Generates the Title Page
+
+\declaration %Insert plagiarism statement
+
+\begin{abstract}
+This is a \LaTeX{} template to be used for project theses by the students of the Imperial College MSc in Statistics. Please have a look at the \verb|*.tex| source and the code comments therein. You may use this template with only minor changes, or make any major style changes you desire (e.g. redesigning the title page, adding headers,...), or you may use a different template, or you may write your own approach from scratch, or you may just use some bits and pieces from the template's \LaTeX{} code. It's up to you. Note that resources on how to use \LaTeX{} are available on Blackboard under `R\&{}LaTeX intro'.
+
+This template will quote relevant sections from the MSc in Statistics student handbook throughout; e.g.
+\begin{myquote}
+The abstract should be a brief statement of the aims and outcomes of the project, to summarise/advise
+even for a casual reader!
+\end{myquote}
+\end{abstract}
+\newpage
+\chapter*{Acknowledgements}
+Thank you supervisor/friends/family/pet.
+\begin{myquote}
+Include an acknowledgement.
+\end{myquote}
+\newpage
+
+% Automatically create a table of contents
+\renewcommand{\contentsname}{Table of Contents}
+\tableofcontents
+\newpage
+
+% Figure and table lists if you want them.
+%\cleardoublepage
+%\phantomsection
+%\listoffigures 
+%\addcontentsline{toc}{chapter}{\listfigurename}
+%\newpage
+%\phantomsection
+%\listoftables  
+%\addcontentsline{toc}{chapter}{\listtablename}
+%\newpage
+
+\include{Chapter1/Chapter1}
+\include{Chapter2/Chapter2}
+%\include{Chapter3}
+%\include{Chapter4}
+%\include{Chapter5}
+
+\end{document}

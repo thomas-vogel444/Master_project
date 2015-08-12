@@ -1,0 +1,20 @@
+\chapter{Setting up the problem}
+
+\section{Data}
+The data used is a set of 27 3D CT images that are 480*480*50 in dimension. They come in 2D arrays in DICOM files. The labelling of all the voxels come in a 3D matrix in a NRRD file.
+
+\section{The Tri-Planar Method}
+
+Classifying the voxels require building an input set containing local and global information to allow the Neural Network to extract relevant information and aid in its choice. One of the cheap ways of doing so is to use the so-called tri-planar method. This consists in generating 3 perpendicular square patches of a given size for each voxel to classify. Each patch is then fed into a different input channel of the Convolutional Neural Network, and are then connected to the classifying layer using a fully connected layer.
+
+\section{Technological Details}
+
+\subsection{Libraries}
+
+We use an open-source library called Torch in Lua to train the Neural Networks and Python and a number of its libraries to handle all the logistics from generating the datasets to producing plots of segmentation results.
+
+\subsection{Computer Power}
+
+The code for training Neural Networks has been written to work on multi-GPU platforms that increase the speed of training by around 100
+times. The graphic cards consist in two NVIDIA Tesla K40m and two Tesla K20Xm.
+
