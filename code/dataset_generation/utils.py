@@ -31,9 +31,9 @@ def random_3d_indices(CT_scan_labels, n, target_label, z=None):
     
     indices_1d = np.random.choice(xrange(len(indices_3d[0])), min(n,len(indices_3d[0])), replace=False)
 
-    return np.dstack((indices_3d[0][indices_1d], 
-                                            indices_3d[1][indices_1d], 
-                                            indices_3d[2][indices_1d]))[0]
+    return np.dstack((  indices_3d[0][indices_1d], 
+                        indices_3d[1][indices_1d], 
+                        indices_3d[2][indices_1d]))[0]
 
 def padded_square_image_crop(center_coordinates,image_2d, patch_size):
         """

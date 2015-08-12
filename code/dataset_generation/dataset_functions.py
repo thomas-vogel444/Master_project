@@ -1,6 +1,7 @@
 import utils
 from functools import partial
 from multiprocessing import Pool
+from multiprocessing.dummy import Pool as ThreadPool
 import itertools
 import numpy as np
 
@@ -32,11 +33,16 @@ def generate_dataset_from_CT_scan(CT_scan, patch_size, n_examples_per_label, sam
 	labels = range(1, len(n_examples_per_label) + 1)	# Should be (1,2,3) or (1,2) if the sampling type is "With_Atrium" or "Without_Atrium" respectively
 	random_indices = [CT_scan.sample_CT_scan_indices(sampling_type, n_examples_per_label[label-1], label, dicom_index) for label in labels]
 
+	#*****************************************************************
 	# Set up the multiprocessing stuff	
+	#*****************************************************************
+	# First attempt... Good for now but later I want to try to make something with dividing the workload among processes.
 	map_function = partial(generate_example_inputs, CT_scan=CT_scan, patch_size=patch_size)
 	if multithreaded == True:
 		pool = Pool() 
 		tri_planar_dataset 	= pool.map(map_function, itertools.chain.from_iterable(random_indices))
+		pool.close() 
+		pool.join() 
 	else:
 		tri_planar_dataset 	= map(map_function, itertools.chain.from_iterable(random_indices))
 

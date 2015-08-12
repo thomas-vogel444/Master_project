@@ -68,7 +68,7 @@ if __name__ == "__main__":
 		labels_hdf5 	  	  = f.create_dataset("%s_labels"%CT_scan_type, labels.shape, dtype="uint8")
 		labels_hdf5[...]  	  = labels
 
-
+	f.close()
 
 
 
