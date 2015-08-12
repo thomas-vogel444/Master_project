@@ -1,5 +1,6 @@
 ----------------------------------------------------------------------
 print '==> defining some tools'
+criterion = nn.ClassNLLCriterion()
 
 classes = {'0','1'}
 
