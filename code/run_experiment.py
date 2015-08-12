@@ -19,7 +19,7 @@ if __name__ == "__main__":
 			"GPU_identifier"	: 1,
 			"number_of_GPUs"	: 4,
 			"savingDirectory"	: os.path.join(experimental_results_directory, experiment_name),
-			"presavedModelPath"	: ""
+			"presavedModelPath"	: "",
 			"modelFilePath"		: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
 			"maxepoch"			: 1, 
 			"learningRate"		: 0.1, 

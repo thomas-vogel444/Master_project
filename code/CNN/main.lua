@@ -23,7 +23,7 @@ cmd:option('-threads', 4, 'number of threads')
 -- data:
 cmd:option('-dataset', '../../datasets/CNN_datasets.hdf5', 'Dataset path')
 -- model:
-cmdLoption('-presavedModelPath', None, "Path to a presaved model to load and start training.")
+cmd:option('-presavedModelPath', "", "Path to a presaved model to load and start training.")
 cmd:option('-modelFilePath', 'model.lua', 'Model file name')
 -- training:
 cmd:option('-maxepoch', 30, 'Maximum number of epoch on which to train the NN')
@@ -45,7 +45,7 @@ torch.manualSeed(opt.seed)
 print '==> executing all'
 
 dofile 'data.lua'
-if opt.presavedModelPath == None then
+if opt.presavedModelPath == "" then
 	dofile(opt.modelFilePath)
 else
 	model = torch.load(opt.presavedModelPath)

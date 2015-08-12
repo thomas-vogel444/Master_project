@@ -26,10 +26,13 @@ class Model:
 		"""
 			Calls the linux command to train a neural network.
 		"""
-		training_command  = "th main.lua -GPU_id %(GPU_identifier)i -number_of_GPUs %(number_of_GPUs)i -dataset %(dataset)s "
-							"-presavedModelPath %(presavedModelPath)s -modelFilePath %(modelFilePath)s "\
+		training_command  = "th main.lua -GPU_id %(GPU_identifier)i -number_of_GPUs %(number_of_GPUs)i -dataset %(dataset)s "\
+							"-modelFilePath %(modelFilePath)s "\
 							"-maxepoch %(maxepoch)i -savingDirectory %(savingDirectory)s -learningRate %(learningRate)f "\
 							"-batchSize %(batchSize)i -momentum %(momentum)f" %self.training_parameters
+
+		if self.training_parameters["presavedModelPath"] != "":
+			training_command += " -presavedModelPath %s"%self.training_parameters["presavedModelPath"]
 
 		# Call the training command
 		subprocess.call(training_command, shell=True)

@@ -32,7 +32,7 @@ class Experiment:
 		template_environment = jinja2.Environment(loader = jinja2.FileSystemLoader(self.model.model_parameters["modelTemplateDirectory"]))
 		model_template 		 = template_environment.get_template(self.model.model_parameters["modelTemplate"])
 
-		with open(self.model.model_parameters["modelPath"], 'w+') as f:
+		with open(self.model.model_parameters["modelFilePath"], 'w+') as f:
 		    f.write(model_template.render(self.model.model_parameters))
 
 	def save_as_json(self, parameters, filename):
@@ -47,8 +47,8 @@ class Experiment:
 		"""
 			Saves the model code in the saving directory of the experiment.
 		"""
-		model_filename = os.path.basename(self.model.model_parameters["modelPath"])
+		model_filename = os.path.basename(self.model.model_parameters["modelFilePath"])
 		if os.path.isfile(os.path.join(self.model.training_parameters["savingDirectory"], model_filename)):
 			os.remove(os.path.join(self.model.training_parameters["savingDirectory"], model_filename))
 
-		shutil.move(self.model.model_parameters["modelPath"], self.model.training_parameters["savingDirectory"])
+		shutil.move(self.model.model_parameters["modelFilePath"], self.model.training_parameters["savingDirectory"])
