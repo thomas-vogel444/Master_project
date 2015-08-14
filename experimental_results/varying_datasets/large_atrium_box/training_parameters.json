@@ -1,12 +1,13 @@
 {
-    "batchSize": 512,
-    "dataset": "/home/tv15/master_project/datasets/CNN_large_atrium_box_datasets.hdf5",
+    "testing_dataset": "/home/tv15/master_project/datasets/testing_dataset.hdf5",
+    "training_dataset": "/home/tv15/master_project/datasets/large_atrium_box_training_dataset.hdf5",
+    "batchSize": 6000,
     "savingDirectory": "/home/tv15/master_project/experimental_results/varying_datasets/large_atrium_box",
-    "modelPath": "/home/tv15/master_project/code/CNN/models/model_large_atrium_box_.lua",
+    "presavedModelPath": "",
     "learningRate": 0.1,
-    "maxepoch": 15,
-    "GPU_identifier": 2,
-    "type": "cuda",
+    "maxepoch": 30,
+    "GPU_identifier": 1,
+    "modelFilePath": "/home/tv15/master_project/code/CNN/models/model.lua",
     "momentum": 0.0,
-    "number_of_GPUs": 1
+    "number_of_GPUs": 4
 }
