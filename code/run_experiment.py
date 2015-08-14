@@ -69,8 +69,8 @@ if __name__ == "__main__":
 	model_template 		= "model_template.lua"
 
 	experiment_name 	= "varying_datasets/no_atrium_box"
-	training_parameters["training_dataset"] = os.path.join(dataset_directory,"no_atrium_box_training_dataset.hdf5")
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
+	training_parameters["training_dataset"] = os.path.join(dataset_directory,"no_atrium_box_training_dataset.hdf5")
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
 	experiment_name 	= "varying_datasets/small_atrium_box"
