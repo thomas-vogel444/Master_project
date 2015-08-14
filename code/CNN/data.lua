@@ -4,27 +4,26 @@ require "hdf5"
 trainData = {}
 testData = {}
 
--- Loading the data
-filename = opt.dataset
-print("Loading data from: " .. filename)
-
 -- Reading the datasets
-local f = hdf5.open(filename,'r')
-
-trainingDataset = f:read("training_dataset"):all():float()
-trainingLabels  = f:read("training_labels"):all():float()
-testingDataset  = f:read("testing_dataset"):all():float()
-testingLabels   = f:read("testing_labels"):all():float()
+print("Loading training data from: " .. opt.training_dataset)
+local f = hdf5.open(opt.training_dataset,'r')
+trainingDataset = f:read("dataset"):all():float()
+trainingLabels  = f:read("labels"):all():float()
 
 trainData.data   = trainingDataset:div(255)
 trainData.labels = trainingLabels
 trainData.size   = function() return(trainingDataset:size()[1]) end
 trainingSize     = trainData.size()
+f:close()
+
+print("Loading testing data from: " .. opt.testing_dataset)
+local f = hdf5.open(opt.testing_dataset,'r')
+testingDataset  = f:read("dataset"):all():float()
+testingLabels   = f:read("labels"):all():float()
 
 testData.data   = testingDataset:div(255)
 testData.labels = testingLabels
 testData.size   = function() return(testingDataset:size()[1]) end
-
 f:close()
 
 -- Normalize the data

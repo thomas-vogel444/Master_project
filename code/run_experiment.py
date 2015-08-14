@@ -9,11 +9,11 @@ if __name__ == "__main__":
 	# ************************************************************************************************
 	# 						Base parameters for the set of experiments to be conducted
 	# ************************************************************************************************
-	NN_code_directory 				= os.path.abspath("CNN")
-	dataset_directory				= os.path.abspath("../datasets")
-	experimental_results_directory  = os.path.abspath("../experimental_results")
+	def get_base_parameters(base_project_path, experiment_name, model_template):
+		NN_code_directory 				= os.path.join(base_project_path, "CNN")
+		dataset_directory				= os.path.join(base_project_path, "datasets")
+		experimental_results_directory  = os.path.join(base_project_path, "experimental_results")
 
-	def get_base_parameters(experiment_name, model_template):
 		model_name 						= model_template.replace("_template", "")
 		base_training_parameters = {
 			"GPU_identifier"	: 1,
@@ -25,14 +25,15 @@ if __name__ == "__main__":
 			"learningRate"		: 0.1, 
 			"batchSize"			: 1500*4, 
 			"momentum"			: 0.0, 
-			"dataset" 			: os.path.join(dataset_directory,"CNN_small_atrium_box_datasets.hdf5")
+			"training_dataset" 	: os.path.join(dataset_directory,"CNN_small_atrium_box_dataset.hdf5"),
+			"testing_dataset" 	: os.path.join(dataset_directory,"testing_datasets.hdf5")
 		}
 
 		base_model_parameters = {
 			"NN_code_directory"		: NN_code_directory,
 			"modelTemplateDirectory": os.path.join(NN_code_directory, "model_templates"),
 			"modelTemplate" 		: model_template,
-			"modelFilePath"				: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
+			"modelFilePath"			: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
 			"nfeaturemaps"  		: [32,64,1000,500],
 			"filtsize" 	  			: 5,
 			"poolsize" 	  			: [2,2],
@@ -59,12 +60,14 @@ if __name__ == "__main__":
 		# Produce some segmentation results
 		segmentator = Segmentator(segmentation_parameters)
 		segmentator.segment()
+
 	# ************************************************************************************************
 	# 										Run the experiments for varying parameters
 	# ************************************************************************************************
-	experiment_name = "test_experiment/1"
-	model_template 	= "model_template.lua"	
-	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(experiment_name, model_template)
+	base_project_path 	= os.path.abspath("..")
+	experiment_name 	= "test_experiment/1"
+	model_template 		= "model_template.lua"	
+	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
 

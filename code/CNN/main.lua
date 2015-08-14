@@ -21,9 +21,10 @@ cmd:option('-number_of_GPUs', 1, "Which GPU to use")
 cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
 cmd:option('-threads', 4, 'number of threads')
 -- data:
-cmd:option('-dataset', '../../datasets/CNN_datasets.hdf5', 'Dataset path')
+cmd:option('-training_dataset', '../../datasets/training_dataset.hdf5', 'Training dataset path')
+cmd:option('-testing_dataset', '../../datasets/testing_dataset.hdf5', 'Testing dataset path')
 -- model:
-cmd:option('-presavedModelPath', "", "Path to a presaved model to load and start training.")
+cmd:option('-presavedModelPath', "model.net", "Path to an existing model to load and start training from.")
 cmd:option('-modelFilePath', 'model.lua', 'Model file name')
 -- training:
 cmd:option('-maxepoch', 30, 'Maximum number of epoch on which to train the NN')
@@ -41,14 +42,20 @@ cutorch.setDevice(opt.GPU_id)
 torch.setnumthreads(opt.threads)
 torch.manualSeed(opt.seed)
 
-----------------------------------------------------------------------
+------------------------------------------------------------------------------------
+-- Define a function to load an existing model for exception handling purposes
+function load_existing_model()
+	model = torch.load(opt.presavedModelPath)
+end
+
+------------------------------------------------------------------------------------
 print '==> executing all'
 
 dofile 'data.lua'
-if opt.presavedModelPath == "" then
-	dofile(opt.modelFilePath)
+if pcall(load_existing_model)  then
+	print("Loaded an existing model at " .. opt.presavedModelPath)
 else
-	model = torch.load(opt.presavedModelPath)
+	dofile(opt.modelFilePath)
 end
 
 dofile 'train.lua'

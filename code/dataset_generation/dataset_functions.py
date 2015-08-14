@@ -1,3 +1,4 @@
+from CTScanImage import CTScanImage
 import utils
 from functools import partial
 from multiprocessing import Pool
@@ -50,3 +51,19 @@ def generate_dataset_from_CT_scan(CT_scan, patch_size, n_examples_per_label, sam
 
 	return np.array(tri_planar_dataset), np.array(tri_planar_labels)
 
+def generate_dataset(CT_scan_names, n_examples_per_label, CT_scan_parameters_template, patch_size, sampling_type, dicom_index=None, xy_padding=0, z_padding=0, multithreaded=True):
+	"""
+		Generates a dataset from a set of CT scans.
+	"""
+	dataset = np.zeros((sum(n_examples_per_label)*len(CT_scan_names), 6, patch_size, patch_size))
+	labels  = np.zeros(sum(n_examples_per_label)*len(CT_scan_names))
+
+	for i, CT_scan_name in enumerate(CT_scan_names):
+		print "Generating datasets from CT scan %s" %CT_scan_name
+		CT_scan 			= CTScanImage(CT_scan_name, CT_scan_parameters_template, xy_padding, z_padding)
+		CT_scan_dataset, CT_scan_labels = generate_dataset_from_CT_scan(CT_scan, patch_size, n_examples_per_label, sampling_type, dicom_index, multithreaded)
+
+		n_examples = len(CT_scan_labels)
+		dataset[(i*n_examples):((i+1)*n_examples)], labels[(i*n_examples):((i+1)*n_examples)] = CT_scan_dataset, CT_scan_labels		
+
+	return dataset, labels

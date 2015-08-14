@@ -26,8 +26,8 @@ class Model:
 		"""
 			Calls the linux command to train a neural network.
 		"""
-		training_command  = "th main.lua -GPU_id %(GPU_identifier)i -number_of_GPUs %(number_of_GPUs)i -dataset %(dataset)s "\
-							"-modelFilePath %(modelFilePath)s "\
+		training_command  = "th main.lua -GPU_id %(GPU_identifier)i -number_of_GPUs %(number_of_GPUs)i -training_dataset %(training_dataset)s "\
+							"-testing_dataset %(testing_dataset)s -modelFilePath %(modelFilePath)s "\
 							"-maxepoch %(maxepoch)i -savingDirectory %(savingDirectory)s -learningRate %(learningRate)f "\
 							"-batchSize %(batchSize)i -momentum %(momentum)f" %self.training_parameters
 
