@@ -25,8 +25,8 @@ if __name__ == "__main__":
 			"learningRate"		: 0.1, 
 			"batchSize"			: 1500*4, 
 			"momentum"			: 0.0, 
-			"training_dataset" 	: os.path.join(dataset_directory,"CNN_small_atrium_box_dataset.hdf5"),
-			"testing_dataset" 	: os.path.join(dataset_directory,"testing_datasets.hdf5")
+			"training_dataset" 	: os.path.join(dataset_directory,"no_atrium_box_training_dataset.hdf5"),
+			"testing_dataset" 	: os.path.join(dataset_directory,"testing_dataset.hdf5")
 		}
 
 		base_model_parameters = {
@@ -65,9 +65,26 @@ if __name__ == "__main__":
 	# 										Run the experiments for varying parameters
 	# ************************************************************************************************
 	base_project_path 	= os.path.abspath("..")
-	experiment_name 	= "test_experiment/1"
-	model_template 		= "model_template.lua"	
+	dataset_directory	= os.path.join(base_project_path, "datasets")
+	model_template 		= "model_template.lua"
+
+	experiment_name 	= "varying_datasets/no_atrium_box"
+	training_parameters["training_dataset"] = os.path.join(dataset_directory,"no_atrium_box_training_dataset.hdf5")
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
+
+	experiment_name 	= "varying_datasets/small_atrium_box"
+	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
+	training_parameters["training_dataset"] = os.path.join(dataset_directory,"small_atrium_box_training_dataset.hdf5")
+	start_experiment(training_parameters, model_parameters, segmentation_parameters)
+
+	experiment_name 	= "varying_datasets/large_atrium_box"
+	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
+	training_parameters["training_dataset"] = os.path.join(dataset_directory,"large_atrium_box_training_dataset.hdf5")
+	start_experiment(training_parameters, model_parameters, segmentation_parameters)
+
+
+
+
 
 
