@@ -1,3 +1,4 @@
+import dataset_generation.utils as utils
 import h5py
 import numpy as np
 import os
@@ -5,8 +6,9 @@ import Image
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
-experiment_directory = "../experimental_results/varying_datasets/1"
-predicted_labels_path = os.path.join(experiment_directory, "predicted_labels.hdf5")
+experiment_directory 		= "../experimental_results/test_experiment/1"
+predicted_labels_path 		= os.path.join(experiment_directory, "predicted_labels.hdf5")
+segmentation_dataset_path 	= "../datasets/segmentation_datasets.hdf5"
 
 #******************************************************************************
 #							Mask and label plots
@@ -19,11 +21,10 @@ predicted_labels_fixed_y = np.array(f_predicted["predicted_labels_fixed_y"])
 predicted_labels_fixed_x = np.array(f_predicted["predicted_labels_fixed_x"])
 
 # import the true labels
-segmentation_dataset_path = "../../datasets/segmentation_datasets.hdf5"
 f_segmentation = h5py.File(segmentation_dataset_path, "r")
-true_labels_fixed_z = np.array(f_segmentation["labels_fixed_z"])
-true_labels_fixed_y = np.array(f_segmentation["labels_fixed_y"])
-true_labels_fixed_x = np.array(f_segmentation["labels_fixed_x"])
+true_labels_fixed_z = np.array(f_segmentation["labels_fixed_z"]) - 1
+true_labels_fixed_y = np.array(f_segmentation["labels_fixed_y"]) - 1
+true_labels_fixed_x = np.array(f_segmentation["labels_fixed_x"]) - 1
 
 true_values_fixed_z = np.array(f_segmentation["values_fixed_z"])
 true_values_fixed_y = np.array(f_segmentation["values_fixed_y"])
@@ -52,11 +53,25 @@ def get_mask(predicted_labels, true_labels, true_values):
 	mask  = Image.fromarray(rgbLabels)
 	image = Image.fromarray(rgbValues)
 
-	return Image.blend(image, mask, 0.4)
+	return np.array(Image.blend(image, mask, 0.4))
+
+print np.where(predicted_labels_fixed_x == 0)
+print np.where(true_labels_fixed_x == 0)
 
 mask_fixed_x = get_mask(predicted_labels_fixed_x, true_labels_fixed_x, true_values_fixed_x)
 mask_fixed_y = get_mask(predicted_labels_fixed_y, true_labels_fixed_y, true_values_fixed_y)
 mask_fixed_z = get_mask(predicted_labels_fixed_z, true_labels_fixed_z, true_values_fixed_z)
+
+# Resize the saggital and coronal images to make them look better
+c_height, c_width = predicted_labels_fixed_x.shape
+mask_fixed_y_resized 				= utils.resize_image_2d_array(mask_fixed_y, 4*c_width, c_height)
+predicted_labels_fixed_y_resized 	= utils.resize_image_2d_array(np.int32(predicted_labels_fixed_y), 4*c_width, c_height)
+true_labels_fixed_y_resized		 	= utils.resize_image_2d_array(np.int32(true_labels_fixed_y), 4*c_width, c_height)
+
+s_height, s_width = predicted_labels_fixed_x.shape
+mask_fixed_x_resized 				= utils.resize_image_2d_array(mask_fixed_x, 4*s_width, s_height)
+predicted_labels_fixed_x_resized 	= utils.resize_image_2d_array(np.int32(predicted_labels_fixed_x), 4*s_width, s_height)
+true_labels_fixed_x_resized		 	= utils.resize_image_2d_array(np.int32(true_labels_fixed_x), 4*c_width, c_height)
 
 fig = plt.figure()
 a   = fig.add_subplot(3,3,1)
@@ -64,19 +79,19 @@ plt.imshow(predicted_labels_fixed_z, cmap = cm.Greys_r)
 a   = fig.add_subplot(3,3,4)
 plt.imshow(true_labels_fixed_z, cmap = cm.Greys_r)
 a   = fig.add_subplot(3,3,2)
-plt.imshow(predicted_labels_fixed_y, cmap = cm.Greys_r)
+plt.imshow(predicted_labels_fixed_y_resized, cmap = cm.Greys_r)
 a   = fig.add_subplot(3,3,5)
-plt.imshow(true_labels_fixed_y, cmap = cm.Greys_r)
+plt.imshow(true_labels_fixed_y_resized, cmap = cm.Greys_r)
 a   = fig.add_subplot(3,3,3)
-plt.imshow(predicted_labels_fixed_x, cmap = cm.Greys_r)
+plt.imshow(predicted_labels_fixed_x_resized, cmap = cm.Greys_r)
 a   = fig.add_subplot(3,3,6)
-plt.imshow(true_labels_fixed_x, cmap = cm.Greys_r)
+plt.imshow(true_labels_fixed_x_resized, cmap = cm.Greys_r)
 a   = fig.add_subplot(3,3,7)
 plt.imshow(mask_fixed_z)
 a   = fig.add_subplot(3,3,8)
-plt.imshow(mask_fixed_y)
+plt.imshow(mask_fixed_y_resized)
 a   = fig.add_subplot(3,3,9)
-plt.imshow(mask_fixed_x)
+plt.imshow(mask_fixed_x_resized)
 plt.show()
 
 #******************************************************************************
