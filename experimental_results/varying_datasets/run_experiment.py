@@ -25,7 +25,7 @@ if __name__ == "__main__":
 			"learningRate"		: 0.1, 
 			"batchSize"			: 1500*4, 
 			"momentum"			: 0.0, 
-			"training_dataset" 	: os.path.join(dataset_directory,"small_atrium_box_training_dataset.hdf5"),
+			"training_dataset" 	: os.path.join(dataset_directory,"no_atrium_box_training_dataset.hdf5"),
 			"testing_dataset" 	: os.path.join(dataset_directory,"testing_dataset.hdf5")
 		}
 
@@ -34,7 +34,7 @@ if __name__ == "__main__":
 			"modelTemplateDirectory": os.path.join(NN_code_directory, "model_templates"),
 			"modelTemplate" 		: model_template,
 			"modelFilePath"			: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
-			"nfeaturemaps"  		: [32,1000,500],
+			"nfeaturemaps"  		: [32,64,1000,500],
 			"filtsize" 	  			: 5,
 			"poolsize" 	  			: [2,2],
 			"featuremaps_h" 		: 5,
@@ -66,36 +66,25 @@ if __name__ == "__main__":
 	# ************************************************************************************************
 	base_project_path 	= os.path.abspath("..")
 	dataset_directory	= os.path.join(base_project_path, "datasets")
+	model_template 		= "model_template.lua"
 
-	experiment_name 	= "varying_number_of_convolutional_layers/1_conv_layer"
-	model_template 		= "model_template_1_conv_layer.lua"
+	experiment_name 	= "varying_datasets/no_atrium_box"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	training_parameters["nfeaturemaps"] 	= [32,1000,500]
-	training_parameters["featuremaps_h"] 	= 14
-	training_parameters["featuremaps_w"] 	= 14
+	training_parameters["training_dataset"] = os.path.join(dataset_directory,"no_atrium_box_training_dataset.hdf5")
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_number_of_convolutional_layers/2_conv_layer"
-	model_template 		= "model_template_2_conv_layer.lua"
+	experiment_name 	= "varying_datasets/small_atrium_box"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	training_parameters["nfeaturemaps"] 	= [32,64,1000,500]
-	training_parameters["featuremaps_h"] 	= 5
-	training_parameters["featuremaps_w"] 	= 5
+	training_parameters["training_dataset"] = os.path.join(dataset_directory,"small_atrium_box_training_dataset.hdf5")
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_number_of_convolutional_layers/3_conv_layer"
-	model_template 		= "model_template_3_conv_layer.lua"
+	experiment_name 	= "varying_datasets/large_atrium_box"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	training_parameters["nfeaturemaps"] 	= [32,32,64,1000,500]
-	training_parameters["featuremaps_h"] 	= 4
-	training_parameters["featuremaps_w"] 	= 4
+	training_parameters["training_dataset"] = os.path.join(dataset_directory,"large_atrium_box_training_dataset.hdf5")
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_number_of_convolutional_layers/4_conv_layer"
-	model_template 		= "model_template_4_conv_layer.lua"
-	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	training_parameters["nfeaturemaps"] 	= [32,32,64,64,1000,500]
-	training_parameters["featuremaps_h"] 	= 2
-	training_parameters["featuremaps_w"] 	= 2
-	start_experiment(training_parameters, model_parameters, segmentation_parameters)
+
+
+
+
 
