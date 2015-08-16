@@ -21,7 +21,7 @@ if __name__ == "__main__":
 			"savingDirectory"	: os.path.join(experimental_results_directory, experiment_name),
 			"presavedModelPath"	: "",
 			"modelFilePath"		: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
-			"maxepoch"			: 30, 
+			"maxepoch"			: 100, 
 			"learningRate"		: 0.1, 
 			"batchSize"			: 1500*4, 
 			"momentum"			: 0.0, 
@@ -37,8 +37,8 @@ if __name__ == "__main__":
 			"nfeaturemaps"  		: [32,1000,500],
 			"filtsize" 	  			: 5,
 			"poolsize" 	  			: [2,2],
-			"featuremaps_h" 		: 5,
-			"featuremaps_w" 		: 5,
+			"featuremaps_h" 		: 14,
+			"featuremaps_w" 		: 14,
 			"noutputs" 	  			: 2
 		}
 
@@ -67,35 +67,39 @@ if __name__ == "__main__":
 	base_project_path 	= os.path.abspath("..")
 	dataset_directory	= os.path.join(base_project_path, "datasets")
 
-	experiment_name 	= "varying_number_of_convolutional_layers/1_conv_layer"
-	model_template 		= "model_template_1_conv_layer.lua"
+	experiment_name 	= "varying_number_of_connected_layers/1_conn_layer"
+	model_template 		= "model_template_1_conn_layers.lua"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	training_parameters["nfeaturemaps"] 	= [32,1000,500]
-	training_parameters["featuremaps_h"] 	= 14
-	training_parameters["featuremaps_w"] 	= 14
+	training_parameters["nfeaturemaps"] 	= [32,1000]
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_number_of_convolutional_layers/2_conv_layer"
-	model_template 		= "model_template_2_conv_layer.lua"
+	experiment_name 	= "varying_number_of_connected_layers/2_conn_layer"
+	model_template 		= "model_template_2_conn_layers.lua"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	training_parameters["nfeaturemaps"] 	= [32,64,1000,500]
-	training_parameters["featuremaps_h"] 	= 5
-	training_parameters["featuremaps_w"] 	= 5
+	training_parameters["nfeaturemaps"] 	= [32,1000, 500]
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_number_of_convolutional_layers/3_conv_layer"
-	model_template 		= "model_template_3_conv_layer.lua"
+	experiment_name 	= "varying_number_of_connected_layers/3_conn_layer"
+	model_template 		= "model_template_3_conn_layers.lua"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	training_parameters["nfeaturemaps"] 	= [32,32,64,1000,500]
-	training_parameters["featuremaps_h"] 	= 4
-	training_parameters["featuremaps_w"] 	= 4
+	training_parameters["nfeaturemaps"] 	= [32,1000, 500, 250]
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_number_of_convolutional_layers/4_conv_layer"
-	model_template 		= "model_template_4_conv_layer.lua"
-	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	training_parameters["nfeaturemaps"] 	= [32,32,64,64,1000,500]
-	training_parameters["featuremaps_h"] 	= 2
-	training_parameters["featuremaps_w"] 	= 2
-	start_experiment(training_parameters, model_parameters, segmentation_parameters)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
