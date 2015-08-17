@@ -35,7 +35,7 @@ if __name__ == "__main__":
 			"modelTemplateDirectory": os.path.join(NN_code_directory, "model_templates"),
 			"modelTemplate" 		: model_template,
 			"modelFilePath"			: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
-			"nfeaturemaps"  		: [32,1000],
+			"nfeaturemaps"  		: [64,1000],
 			"filtsize" 	  			: 5,
 			"poolsize" 	  			: [2,2],
 			"featuremaps_h" 		: 14,
@@ -68,28 +68,34 @@ if __name__ == "__main__":
 	base_project_path 			= os.path.abspath("..")
 	dataset_directory			= os.path.join(base_project_path, "datasets")
 
-	experiment_name 	= "varying_number_of_feature_maps/32"
+	experiment_name 	= "varying_number_of_connected_hidden_units/100"
 	model_template 		= "model_template_1_conn_layers.lua"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	base_model_parameters["nfeaturemaps"] 	= [32,1000]
+	model_parameters["nfeaturemaps"] 	= [64,100]
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_number_of_feature_maps/64"
+	experiment_name 	= "varying_number_of_connected_hidden_units/200"
 	model_template 		= "model_template_1_conn_layers.lua"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	base_model_parameters["nfeaturemaps"] 	= [64,1000]
+	model_parameters["nfeaturemaps"] 	= [64,200]
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_number_of_feature_maps/128"
+	experiment_name 	= "varying_number_of_connected_hidden_units/500"
 	model_template 		= "model_template_1_conn_layers.lua"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	base_model_parameters["nfeaturemaps"] 	= [128,1000]
+	model_parameters["nfeaturemaps"] 	= [64,500]
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_number_of_feature_maps/256"
+	experiment_name 	= "varying_number_of_connected_hidden_units/1000"
 	model_template 		= "model_template_1_conn_layers.lua"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	base_model_parameters["nfeaturemaps"] 	= [256,1000]
+	model_parameters["nfeaturemaps"] 	= [64,1000]
+	start_experiment(training_parameters, model_parameters, segmentation_parameters)
+
+	experiment_name 	= "varying_number_of_connected_hidden_units/1500"
+	model_template 		= "model_template_1_conn_layers.lua"
+	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
+	model_parameters["nfeaturemaps"] 	= [64,1500]
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
 
