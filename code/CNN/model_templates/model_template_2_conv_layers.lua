@@ -16,11 +16,11 @@ model = nn.Sequential()
 -- stage 1 : mean suppresion -> filter bank -> squashing -> max pooling
 model:add(cudnn.SpatialConvolution(nfeats, nfeaturemaps[1], filtsize, filtsize))
 model:add(cudnn.{{ activation_function }}(true))
-model:add(cudnn.SpatialMaxPooling(poolsize[1],poolsize[1],poolsize[1],poolsize[1]))
+model:add(cudnn.{{ pooling_function }}(poolsize[1],poolsize[1],poolsize[1],poolsize[1]))
 -- stage 2 : mean suppresion -> filter bank -> squashing -> max pooling
 model:add(cudnn.SpatialConvolution(nfeaturemaps[1], nfeaturemaps[2], filtsize, filtsize))
 model:add(cudnn.{{ activation_function }}(true))
-model:add(cudnn.SpatialMaxPooling(poolsize[2],poolsize[2],poolsize[2],poolsize[2]))
+model:add(cudnn.{{ pooling_function }}(poolsize[2],poolsize[2],poolsize[2],poolsize[2]))
 -- stage 3 : standard 2-layer MLP:
 model:add(nn.View(nfeaturemaps[2]*featuremaps_h*featuremaps_w))
 model:add(nn.Dropout(0.5))

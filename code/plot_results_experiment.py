@@ -89,45 +89,60 @@ def get_resized_mask(mask):
 	width, height = mask.size
 	return mask.resize((4*width, height))
 
-
 #******************************************************************************************
 #										Masks plot
 #******************************************************************************************
 # experiment_base_name 	= "varying_datasets"
 # experiment_base_name 	= "varying_number_of_convolutional_layers"
 # experiment_base_name 	= "varying_number_of_connected_layers"
-experiment_base_name	= "varying_number_of_feature_maps"
-
+# experiment_base_name	= "varying_number_of_feature_maps"
+experiment_base_name  = "varying_number_of_connected_hidden_units"
 
 experiment_base_directory 	= os.path.join("../experimental_results", experiment_base_name)
 segmentation_dataset_path 	= "../datasets/segmentation_datasets.hdf5"
+experiment_names 			= [os.path.basename(path) for path in get_experiments_paths(experiment_base_directory)]
+
+if experiment_names[0].isdigit():
+	experiment_names = sorted(experiment_names, key=lambda x: int(x))
 
 masks = get_mask_images(experiment_base_directory, segmentation_dataset_path)
 
 fig = plt.figure()
-for i_experiment, experiment_name in enumerate(masks.keys()):
+for i_experiment, experiment_name in enumerate(experiment_names):
 	experiment_masks = masks[experiment_name]
-	# print experiment_name
+	print experiment_name
 	for i_mask in range(3):
 		a   = fig.add_subplot(3,len(masks),(i_experiment + len(masks) * i_mask + 1))
 		plt.imshow(np.array(experiment_masks[i_mask]))
-plt.show()
+		if i_mask == 0:
+			a.set_title(experiment_name)
+		plt.axis('off')
+# plt.show()
+plt.savefig(os.path.join(experiment_base_directory, "mask_results.pdf"))
 
 #******************************************************************************************
 #									Testing error plot
 #******************************************************************************************
 testing_dice_coefficients = get_dice_coefficients(experiment_base_directory, type="test")
-x = range(len(testing_dice_coefficients.values()[0]))
+training_dice_coefficients = get_dice_coefficients(experiment_base_directory, type="train")
 
-for experiment_name, coefficients in testing_dice_coefficients.items():
-	print experiment_name, max(coefficients)
-	plt.plot(x, coefficients)
+fig = plt.figure()
+for experiment_name in experiment_names:
+	print experiment_name, max(testing_dice_coefficients[experiment_name])
+	plt.plot(testing_dice_coefficients[experiment_name])
 
-plt.legend(testing_dice_coefficients.keys(), loc='lower right')
-plt.show()
+plt.legend(experiment_names, loc='lower right')
+# plt.show()
+plt.savefig(os.path.join(experiment_base_directory, "test_dice_coefficient_plots.pdf"))
 
+fig = plt.figure()
+for experiment_name in experiment_names:
+	print experiment_name, max(training_dice_coefficients[experiment_name])
+	plt.plot(training_dice_coefficients[experiment_name])
 
-
+plt.legend(experiment_names, loc='lower right')
+# plt.show()
+plt.savefig(os.path.join(experiment_base_directory, "train_dice_coefficient_plots.pdf"))
 
 
 

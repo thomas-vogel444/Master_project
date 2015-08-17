@@ -36,7 +36,8 @@ if __name__ == "__main__":
 			"modelTemplate" 		: model_template,
 			"modelFilePath"			: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
 			"activation_function"	: "ReLU",
-			"nfeaturemaps"  		: [64,1000],
+			"pooling_function"		: "SpatialMaxPooling",
+			"nfeaturemaps"  		: [64,200],
 			"filtsize" 	  			: 5,
 			"poolsize" 	  			: [2,2],
 			"featuremaps_h" 		: 14,
@@ -69,23 +70,18 @@ if __name__ == "__main__":
 	base_project_path 			= os.path.abspath("..")
 	dataset_directory			= os.path.join(base_project_path, "datasets")
 
-	experiment_name 	= "varying_activation_functions/ReLU"
+	experiment_name 	= "varying_pooling_functions/max_pooling"
 	model_template 		= "model_template_1_conn_layers.lua"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["activation_function"] = "ReLU"
+	model_parameters["pooling_function"] = "SpatialMaxPooling"
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_activation_functions/Tanh"
+	experiment_name 	= "varying_pooling_functions/average_pooling"
 	model_template 		= "model_template_1_conn_layers.lua"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["activation_function"] = "Tanh"
+	model_parameters["pooling_function"] = "SpatialAveragePooling"
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_activation_functions/Sigmoid"
-	model_template 		= "model_template_1_conn_layers.lua"
-	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["activation_function"] = "Sigmoid"
-	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 	
 
 
