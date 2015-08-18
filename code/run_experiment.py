@@ -67,15 +67,34 @@ if __name__ == "__main__":
 	# ************************************************************************************************
 	# 										Run the experiments for varying parameters
 	# ************************************************************************************************
-	base_project_path 			= os.path.abspath("..")
-	dataset_directory			= os.path.join(base_project_path, "datasets")
+	base_project_path 	= os.path.abspath("..")
+	dataset_directory	= os.path.join(base_project_path, "datasets")
+	model_template 		= "model_template_1_conn_layers.lua"
 
-	experiment_name 	= "with_large_dataset/3_connected_layers"
-	model_template 		= "model_template_3_conn_layers.lua"
+	experiment_name 	= "varying_learning_rate/1_0"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
+	training_parameters["learningRate"] = 1
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	
+	experiment_name 	= "varying_learning_rate/0_5"
+	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
+	training_parameters["learningRate"] = 0.5
+	start_experiment(training_parameters, model_parameters, segmentation_parameters)
+
+	experiment_name 	= "varying_learning_rate/0_1"
+	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
+	training_parameters["learningRate"] = 0.1
+	start_experiment(training_parameters, model_parameters, segmentation_parameters)
+
+	experiment_name 	= "varying_learning_rate/0_05"
+	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
+	training_parameters["learningRate"] = 0.05
+	start_experiment(training_parameters, model_parameters, segmentation_parameters)
+
+	experiment_name 	= "varying_learning_rate/0_01"
+	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
+	training_parameters["learningRate"] = 0.01
+	start_experiment(training_parameters, model_parameters, segmentation_parameters)	
 
 
 
