@@ -71,31 +71,35 @@ if __name__ == "__main__":
 	dataset_directory	= os.path.join(base_project_path, "datasets")
 	model_template 		= "model_template_1_conn_layers.lua"
 
-	experiment_name 	= "varying_learning_rate/1_0"
+	experiment_name 	= "varying_momentum/1_0"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	training_parameters["learningRate"] = 1
+	training_parameters["momentum"] = 1
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_learning_rate/0_5"
+	experiment_name 	= "varying_momentum/0_5"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	training_parameters["learningRate"] = 0.5
+	training_parameters["momentum"] = 0.5
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_learning_rate/0_1"
+	experiment_name 	= "varying_momentum/0_1"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	training_parameters["learningRate"] = 0.1
+	training_parameters["momentum"] = 0.1
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_learning_rate/0_05"
+	experiment_name 	= "varying_momentum/0_05"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	training_parameters["learningRate"] = 0.05
+	training_parameters["momentum"] = 0.05
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_learning_rate/0_01"
+	experiment_name 	= "varying_momentum/0_01"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	training_parameters["learningRate"] = 0.01
+	training_parameters["momentum"] = 0.01
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)	
 
+	experiment_name 	= "varying_momentum/0_0"
+	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
+	training_parameters["momentum"] = 0
+	start_experiment(training_parameters, model_parameters, segmentation_parameters)	
 
 
 
