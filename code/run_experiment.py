@@ -26,7 +26,7 @@ if __name__ == "__main__":
 			"learningRate"		: 0.1, 
 			"batchSize"			: 1500*4, 
 			"momentum"			: 0.0, 
-			"training_dataset" 	: os.path.join(dataset_directory,"small_atrium_box_training_dataset.hdf5"),
+			"training_dataset" 	: os.path.join(dataset_directory,"small_atrium_box_training_dataset_2_800_000.hdf5"),
 			"testing_dataset" 	: os.path.join(dataset_directory,"testing_dataset.hdf5")
 		}
 
@@ -37,7 +37,7 @@ if __name__ == "__main__":
 			"modelFilePath"			: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
 			"activation_function"	: "ReLU",
 			"pooling_function"		: "SpatialMaxPooling",
-			"nfeaturemaps"  		: [64,200],
+			"nfeaturemaps"  		: [64,200, 100, 50],
 			"filtsize" 	  			: 5,
 			"poolsize" 	  			: [2,2],
 			"featuremaps_h" 		: 14,
@@ -70,16 +70,9 @@ if __name__ == "__main__":
 	base_project_path 			= os.path.abspath("..")
 	dataset_directory			= os.path.join(base_project_path, "datasets")
 
-	experiment_name 	= "varying_pooling_functions/max_pooling"
-	model_template 		= "model_template_1_conn_layers.lua"
+	experiment_name 	= "with_large_dataset/3_connected_layers"
+	model_template 		= "model_template_3_conn_layers.lua"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["pooling_function"] = "SpatialMaxPooling"
-	start_experiment(training_parameters, model_parameters, segmentation_parameters)
-
-	experiment_name 	= "varying_pooling_functions/average_pooling"
-	model_template 		= "model_template_1_conn_layers.lua"
-	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["pooling_function"] = "SpatialAveragePooling"
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
 	

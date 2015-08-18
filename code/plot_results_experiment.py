@@ -73,8 +73,9 @@ def get_mask(predicted_labels, true_labels, true_values):
 	rgbValues = np.zeros((x, y, 3), 'uint8')
 
 	rgbLabels[:,:,1] = np.where((predicted_labels == true_labels) & (true_labels == 1), 255, 0)
-	rgbLabels[:,:,2] = np.where((predicted_labels == true_labels) & (true_labels == 0), 255, 0)
+	rgbLabels[:,:,2] = np.where((true_labels == 0), 255, 0)
 	rgbLabels[:,:,0] = np.where(predicted_labels != true_labels, 255, 0)
+
 
 	rgbValues[:,:,0] = true_values
 	rgbValues[:,:,1] = true_values
@@ -96,7 +97,8 @@ def get_resized_mask(mask):
 # experiment_base_name 	= "varying_number_of_convolutional_layers"
 # experiment_base_name 	= "varying_number_of_connected_layers"
 # experiment_base_name	= "varying_number_of_feature_maps"
-experiment_base_name  = "varying_number_of_connected_hidden_units"
+# experiment_base_name  = "varying_number_of_connected_hidden_units"
+experiment_base_name  = "varying_activation_functions"
 
 experiment_base_directory 	= os.path.join("../experimental_results", experiment_base_name)
 segmentation_dataset_path 	= "../datasets/segmentation_datasets.hdf5"
@@ -118,7 +120,7 @@ for i_experiment, experiment_name in enumerate(experiment_names):
 			a.set_title(experiment_name)
 		plt.axis('off')
 # plt.show()
-plt.savefig(os.path.join(experiment_base_directory, "mask_results.pdf"))
+plt.savefig(os.path.join(experiment_base_directory, "mask_results.png"))
 
 #******************************************************************************************
 #									Testing error plot
@@ -133,7 +135,7 @@ for experiment_name in experiment_names:
 
 plt.legend(experiment_names, loc='lower right')
 # plt.show()
-plt.savefig(os.path.join(experiment_base_directory, "test_dice_coefficient_plots.pdf"))
+plt.savefig(os.path.join(experiment_base_directory, "test_dice_coefficient_plots.png"))
 
 fig = plt.figure()
 for experiment_name in experiment_names:
@@ -142,7 +144,7 @@ for experiment_name in experiment_names:
 
 plt.legend(experiment_names, loc='lower right')
 # plt.show()
-plt.savefig(os.path.join(experiment_base_directory, "train_dice_coefficient_plots.pdf"))
+plt.savefig(os.path.join(experiment_base_directory, "train_dice_coefficient_plots.png"))
 
 
 
