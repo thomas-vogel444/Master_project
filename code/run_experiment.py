@@ -37,7 +37,7 @@ if __name__ == "__main__":
 			"modelFilePath"			: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
 			"activation_function"	: "ReLU",
 			"pooling_function"		: "SpatialMaxPooling",
-			"nfeaturemaps"  		: [64,200, 100, 50],
+			"nfeaturemaps"  		: [64,200],
 			"filtsize" 	  			: 5,
 			"poolsize" 	  			: [2,2],
 			"featuremaps_h" 		: 14,
@@ -71,6 +71,6 @@ if __name__ == "__main__":
 	dataset_directory	= os.path.join(base_project_path, "datasets")
 	model_template 		= "model_template_1_conn_layers.lua"
 
-	experiment_name 	= "with_large_dataset/3_conn_layer_momentum"
+	experiment_name 	= "with_large_dataset/1_conn_layer_momentum"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
