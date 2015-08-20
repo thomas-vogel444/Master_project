@@ -37,10 +37,11 @@ def generate_segmentation_dataset(segmented_CT_scan, slice_center_coordinates, p
 	return tri_planar_segmentation_dataset_fixed_x, tri_planar_segmentation_dataset_fixed_y, tri_planar_segmentation_dataset_fixed_z
 
 
-def save_segmentation_dataset(segmentation_dataset_path, segmented_CT_scan, dataset_fixed_x, dataset_fixed_y, dataset_fixed_z):
+def save_segmentation_dataset(segmentation_dataset_path, segmented_CT_scan, slice_center_coordinates, dataset_fixed_x, dataset_fixed_y, dataset_fixed_z):
 	# ********************************************************************************************
 	# 								Saving the segmentation datasets
 	# ********************************************************************************************
+	x_slice, y_slice, z_slice = slice_center_coordinates
 	f = h5py.File(segmentation_dataset_path, "w")
 
 	print "=======> Saving the segmentation datasets for fixed z in %s <=======" %segmentation_dataset_path
@@ -103,6 +104,7 @@ if __name__ == "__main__":
 		save_segmentation_dataset(
 				segmentation_dataset_path, 
 				segmented_CT_scan, 
+				slice_center_coordinates, 
 				tri_planar_segmentation_dataset_fixed_x, 
 				tri_planar_segmentation_dataset_fixed_y, 
 				tri_planar_segmentation_dataset_fixed_z
