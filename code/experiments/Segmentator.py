@@ -15,7 +15,7 @@ class Segmentator:
 				"segmentationFile" 		: segmentation_parameters["segmentationFile"],
 				"segmentationDataset"	: "segmentation_dataset_NAME",
 				"segmentationValues"	: "values_NAME",
-				"predictedPath"			: os.path.join(segmentation_parameters["modelDirectory"], "predicted_labels.hdf5"),
+				"predictedPath"			: os.path.join(segmentation_parameters["modelDirectory"], segmentation_parameters["predictedFilename"]),
 				"predictedDataset"		: "predicted_labels_NAME",
 				"modelPath"				: os.path.join(segmentation_parameters["modelDirectory"], "model.net"),
 			}

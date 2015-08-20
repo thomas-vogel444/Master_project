@@ -17,7 +17,8 @@ segmentation_parameters = {
 		"number_of_GPUs"	: 4,
 		"segmentationCode"	: code_path,
 		"segmentationFile" 	: args.dataset_path,
-		"modelDirectory"	: args.model_path
+		"modelDirectory"	: args.model_path,
+		"predictedFilename"	: "predicted_labels_%s"%os.path.basename(args.dataset_path)
 	}
 
 segmentator = Segmentator(segmentation_parameters)
