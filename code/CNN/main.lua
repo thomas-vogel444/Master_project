@@ -78,4 +78,4 @@ local filename = paths.concat(opt.savingDirectory, 'model.net')
 
 print('==> saving model to '..filename)
 os.execute('mkdir -p ' .. sys.dirname(filename))
-torch.save(filename, model)
+torch.save(filename, model:get(1))

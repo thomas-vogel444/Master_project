@@ -50,6 +50,20 @@ segment_dataset.data:div(segment_dataset.data:std())
 -- Copying the model onto all the GPUs required
 model = torch.load(opt.modelPath)
 
+-- Multi-GPU set up
+if opt.number_of_GPUs > 1 then
+    print('Using data parallel')
+    local GPU_network = nn.DataParallel(1):cuda()
+    for i = 1, opt.number_of_GPUs do
+        local current_GPU = math.fmod(opt.GPU_id + (i-1)-1, cutorch.getDeviceCount())+1
+        cutorch.setDevice(current_GPU)
+        GPU_network:add(model:clone():cuda(), current_GPU)
+    end
+    cutorch.setDevice(opt.GPU_id)
+
+    model = GPU_network
+end
+
 -- Classify every voxel in the segmentation dataset
 print("Segmenting the image using the model in " .. opt.modelPath)
 
@@ -69,7 +83,7 @@ for t = 1,segment_dataset.size(),batchSize do
     -- load new sample
     inputs =  segment_dataset.data[{{t, math.min(t + batchSize - 1, segment_dataset.size())},{},{},{}}]
 
-        inputs = inputs:cuda()
+    inputs = inputs:cuda()
 
 	prediction[{{t, math.min(t + batchSize - 1, segment_dataset.size())}}] = model:forward(inputs)[{{},{2}}]
 end
