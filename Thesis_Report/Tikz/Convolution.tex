@@ -1,0 +1,30 @@
+\documentclass{article}
+
+% from http://www.texample.net/tikz/examples/neural-network/
+\usepackage{tikz}
+
+\newcommand{\myGlobalTransformation}[2]
+{
+    \pgftransformcm{1}{0}{0}{1}{\pgfpoint{#1cm}{#2cm}}
+}
+
+\newcommand{\gridThreeD}[3]
+{
+    \begin{scope}
+        \myGlobalTransformation{#1}{#2};
+        \draw [#3,step=1cm] grid (6,6);
+    \end{scope}
+}
+
+
+\begin{document}
+\pagestyle{empty}
+
+\begin{tikzpicture}
+
+\gridThreeD{9}{0}{black!50};
+\gridThreeD{0}{0}{black!50};
+
+\end{tikzpicture}
+% End of code
+\end{document}
