@@ -55,7 +55,7 @@ if opt.number_of_GPUs > 1 then
     print('Using data parallel')
     local GPU_network = nn.DataParallel(1):cuda()
     for i = 1, opt.number_of_GPUs do
-        local current_GPU = math.fmod(opt.GPU_id + (i-1)-1, cutorch.getDeviceCount())+1
+        local current_GPU = math.fmod(opt.GPU_id + (i-1)-1, cutorch.getDeviceCount())+opt.GPU_id
         cutorch.setDevice(current_GPU)
         GPU_network:add(model:clone():cuda(), current_GPU)
     end
