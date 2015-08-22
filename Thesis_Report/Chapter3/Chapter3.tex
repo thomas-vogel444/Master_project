@@ -37,14 +37,32 @@ The training of the CNNs were conducted on 2 multi-GPU clusters, named montana-n
 
 \section{Hyper-parameter search}
 
-\subsection{General approach to looking for a good model}
+\subsection{General approach for model selection}
 
-How did I generate the training and testing datasets?
-Describe the base model. Describe how I am undertaking the hyper-parameter search. Describe the dice coefficient.
+To look for a good model, we allocated 20 of the 27 CT scans to the training set, 7 to a testing set. We generated 400000 training examples equally divided among the training CT scans, half being in the atrium and the other half in the non-atrium part. The validation set is composed of 15000 testing examples from each testing CT scans to a total number of 105000 testing examples. The model selection is done by comparing the dice coefficient on the testing set calculated at the end of end epoch, which is just the classification accuracy in a 2-class problem, segmentation results from a few slices taken from the testing set and a final dice coefficient of the classification accuracy of the segmentation of the entire 7 testing CT scans preformed at the end of training.\\
+
+We start off our model selection with a CNN composed of 2 convolutional layers with 32 and 64 feature maps respectively, 2 fully connected layers with 1000 and 500 hidden units each respectively, a logsoftmax output layer giving log probabilities. We will be varying in turn the following hyperparameters while keeping the rest constant.\\
+
+\begin{itemize}
+	\item varying the type of sampling method for the training set.
+	\item varying the number of convolutional layers.
+	\item varying the number of connected layers.
+	\item varying the number of feature maps in the chosen number of convolutional layers.
+	\item varying the number of hidden units in the chosen number of connected layers.
+	\item varying the type of activation function (ReLU, Tanh or Sigmoid).
+	\item varying the type of subsampling function (Maxpooling or average pooling).
+	\item varying the learning rate.
+	\item varying the momentum.
+	\item varying the dataset size for the selected model.
+\end{itemize}
 
 \subsection{varying datasets type}
 
-Describe the atrium box approach. Conjecture that the improved results were because of a higher concentration of training examples in the boundary regions.
+The first thing we investigate is the sampling method for obtaining the training set. In order to increase the number of non-atrium training examples lying near the boundaries where we expect most of the classification errors to lie, we construct a rectangular area which contains the atrium. The atrium box is constructed by going through all the coordinates of the voxels labeled as being in the atrium, picking the minimum and maximum values in each of the coordinate planes, and possibly adding some padding, this procedure gives us a box containing the atrium. \\
+
+We train our base CNN on 3 sampling procedures with no atrium box, i.e. all the non-atrium training examples are sampled randomly uniformly, a small atrium box constructed by the procedure above with a padding of 5 pixels in the x and y coordinate directions and of 1 pixel in the z coordinate direction, and finally a large atrium box with a padding of 30 pixels in the x and y coordinates and of 5 pixels in the z coordinate.\\
+
+Figure whatever shows 
 
 \begin{figure}
 \centering
@@ -62,7 +80,16 @@ Describe the atrium box approach. Conjecture that the improved results were beca
 
 \subsection{varying number of convolutional layers}
 
-We tried 3 different architectures with 1, 2, 3 convolutional layers while keeping all the other parameters the same. We find that having more than 1 doesn't improve the results much. Of note that I have no max pooling in the second convolutional layer to not decrease the number of features too much.
+Having established our sampling procedure, we now start the first step of our model selection: the number of convolutional layers. We train our CNN with the following 4 different architectures for the convolutional parts:
+
+\begin{itemize}
+	\item Input (6*32*32) => Conv layer (32*28*28) => 2*2 MaxPooling filter (32*14*14) 
+	\item Input (6*32*32) => Conv layer (32*28*28) => 2*2 MaxPooling filter (32*14*14) => Conv layer (64*10*10) => 2*2 MaxPooling filter (64*5*5)
+	\item Input (6*32*32) => Conv layer (32*28*28) => Conv layer (32*24*24) => 2*2 MaxPooling filter (32*12*12) => Conv layer (64*8*8) => 2*2 MaxPooling filter (64*4*4)
+	\item Input (6*32*32) => Conv layer (32*28*28) => Conv layer (32*24*24) => 2*2 MaxPooling filter (32*12*12) => Conv layer (64*8*8) => Conv layer (64*4*4) => 2*2 MaxPooling filter (64*2*2)
+\end{itemize}
+
+Each of those architectures is then followed by the same fully connected layers as used for selecting the sampling procedure. We find that having more than 1 doesn't improve the results much. 
 
 \begin{figure}
 \centering
@@ -80,7 +107,7 @@ We tried 3 different architectures with 1, 2, 3 convolutional layers while keepi
 
 \subsection{varying number of connected layers}
 
-Having settled on an architecture with 1 convolutional layer, we trained 3 CNNs with 1, 2, and 3 connected layers. Having more than 1 connected layer doesn't make a difference.
+Having settled on an architecture with 1 convolutional layer, we trained 3 CNNs with 1, 2, and 3 connected layers each having 1000 hidden units. Having more than 1 connected layer doesn't make a difference.
 
 \begin{figure}
 \centering
