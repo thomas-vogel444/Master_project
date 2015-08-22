@@ -34,6 +34,8 @@ if __name__ == "__main__":
 			"modelTemplateDirectory": os.path.join(NN_code_directory, "model_templates"),
 			"modelTemplate" 		: model_template,
 			"modelFilePath"			: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
+			"activation_function"	: "ReLU",
+			"pooling_function"		: "SpatialMaxPooling",
 			"nfeaturemaps"  		: [32,64,1000,500],
 			"filtsize" 	  			: 5,
 			"poolsize" 	  			: [2,2],
@@ -47,7 +49,8 @@ if __name__ == "__main__":
 			"number_of_GPUs"	: 4,
 			"segmentationCode"	: os.path.join(NN_code_directory, "segment.lua"),
 			"segmentationFile" 	: os.path.join(dataset_directory,"segmentation_datasets.hdf5"),
-			"modelDirectory"	: os.path.join(experimental_results_directory, experiment_name)
+			"modelDirectory"	: os.path.join(experimental_results_directory, experiment_name),
+			"predictedFilename"	: "predicted_labels.hdf5"
 		}
 		return dict(base_training_parameters), dict(base_model_parameters), dict(base_segmentation_parameters)
 
