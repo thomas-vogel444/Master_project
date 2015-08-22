@@ -100,15 +100,17 @@ if __name__ == "__main__":
 		segmentation_filename 		= "segmentation_datasets_%s.hdf5"%testing_CT_scan_name
 		segmentation_dataset_path 	= os.path.join(dataset_directory, segmentation_filename)
 
-		tri_planar_segmentation_dataset_fixed_x, tri_planar_segmentation_dataset_fixed_y, tri_planar_segmentation_dataset_fixed_z = generate_segmentation_dataset(segmented_CT_scan, slice_center_coordinates)
-		save_segmentation_dataset(
-				segmentation_dataset_path, 
-				segmented_CT_scan, 
-				slice_center_coordinates, 
-				tri_planar_segmentation_dataset_fixed_x, 
-				tri_planar_segmentation_dataset_fixed_y, 
-				tri_planar_segmentation_dataset_fixed_z
-			)
+		if os.path.isfile(segmentation_dataset_path) == False:
+			print segmentation_dataset_path
+			tri_planar_segmentation_dataset_fixed_x, tri_planar_segmentation_dataset_fixed_y, tri_planar_segmentation_dataset_fixed_z = generate_segmentation_dataset(segmented_CT_scan, slice_center_coordinates)
+			save_segmentation_dataset(
+					segmentation_dataset_path, 
+					segmented_CT_scan, 
+					slice_center_coordinates, 
+					tri_planar_segmentation_dataset_fixed_x, 
+					tri_planar_segmentation_dataset_fixed_y, 
+					tri_planar_segmentation_dataset_fixed_z
+				)
 
 
 

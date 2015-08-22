@@ -93,8 +93,13 @@ cutorch.synchronize()
 prediction = prediction:float()
 
 prediction = torch.round(torch.exp(prediction))
-rows, cols = values:size(1), values:size(2)
-prediction_2d = torch.reshape(prediction, rows, cols)
+if values:dim() == 2 then
+    height, width = values:size(1), values:size(2)
+    prediction_reshaped = torch.reshape(prediction, height, width)
+elseif values:dim() == 3 then
+    height, width, depth = values:size(1), values:size(2), values:size(3)
+    prediction_reshaped = torch.reshape(prediction, height, width, depth)
+end
 
 ----------------------------------------------------------------------
 -- 						Save the segmentation results 
@@ -102,7 +107,7 @@ prediction_2d = torch.reshape(prediction, rows, cols)
 print("Saving the segmentation results in " .. opt.predictedDataset)
 
 local f = hdf5.open(opt.predictedPath,'a')
-f:write(opt.predictedDataset, prediction_2d)
+f:write(opt.predictedDataset, prediction_reshaped)
 f:close()
 
 

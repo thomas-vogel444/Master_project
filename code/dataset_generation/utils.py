@@ -19,15 +19,17 @@ def drawProgressBar(percent, bar_length = 20):
 		sys.stdout.write("\n")    	
     sys.stdout.flush()
 
-def save_dataset(dataset, labels, dataset_path):
+def save_dataset(dataset_path, dataset, labels=None):
     """ 
         Saves a dataset and labels to a given path.
     """
     f = h5py.File(dataset_path, "w")
     dataset_hdf5        = f.create_dataset("dataset", dataset.shape, dtype="uint32")
     dataset_hdf5[...]   = dataset
-    labels_hdf5         = f.create_dataset("labels", labels.shape, dtype="uint32")
-    labels_hdf5[...]    = labels
+
+    if labels != None:
+        labels_hdf5         = f.create_dataset("labels", labels.shape, dtype="uint32")
+        labels_hdf5[...]    = labels
     f.close()
 
 def random_3d_indices(CT_scan_labels, n, target_label, z=None):

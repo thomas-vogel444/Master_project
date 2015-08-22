@@ -51,6 +51,21 @@ def generate_dataset_from_CT_scan(CT_scan, patch_size, n_examples_per_label, sam
 
 	return np.array(tri_planar_dataset), np.array(tri_planar_labels)
 
+def generate_full_segmentation_dataset(CT_scan, patch_size):
+	"""
+		Generates a full dataset for all the voxels in the CT scan.
+	"""
+	map_function = partial(generate_example_inputs, CT_scan=CT_scan, patch_size=patch_size)
+
+	# Get the 3d indices
+	height, width, depth = CT_scan.image.shape
+	full_indices_3d 	 = itertools.product(range(height), range(width), range(depth))
+
+	# Generate a set of inputs for each voxel
+	tri_planar_dataset 	= np.array(map(map_function, random_indices))
+
+	return tri_planar_dataset
+
 def generate_dataset(CT_scan_names, n_examples_per_label, CT_scan_parameters_template, patch_size, sampling_type, dicom_index=None, xy_padding=0, z_padding=0, multithreaded=True):
 	"""
 		Generates a dataset from a set of CT scans.
@@ -67,3 +82,7 @@ def generate_dataset(CT_scan_names, n_examples_per_label, CT_scan_parameters_tem
 		dataset[(i*n_examples):((i+1)*n_examples)], labels[(i*n_examples):((i+1)*n_examples)] = CT_scan_dataset, CT_scan_labels		
 
 	return dataset, labels
+
+
+
+
