@@ -36,3 +36,6 @@ model:add(nn.LogSoftMax())
 ----------------------------------------------------------------------
 print '==> here is the model:'
 print(model)
+
+----------------------------------------------------------------------
+criterion = nn.ClassNLLCriterion()

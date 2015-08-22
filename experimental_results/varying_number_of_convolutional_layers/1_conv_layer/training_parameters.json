@@ -8,6 +8,6 @@
     "maxepoch": 100,
     "GPU_identifier": 1,
     "modelFilePath": "/home/tv15/master_project/code/CNN/models/model_1_conv_layers.lua",
-    "momentum": 0.0,
+    "momentum": 0,
     "number_of_GPUs": 4
 }
