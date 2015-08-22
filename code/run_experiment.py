@@ -25,8 +25,8 @@ if __name__ == "__main__":
 			"maxepoch"			: 100, 
 			"learningRate"		: 0.1, 
 			"batchSize"			: 1500*4, 
-			"momentum"			: 0.5, 
-			"training_dataset" 	: os.path.join(dataset_directory,"small_atrium_box_training_dataset_2_800_000.hdf5"),
+			"momentum"			: 0, 
+			"training_dataset" 	: os.path.join(dataset_directory,"small_atrium_box_training_dataset.hdf5"),
 			"testing_dataset" 	: os.path.join(dataset_directory,"testing_dataset.hdf5")
 		}
 
@@ -37,11 +37,11 @@ if __name__ == "__main__":
 			"modelFilePath"			: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
 			"activation_function"	: "ReLU",
 			"pooling_function"		: "SpatialMaxPooling",
-			"nfeaturemaps"  		: [64,200, 50, 25],
+			"nfeaturemaps"  		: [32,64,1000,500],
 			"filtsize" 	  			: 5,
 			"poolsize" 	  			: [2,2],
-			"featuremaps_h" 		: 14,
-			"featuremaps_w" 		: 14,
+			"featuremaps_h" 		: 5,
+			"featuremaps_w" 		: 5,
 			"noutputs" 	  			: 2
 		}
 
@@ -69,15 +69,25 @@ if __name__ == "__main__":
 	# ************************************************************************************************
 	base_project_path 	= os.path.abspath("..")
 	dataset_directory	= os.path.join(base_project_path, "datasets")
-	model_template 		= "model_template_3_conn_layers.lua"
+	model_template 		= "model_template_2_conv_layers.lua"
 
-	experiment_name 	= "varying_dataset_size/1_connected_layer"
+	experiment_name 	= "varying_datasets/no_atrium_box"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["nfeaturemaps"] = [64,200]
+	training_parameters["training_dataset"] = os.path.join(dataset_directory,"no_atrium_box_training_dataset.hdf5")
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_dataset_size/3_connected_layers"
+	experiment_name 	= "varying_datasets/small_atrium_box"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["nfeaturemaps"] = [64,200, 100, 50]
+	training_parameters["training_dataset"] = os.path.join(dataset_directory,"small_atrium_box_training_dataset.hdf5")
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
+
+	experiment_name 	= "varying_datasets/large_atrium_box"
+	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
+	training_parameters["training_dataset"] = os.path.join(dataset_directory,"large_atrium_box_training_dataset.hdf5")
+	start_experiment(training_parameters, model_parameters, segmentation_parameters)
+
+
+
+
+
 
