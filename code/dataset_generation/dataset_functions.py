@@ -62,7 +62,7 @@ def generate_full_segmentation_dataset(CT_scan, patch_size):
 	full_indices_3d 	 = itertools.product(range(height), range(width), range(depth))
 
 	# Generate a set of inputs for each voxel
-	tri_planar_dataset 	= np.array(map(map_function, random_indices))
+	tri_planar_dataset 	= np.array(map(map_function, full_indices_3d))
 
 	return tri_planar_dataset
 
