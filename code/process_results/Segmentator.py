@@ -23,14 +23,15 @@ class Segmentator:
 			os.remove(predicted_path)
 
 		segmentation_command_options = self.get_segmentation_command_options(segmentation_path, predicted_path, height, width)
-
+		import pprint as pp
+		pp.pprint(segmentation_command_options)
 		segmentation_command = 	"th %(segmentationCode)s "\
 								"-GPU_id %(GPU_id)i "\
 								"-number_of_GPUs %(number_of_GPUs)i "\
 								"-segmentationPath %(segmentationPath)s "\
 								"-segmentationDataset %(segmentationDataset)s "\
-								"-height %i"\
-								"-width %i"\
+								"-height %(height)i "\
+								"-width %(width)i "\
 								"-predictedPath %(predictedPath)s "\
 								"-predictedDataset %(predictedDataset)s "\
 								"-modelPath %(modelPath)s" %segmentation_command_options

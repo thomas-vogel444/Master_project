@@ -26,7 +26,6 @@ if __name__ == "__main__":
 	segmentator 			= Segmentator(segmentation_parameters)
 	segmentation_datasets 	= [segmentation_dataset for segmentation_dataset in os.listdir(args.segmentation_dataset_directory)]
 	height, width 			= 480, 480
-	print segmentation_datasets
 
 	for segmentation_dataset in segmentation_datasets:
 		segmentation_dataset_path 	= os.path.join(args.segmentation_dataset_directory, segmentation_dataset)
