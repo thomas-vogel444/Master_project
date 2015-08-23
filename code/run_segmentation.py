@@ -27,7 +27,7 @@ if __name__ == "__main__":
 	segmentation_datasets 	= [segmentation_dataset for segmentation_dataset in os.listdir(args.segmentation_dataset_directory)]
 	height, width 			= 480, 480
 
-	predicted_files_directory = os.path.join(arg.model_path, "predicted_files")
+	predicted_files_directory = os.path.join(args.model_path, "predicted_files")
 	if not os.path.exists(predicted_files_directory):
 		    os.makedirs(predicted_files_directory)
 
