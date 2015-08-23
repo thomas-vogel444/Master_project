@@ -15,14 +15,14 @@ class Segmentator:
 				"modelPath"				: os.path.join(segmentation_parameters["modelDirectory"], "model.net"),
 			}
 
-	def segment(self, segmentation_file, predicted_file, height, width):
+	def segment(self, segmentation_path, predicted_path, height, width):
 		"""
 			Segments the three segmentation datasets in the segmentation hdf5 file.
 		"""
-		if os.path.isfile(self.segmentation_parameters["predictedPath"]):
-			os.remove(self.segmentation_parameters["predictedPath"])
+		if os.path.isfile(predicted_path):
+			os.remove(predicted_path)
 
-		segmentation_command_options = self.get_segmentation_command_options(segmentationFile, predicted_file, height, width)
+		segmentation_command_options = self.get_segmentation_command_options(segmentation_path, predicted_path, height, width)
 
 		segmentation_command = 	"th %(segmentationCode)s "\
 								"-GPU_id %(GPU_id)i "\
@@ -37,14 +37,14 @@ class Segmentator:
 
 		subprocess.call(segmentation_command, shell=True)
 
-	def get_segmentation_command_options(self, segmentation_path, predicted_file, width, height):
+	def get_segmentation_command_options(self, segmentation_path, predicted_path, width, height):
 		"""
 			Customises the command option values for each segmentation dataset.
 		"""
 		command_options = dict(self.segmentation_parameters)
 
 		command_options["segmentationPath"] = segmentation_path
-		command_options["predicted_path"] 	= predicted_file
+		command_options["predictedPath"] 	= predicted_path
 		command_options["width"] 			= width
 		command_options["height"] 			= height
 

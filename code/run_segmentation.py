@@ -5,7 +5,7 @@ from process_results.Segmentator import Segmentator
 
 def get_slice_number(segmentation_dataset):
 	p = re.compile("segmentation_dataset_(.*).hdf5")
-	return p.search(segmentation_dataset).group(1)
+	return int(p.search(segmentation_dataset).group(1))
 
 if __name__ == "__main__":
 	# Command line arguments
