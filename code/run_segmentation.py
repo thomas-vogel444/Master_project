@@ -29,6 +29,6 @@ if __name__ == "__main__":
 
 	for segmentation_dataset in segmentation_datasets:
 		segmentation_dataset_path 	= os.path.join(args.segmentation_dataset_directory, segmentation_dataset)
-		predicted_file 				= "predicted_file_%i.hdf5"%get_slice_number(segmentation_dataset)
-
+		predicted_file 				= os.path.join(args.model_path, "predicted_file_%i.hdf5"%get_slice_number(segmentation_dataset))
+		
 		segmentator.segment(segmentation_dataset_path, predicted_file, width, height)
