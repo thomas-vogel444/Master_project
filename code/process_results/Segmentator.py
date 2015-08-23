@@ -27,7 +27,7 @@ class Segmentator:
 		segmentation_command = 	"th %(segmentationCode)s "\
 								"-GPU_id %(GPU_id)i "\
 								"-number_of_GPUs %(number_of_GPUs)i "\
-								"-segmentationFile %(segmentationFile)s "\
+								"-segmentationPath %(segmentationPath)s "\
 								"-segmentationDataset %(segmentationDataset)s "\
 								"-height %i"\
 								"-width %i"\
