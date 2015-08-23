@@ -42,7 +42,7 @@ if __name__ == "__main__":
 			transversal_dataset = df.generate_full_transversal_segmentation_dataset(segmented_CT_scan, patch_size, z)
 
 			# Saving the transversal dataset
-			transversal_dataset_path = os.path.join(segmentation_directory, "segmentation_dataset_#%i.hdf5")%z
+			transversal_dataset_path = os.path.join(segmentation_directory, "segmentation_dataset_%i.hdf5")%z
 			print "Saving the dataset in %s"%transversal_dataset_path
 			utils.save_dataset(transversal_dataset_path, transversal_dataset)
 

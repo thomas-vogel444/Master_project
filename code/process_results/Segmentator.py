@@ -15,14 +15,14 @@ class Segmentator:
 				"modelPath"				: os.path.join(segmentation_parameters["modelDirectory"], "model.net"),
 			}
 
-	def segment(self, segmentation_file, height, width):
+	def segment(self, segmentation_file, predicted_file, height, width):
 		"""
 			Segments the three segmentation datasets in the segmentation hdf5 file.
 		"""
 		if os.path.isfile(self.segmentation_parameters["predictedPath"]):
 			os.remove(self.segmentation_parameters["predictedPath"])
 
-		segmentation_command_options = self.get_segmentation_command_options(segmentationFile, height, width)
+		segmentation_command_options = self.get_segmentation_command_options(segmentationFile, predicted_file, height, width)
 
 		segmentation_command = 	"th %(segmentationCode)s "\
 								"-GPU_id %(GPU_id)i "\
