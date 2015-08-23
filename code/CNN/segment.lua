@@ -12,10 +12,11 @@ cmd:text('Options:')
 cmd:option('-GPU_id', 1, "Which GPU to use")
 cmd:option('-number_of_GPUs', 1, "Which GPU to use")
 cmd:option('-segmentationFile', "../../datasets/segmentation_datasets.hdf5", "Path to the segmentation file")
-cmd:option('-segmentationDataset', "segmentation_dataset_fixed_z", "Segmentation dataset")
-cmd:option('-segmentationValues', "segmentation_values_fixed_z", "Segmentation values")
+cmd:option('-segmentationDataset', "dataset", "Segmentation dataset")
+cmd:option('-height', 480, "height of the segmented image")
+cmd:option('-width', 480, "width of the segmented image")
 cmd:option('-predictedPath', "predicted_labels.hdf5", 'Path to the predicted file')
-cmd:option('-predictedDataset', "predicted_labels_fixed_z", 'Dataset name contaiing the predicted labels')
+cmd:option('-predictedDataset', "dataset", 'Dataset name containing the predicted labels')
 cmd:option('-modelPath', "model.net", 'Paths to the model file')
 cmd:text()
 opt = cmd:parse(arg or {})
@@ -33,7 +34,6 @@ cutorch.setDevice(opt.GPU_id)
 print("Loading the dataset " .. opt.segmentationDataset .. " from " .. opt.segmentationFile)
 local f = hdf5.open(opt.segmentationFile,'r')
 data    = f:read(opt.segmentationDataset):all():float()
-values  = f:read(opt.segmentationValues):all():float()
 f:close()
 
 segment_dataset = {}
@@ -76,6 +76,7 @@ prediction = prediction:cuda()
 
 local batchSize = 1500*opt.number_of_GPUs
 
+-- Segment the whole dataset
 for t = 1,segment_dataset.size(),batchSize do
   	-- disp progress
   	xlua.progress(math.min(t + batchSize -1, segment_dataset.size()), segment_dataset.size())
@@ -90,16 +91,9 @@ end
 
 cutorch.synchronize()
 
-prediction = prediction:float()
-
-prediction = torch.round(torch.exp(prediction))
-if values:dim() == 2 then
-    height, width = values:size(1), values:size(2)
-    prediction_reshaped = torch.reshape(prediction, height, width)
-elseif values:dim() == 3 then
-    height, width, depth = values:size(1), values:size(2), values:size(3)
-    prediction_reshaped = torch.reshape(prediction, height, width, depth)
-end
+prediction          = prediction:float()
+prediction          = torch.round(torch.exp(prediction))
+prediction_reshaped = torch.reshape(prediction, opt.height, opt.width)
 
 ----------------------------------------------------------------------
 -- 						Save the segmentation results 

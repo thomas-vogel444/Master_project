@@ -27,7 +27,11 @@ if __name__ == "__main__":
 	testing_CT_scan_names = [directory for directory in os.listdir(data_directory) if CT_scan_parameters_template["CT_directory_pattern"].match(directory)]
 
 	for testing_CT_scan_name in testing_CT_scan_names:
+		# Some logistics...
 		segmentation_directory 	= os.path.join(dataset_directory, "segmentation_dataset_for_%s"%testing_CT_scan_name)
+		if not os.path.exists(segmentation_directory):
+		    os.makedirs(segmentation_directory)
+
 		segmented_CT_scan 		= CTScanImage(testing_CT_scan_name, CT_scan_parameters_template)
 		_, _, number_of_slices 	= segmented_CT_scan.image.shape
 
@@ -39,6 +43,6 @@ if __name__ == "__main__":
 
 			# Saving the transversal dataset
 			transversal_dataset_path = os.path.join(segmentation_directory, "segmentation_dataset_#%i.hdf5")%z
-			print "Saving the dataset in %s"%s
+			print "Saving the dataset in %s"%transversal_dataset_path
 			utils.save_dataset(transversal_dataset_path, transversal_dataset)
 
