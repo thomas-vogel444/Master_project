@@ -40,7 +40,8 @@ patch_size 							= 32
 
 # Generate a test dataset from a single DICOM image from a single CT scan
 print "=======> Generating the testing dataset <======="
-generated_dataset, generated_labels = df.generate_dataset_from_CT_scan(CT_scan, patch_size, n_examples_per_CT_scan_per_label, sampling_type, dicom_index=z)
+# generate_random_dataset(CT_scan_names, n_examples_per_label, CT_scan_parameters_template, patch_size, sampling_type, dicom_index=None, xy_padding=0, z_padding=0)
+generated_dataset, generated_labels = df.generate_random_dataset([CT_scan_name], n_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size, sampling_type, dicom_index=z)
 print "Expected number of examples generated: %s" %(sum(n_examples_per_CT_scan_per_label))
 print "Actual number of examples generated: %s" %(len(generated_labels))
 print "Number of examples in the Atrium and non-Atrium: %i, %i" %(len(np.where(generated_labels == 2)[0]), len(np.where(generated_labels == 1)[0]))

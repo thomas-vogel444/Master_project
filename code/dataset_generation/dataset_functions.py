@@ -26,49 +26,39 @@ def generate_example_inputs(voxel_location, CT_scan, patch_size):
 
 	return patches
 
-def generate_dataset_from_CT_scan(CT_scan, patch_size, n_examples_per_label, sampling_type, dicom_index=None, multithreaded=True):
+def generate_dataset_from_CT_scan(voxel_locations, CT_scan, patch_size):
 	"""
-		Generates a random dataset from a CT scan.
+		Generates a dataset from a CT scan given a list of voxel locations.
 	"""
 	# For each index sampled generate 3 patches centred at the voxel of interest
-	labels = range(1, len(n_examples_per_label) + 1)	# Should be (1,2,3) or (1,2) if the sampling type is "With_Atrium" or "Without_Atrium" respectively
-	random_indices = [CT_scan.sample_CT_scan_indices(sampling_type, n_examples_per_label[label-1], label, dicom_index) for label in labels]
+	n_examples = len(voxel_locations)
 
-	#*****************************************************************
-	# Set up the multiprocessing stuff	
-	#*****************************************************************
-	# First attempt... Good for now but later I want to try to make something with dividing the workload among processes.
-	map_function = partial(generate_example_inputs, CT_scan=CT_scan, patch_size=patch_size)
-	if multithreaded == True:
-		pool = Pool() 
-		tri_planar_dataset 	= pool.map(map_function, itertools.chain.from_iterable(random_indices))
-		pool.close() 
-		pool.join() 
-	else:
-		tri_planar_dataset 	= map(map_function, itertools.chain.from_iterable(random_indices))
+	tri_planar_dataset = np.zeros((n_examples, 6, patch_size, patch_size))
+	for i, voxel_location in enumerate(voxel_locations):
+		# progress bar
+		utils.drawProgressBar((i + 1)/n_examples, bar_length = 20)
 
-	tri_planar_labels	= map(CT_scan.get_label, itertools.chain.from_iterable(random_indices))
-
-	return np.array(tri_planar_dataset), np.array(tri_planar_labels)
+		# Generating the dataset
+		tri_planar_dataset[i,:,:,:] = generate_example_inputs(voxel_location, CT_scan, patch_size)
+	
+	return tri_planar_dataset
 
 def generate_full_segmentation_dataset(CT_scan, patch_size):
 	"""
 		Generates a full dataset for all the voxels in the CT scan.
 	"""
-	map_function = partial(generate_example_inputs, CT_scan=CT_scan, patch_size=patch_size)
-
 	# Get the 3d indices
 	height, width, depth = CT_scan.image.shape
-	full_indices_3d 	 = itertools.product(range(height), range(width), range(depth))
+	full_indices_3d 	 = list(itertools.product(range(height), range(width), range(depth)))
 
 	# Generate a set of inputs for each voxel
-	tri_planar_dataset 	= np.array(map(map_function, full_indices_3d))
+	tri_planar_dataset 	= generate_dataset_from_CT_scan(full_indices_3d, CT_scan, patch_size)
 
 	return tri_planar_dataset
 
-def generate_dataset(CT_scan_names, n_examples_per_label, CT_scan_parameters_template, patch_size, sampling_type, dicom_index=None, xy_padding=0, z_padding=0, multithreaded=True):
+def generate_random_dataset(CT_scan_names, n_examples_per_label, CT_scan_parameters_template, patch_size, sampling_type, dicom_index=None, xy_padding=0, z_padding=0):
 	"""
-		Generates a dataset from a set of CT scans.
+		Generates a random dataset from a set of CT scans.
 	"""
 	dataset = np.zeros((sum(n_examples_per_label)*len(CT_scan_names), 6, patch_size, patch_size))
 	labels  = np.zeros(sum(n_examples_per_label)*len(CT_scan_names))
@@ -76,10 +66,14 @@ def generate_dataset(CT_scan_names, n_examples_per_label, CT_scan_parameters_tem
 	for i, CT_scan_name in enumerate(CT_scan_names):
 		print "Generating datasets from CT scan %s" %CT_scan_name
 		CT_scan 			= CTScanImage(CT_scan_name, CT_scan_parameters_template, xy_padding, z_padding)
-		CT_scan_dataset, CT_scan_labels = generate_dataset_from_CT_scan(CT_scan, patch_size, n_examples_per_label, sampling_type, dicom_index, multithreaded)
+
+		label_types = range(1, len(n_examples_per_label) + 1)	# Should be (1,2,3) or (1,2) if the sampling type is "With_Atrium" or "Without_Atrium" respectively
+		random_indices = list(itertools.chain.from_iterable(
+				[CT_scan.sample_CT_scan_indices(sampling_type, n_examples_per_label[label-1], label, dicom_index) for label in label_types]))
 
 		n_examples = len(CT_scan_labels)
-		dataset[(i*n_examples):((i+1)*n_examples)], labels[(i*n_examples):((i+1)*n_examples)] = CT_scan_dataset, CT_scan_labels		
+		dataset[(i*n_examples):((i+1)*n_examples)] = generate_dataset_from_CT_scan(random_indices, CT_scan, patch_size)
+		labels[(i*n_examples):((i+1)*n_examples)]  = np.array(map(CT_scan.get_label, random_indices))
 
 	return dataset, labels
 

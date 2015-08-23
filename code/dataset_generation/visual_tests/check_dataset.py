@@ -32,7 +32,7 @@ CT_scan_name  = CT_scan_names[0]
 CT_scan = CTScanImage(CT_scan_name, CT_scan_parameters_template)
 
 print "=======> Generating the testing dataset <======="
-generated_dataset, generated_labels = df.generate_dataset_from_CT_scan(CT_scan, patch_size, n_examples_per_CT_scan_per_label, sampling_type, dicom_index=z)
+generated_dataset, generated_labels = df.generate_random_dataset([CT_scan_name], n_examples_per_CT_scan_per_label, CT_scan_parameters_template, patch_size, sampling_type, dicom_index=z)
 
 print "Expected number of examples generated: %s" %(sum(n_examples_per_CT_scan_per_label))
 print "Actual number of examples generated: %s" %(len(generated_labels))

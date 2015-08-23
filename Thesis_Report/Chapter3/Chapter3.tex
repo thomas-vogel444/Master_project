@@ -35,7 +35,7 @@ We use Torch, an open-source library maintained by Facebook in Lua aiming to pro
 
 The training of the CNNs were conducted on 2 multi-GPU clusters, named montana-nvidia and montana-k80, kindly provided by Prof. Montana's laboratory. montana-nvidia consists 24 cores with 129 Gb of memory connected to two NVIDIA Tesla K40m and two Tesla K20Xm while montana-k80 on the other hand has 56 cores with 258 Gb of memory supported by 8 of NVIDIA's Testla K80. 
 
-\section{Hyper-parameter search}
+\section{Model Selection}
 
 \subsection{General approach for model selection}
 
@@ -62,7 +62,7 @@ The first thing we investigate is the sampling method for obtaining the training
 
 We train our base CNN on 3 sampling procedures with no atrium box, i.e. all the non-atrium training examples are sampled randomly uniformly, a small atrium box constructed by the procedure above with a padding of 5 pixels in the x and y coordinate directions and of 1 pixel in the z coordinate direction, and finally a large atrium box with a padding of 30 pixels in the x and y coordinates and of 5 pixels in the z coordinate.\\
 
-Figure whatever shows 
+The results of the three training runs are shown in Figure whatever. From the testing dice coefficient plot, we get a better classification rate with sampling using an atrium box than no atrium box and particularly with the smaller atrium box. In the segmentation mask, sampling with no atrium box clearly yields more errors in the proximity of the atrium but none away from it whereas there are some errors far away from the atrium from the models trained with the atrium box sampling procedure. This is a consequence of the sampling procedures in both cases. Sampling with an atrium box would naturally yield better segmentation results near the atrium as the proportion of training examples is much higher in those regions than without an atrium box around it.\\
 
 \begin{figure}
 \centering
@@ -73,9 +73,9 @@ Figure whatever shows
 \hspace{-1cm}
 \begin{minipage}{0.45\textwidth}
 \centering
-\fbox{\includegraphics[height=60mm, width=70mm]{Chapter3/test_dice_coefficient_plots_varying_dataset.png}}
+\fbox{\includegraphics[trim=1cm 1cm 1cm 1cm, clip=true, height=60mm, width=70mm]{Chapter3/test_dice_coefficient_plots_varying_dataset.png}}
 \end{minipage}
-\caption{Left: grey scale slices from a CT scan taken in the transversal, saggital and coronal planes. Right: illustration of the triplanar}
+\caption{Right: test classification rate vs epoch number for the CNN trained with the 3 different sampling procedures. Left: segmentation result of a reference slice of one of the test CT scans for each of the models.}
 \end{figure}
 
 \subsection{varying number of convolutional layers}
