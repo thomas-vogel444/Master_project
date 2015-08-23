@@ -1,6 +1,10 @@
 import argparse
 import os
-from experiments.Segmentator import Segmentator
+from process_results.Segmentator import Segmentator
+
+def get_slice_number(segmentation_dataset):
+	p = re.compile("segmentation_dataset_(.*).hdf5")
+	return p.search(segmentation_dataset).group(1)
 
 if __name__ == "__main__":
 	# Command line arguments
@@ -19,12 +23,12 @@ if __name__ == "__main__":
 		}
 
 	segmentator 			= Segmentator(segmentation_parameters)
-	segmentation_datasets 	= [segmentation_dataset for segmentation_dataset in os.listdir(segmentation_dataset_directory)]
+	segmentation_datasets 	= [segmentation_dataset for segmentation_dataset in os.listdir(args.segmentation_dataset_directory)]
 	height, width 			= 480, 480
 	print segmentation_datasets
 
-	for index, segmentation_dataset in enumerate(segmentation_datasets):
-		segmentation_dataset_path 	= os.path.join(segmentation_dataset, segmentation_dataset_directory)
-		predicted_file 				= "predicted_file_%i.hdf5"%index
+	for segmentation_dataset in segmentation_datasets:
+		segmentation_dataset_path 	= os.path.join(segmentation_dataset_directory, segmentation_dataset)
+		predicted_file 				= "predicted_file_%i.hdf5"%get_slice_number(segmentation_dataset)
 
 		segmentator.segment(segmentation_dataset_path, predicted_file, width, height)
