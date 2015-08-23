@@ -24,8 +24,6 @@ segmented_CT_scan			  		 	 = CTScanImage(testing_CT_scan_name, CT_scan_parameter
 dicom_height, dicom_width, number_dicoms = segmented_CT_scan.image.shape
 x_slice, y_slice, z_slice 				 = (250, 250, 30)
 
-# import pdb; pdb.set_trace()
-
 fig = plt.figure()
 a   = fig.add_subplot(2,3,1)
 plt.imshow(segmented_CT_scan.image[:,:,z_slice], cmap = cm.Greys_r)
