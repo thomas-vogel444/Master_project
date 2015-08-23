@@ -36,12 +36,25 @@ def generate_dataset_from_CT_scan(voxel_locations, CT_scan, patch_size):
 	tri_planar_dataset = np.zeros((n_examples, 6, patch_size, patch_size))
 	for i, voxel_location in enumerate(voxel_locations):
 		# progress bar
-		utils.drawProgressBar((i + 1)/n_examples, bar_length = 20)
+		utils.drawProgressBar((i + 1)/float(n_examples), bar_length = 100)
 
 		# Generating the dataset
 		tri_planar_dataset[i,:,:,:] = generate_example_inputs(voxel_location, CT_scan, patch_size)
 	
 	return tri_planar_dataset
+
+def generate_full_transversal_segmentation_dataset(CT_scan, patch_size, z):
+	"""
+		Generates a full dataset of a transversal slice (x-y plane) of a CT scan.
+	"""
+	# Get the 3d indices
+	height, width, depth = CT_scan.image.shape
+	full_indices_3d 	 = [list(xy_coordinate) + [z] for xy_coordinate in itertools.product(range(height), range(width))]
+
+	# Generate a set of inputs for each voxel
+	dataset = generate_dataset_from_CT_scan(full_indices_3d, CT_scan, patch_size)
+
+	return dataset
 
 def generate_full_segmentation_dataset(CT_scan, patch_size):
 	"""
@@ -52,9 +65,9 @@ def generate_full_segmentation_dataset(CT_scan, patch_size):
 	full_indices_3d 	 = list(itertools.product(range(height), range(width), range(depth)))
 
 	# Generate a set of inputs for each voxel
-	tri_planar_dataset 	= generate_dataset_from_CT_scan(full_indices_3d, CT_scan, patch_size)
+	dataset = generate_dataset_from_CT_scan(full_indices_3d, CT_scan, patch_size)
 
-	return tri_planar_dataset
+	return dataset
 
 def generate_random_dataset(CT_scan_names, n_examples_per_label, CT_scan_parameters_template, patch_size, sampling_type, dicom_index=None, xy_padding=0, z_padding=0):
 	"""
