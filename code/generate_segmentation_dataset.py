@@ -6,6 +6,7 @@ import re
 import numpy as np
 import h5py
 
+
 def generate_segmentation_dataset(segmented_CT_scan, slice_center_coordinates, patch_size=32):
 	# ********************************************************************************************
 	# 								Generate the segmentation datasets
@@ -36,7 +37,6 @@ def generate_segmentation_dataset(segmented_CT_scan, slice_center_coordinates, p
 
 	return tri_planar_segmentation_dataset_fixed_x, tri_planar_segmentation_dataset_fixed_y, tri_planar_segmentation_dataset_fixed_z
 
-
 def save_segmentation_dataset(segmentation_dataset_path, segmented_CT_scan, slice_center_coordinates, dataset_fixed_x, dataset_fixed_y, dataset_fixed_z):
 	# ********************************************************************************************
 	# 								Saving the segmentation datasets
@@ -45,33 +45,33 @@ def save_segmentation_dataset(segmentation_dataset_path, segmented_CT_scan, slic
 	f = h5py.File(segmentation_dataset_path, "w")
 
 	print "=======> Saving the segmentation datasets for fixed z in %s <=======" %segmentation_dataset_path
-	segmentation_dataset_fixed_z 				  = f.create_dataset("segmentation_dataset_fixed_z", dataset_fixed_z.shape, dtype="uint32")
+	segmentation_dataset_fixed_z 				  = f.create_dataset("segmentation_dataset_fixed_z", dataset_fixed_z.shape, dtype="float32")
 	segmentation_dataset_fixed_z[...] 			  = dataset_fixed_z
 
-	labels_fixed_z 		= f.create_dataset("labels_fixed_z", segmented_CT_scan.labels[:,:,z_slice].shape, dtype="uint32")
+	labels_fixed_z 		= f.create_dataset("labels_fixed_z", segmented_CT_scan.labels[:,:,z_slice].shape, dtype="uint8")
 	labels_fixed_z[...] = segmented_CT_scan.labels[:,:,z_slice]
 
-	values_fixed_z 		= f.create_dataset("values_fixed_z", segmented_CT_scan.image[:,:,z_slice].shape, dtype="uint32")
+	values_fixed_z 		= f.create_dataset("values_fixed_z", segmented_CT_scan.image[:,:,z_slice].shape, dtype="float32")
 	values_fixed_z[...] = segmented_CT_scan.image[:,:,z_slice]
 
 	print "=======> Saving the segmentation datasets for fixed y in %s <=======" %segmentation_dataset_path
-	segmentation_dataset_fixed_y 				  = f.create_dataset("segmentation_dataset_fixed_y", dataset_fixed_y.shape, dtype="uint32")
+	segmentation_dataset_fixed_y 				  = f.create_dataset("segmentation_dataset_fixed_y", dataset_fixed_y.shape, dtype="float32")
 	segmentation_dataset_fixed_y[...] 			  = dataset_fixed_y
 
-	labels_fixed_y 		= f.create_dataset("labels_fixed_y", segmented_CT_scan.labels[:,y_slice,:].shape, dtype="uint32")
+	labels_fixed_y 		= f.create_dataset("labels_fixed_y", segmented_CT_scan.labels[:,y_slice,:].shape, dtype="uint8")
 	labels_fixed_y[...] = segmented_CT_scan.labels[:,y_slice,:]
 
-	values_fixed_y 		= f.create_dataset("values_fixed_y", segmented_CT_scan.image[:,y_slice,:].shape, dtype="uint32")
+	values_fixed_y 		= f.create_dataset("values_fixed_y", segmented_CT_scan.image[:,y_slice,:].shape, dtype="float32")
 	values_fixed_y[...] = segmented_CT_scan.image[:,y_slice,:]
 
 	print "=======> Saving the segmentation datasets for fixed x in %s <=======" %segmentation_dataset_path
-	segmentation_dataset_fixed_x 				  = f.create_dataset("segmentation_dataset_fixed_x", dataset_fixed_x.shape, dtype="uint32")
+	segmentation_dataset_fixed_x 				  = f.create_dataset("segmentation_dataset_fixed_x", dataset_fixed_x.shape, dtype="float32")
 	segmentation_dataset_fixed_x[...] 			  = dataset_fixed_x
 
-	labels_fixed_x 		= f.create_dataset("labels_fixed_x", segmented_CT_scan.labels[x_slice,:,:].shape, dtype="uint32")
+	labels_fixed_x 		= f.create_dataset("labels_fixed_x", segmented_CT_scan.labels[x_slice,:,:].shape, dtype="uint8")
 	labels_fixed_x[...] = segmented_CT_scan.labels[x_slice,:,:]
 
-	values_fixed_x 		= f.create_dataset("values_fixed_x", segmented_CT_scan.image[x_slice,:,:].shape, dtype="uint32")
+	values_fixed_x 		= f.create_dataset("values_fixed_x", segmented_CT_scan.image[x_slice,:,:].shape, dtype="float32")
 	values_fixed_x[...] = segmented_CT_scan.image[x_slice,:,:]
 
 	f.close()

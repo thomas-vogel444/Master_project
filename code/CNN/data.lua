@@ -10,7 +10,7 @@ local f = hdf5.open(opt.training_dataset,'r')
 trainingDataset = f:read("dataset"):all():float()
 trainingLabels  = f:read("labels"):all():float()
 
-trainData.data   = trainingDataset:div(255)
+trainData.data   = trainingDataset
 trainData.labels = trainingLabels
 trainData.size   = function() return(trainingDataset:size()[1]) end
 trainingSize     = trainData.size()
@@ -21,14 +21,14 @@ local f = hdf5.open(opt.testing_dataset,'r')
 testingDataset  = f:read("dataset"):all():float()
 testingLabels   = f:read("labels"):all():float()
 
-testData.data   = testingDataset:div(255)
+testData.data   = testingDataset
 testData.labels = testingLabels
 testData.size   = function() return(testingDataset:size()[1]) end
 f:close()
 
 -- Normalize the data
-normalize(trainData.data)
-normalize(testData.data)
+-- normalize(trainData.data)
+-- normalize(testData.data)
 
 nfeats  	= trainData.data:size()[2]
 patchsize   = trainData.data:size()[3]

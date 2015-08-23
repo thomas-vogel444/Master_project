@@ -43,8 +43,8 @@ print generated_labels
 dataset_path = "test_dataset.hdf5"
 
 f 							  = h5py.File(dataset_path, "w")
-testing_dataset_hdf5 	  	  = f.create_dataset("testing_dataset", generated_dataset.shape, dtype="uint32")
-testing_dataset_hdf5[...]  	  = np.int16(generated_dataset)
+testing_dataset_hdf5 	  	  = f.create_dataset("testing_dataset", generated_dataset.shape, dtype="float32")
+testing_dataset_hdf5[...]  	  = generated_dataset
 testing_labels_hdf5 	  	  = f.create_dataset("testing_labels", generated_labels.shape, dtype="uint8")
 testing_labels_hdf5[...]  	  = generated_labels
 f.close()
@@ -61,15 +61,15 @@ i_non_atrium_patch = len(testing_labels)-1
 
 fig = plt.figure()
 a   = fig.add_subplot(2,3,1)
-plt.imshow(testing_dataset[i_atrium_patch,3,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 400)
+plt.imshow(testing_dataset[i_atrium_patch,3,:,:], cmap = cm.Greys_r)
 a   = fig.add_subplot(2,3,4)
-plt.imshow(testing_dataset[i_atrium_patch,0,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 400)
+plt.imshow(testing_dataset[i_atrium_patch,0,:,:], cmap = cm.Greys_r)
 a   = fig.add_subplot(2,3,2)
-plt.imshow(testing_dataset[i_non_atrium_patch,3,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 400)
+plt.imshow(testing_dataset[i_non_atrium_patch,3,:,:], cmap = cm.Greys_r)
 a   = fig.add_subplot(2,3,5)
-plt.imshow(testing_dataset[i_non_atrium_patch,0,:,:], cmap = cm.Greys_r, vmin = 0, vmax = 400)
+plt.imshow(testing_dataset[i_non_atrium_patch,0,:,:], cmap = cm.Greys_r)
 a   = fig.add_subplot(2,3,3)
-plt.imshow(CT_scan.image[:,:,z], cmap = cm.Greys_r, vmin = 0, vmax = 500)
+plt.imshow(CT_scan.image[:,:,z], cmap = cm.Greys_r)
 a   = fig.add_subplot(2,3,6)
 plt.imshow(CT_scan.labels[:,:,z], cmap = cm.Greys_r)
 plt.show()

@@ -24,11 +24,11 @@ def save_dataset(dataset_path, dataset, labels=None):
         Saves a dataset and labels to a given path.
     """
     f = h5py.File(dataset_path, "w")
-    dataset_hdf5        = f.create_dataset("dataset", dataset.shape, dtype="uint32")
+    dataset_hdf5        = f.create_dataset("dataset", dataset.shape, dtype="float32")
     dataset_hdf5[...]   = dataset
 
     if labels != None:
-        labels_hdf5         = f.create_dataset("labels", labels.shape, dtype="uint32")
+        labels_hdf5         = f.create_dataset("labels", labels.shape, dtype="uint8")
         labels_hdf5[...]    = labels
     f.close()
 

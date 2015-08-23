@@ -69,14 +69,16 @@ class CTScanImage:
 			Extract the CT scan image from the DICOM files.
 		"""
 		# Loop through all the DICOM files for a given CT scan and get all the values into a single 3D numpy array
-		CT_scan_array = np.zeros(self.NRRD_header["sizes"], dtype="uint16")
+		CT_scan_array = np.zeros(self.NRRD_header["sizes"], dtype="float32")
 		for dicom_filename in self.dicoms:
 		    # read the file
 		    dicom_file_path = self.parameters["DICOM_path_template"].replace("DICOM_name", dicom_filename)
 		    ds = dicom.read_file(dicom_file_path)
-		    # store the raw image data
+
+		    # CT_scan_array[:, :, self.dicoms.index(dicom_filename)] = np.array((np.round(ds.pixel_array/float(ds.pixel_array.max())*255)), dtype=np.uint8)
 		    CT_scan_array[:, :, self.dicoms.index(dicom_filename)] = ds.pixel_array
 
+		CT_scan_array = CT_scan_array/np.float32(CT_scan_array.max())
 		return CT_scan_array
 
 	def get_labels_with_atrium_box(self, xy_padding, z_padding):
