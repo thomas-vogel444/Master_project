@@ -27,8 +27,12 @@ if __name__ == "__main__":
 	segmentation_datasets 	= [segmentation_dataset for segmentation_dataset in os.listdir(args.segmentation_dataset_directory)]
 	height, width 			= 480, 480
 
+	predicted_files_directory = os.path.join(arg.model_path, "predicted_files")
+	if not os.path.exists(predicted_files_directory):
+		    os.makedirs(predicted_files_directory)
+
 	for segmentation_dataset in segmentation_datasets:
 		segmentation_dataset_path 	= os.path.join(args.segmentation_dataset_directory, segmentation_dataset)
-		predicted_file 				= os.path.join(args.model_path, "predicted_file_%i.hdf5"%get_slice_number(segmentation_dataset))
+		predicted_file 				= os.path.join(predicted_files_directory, "predicted_file_%i.hdf5"%get_slice_number(segmentation_dataset))
 		
 		segmentator.segment(segmentation_dataset_path, predicted_file, width, height)
