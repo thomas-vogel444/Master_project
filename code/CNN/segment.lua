@@ -31,8 +31,8 @@ cutorch.setDevice(opt.GPU_id)
 -- 						     Load and normalizing the dataset
 ----------------------------------------------------------------------
 -- Loading the segmentation dataset
-print("Loading the dataset " .. opt.segmentationDataset .. " from " .. opt.segmentationFile)
-local f = hdf5.open(opt.segmentationFile,'r')
+print("Loading the dataset " .. opt.segmentationDataset .. " from " .. opt.segmentationPath)
+local f = hdf5.open(opt.segmentationPath,'r')
 data    = f:read(opt.segmentationDataset):all():float()
 f:close()
 

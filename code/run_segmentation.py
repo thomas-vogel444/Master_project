@@ -11,7 +11,7 @@ if __name__ == "__main__":
 	# Command line arguments
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-s', '--segmentation_dataset_directory', default = '../datasets/segmentation_dataset_for_14040204')
-	parser.add_argument('-m', '--model_path',   default = '../experimental_results/varying_momentum/0_5')
+	parser.add_argument('-m', '--model_path',   default = '../experimental_results/varying_datasets_test/small_atrium_box')
 
 	args = parser.parse_args()
 
