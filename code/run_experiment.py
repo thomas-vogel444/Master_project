@@ -62,36 +62,36 @@ if __name__ == "__main__":
 	experiment_name 	= "varying_number_of_convolutional_layers/1_conv_layer"
 	model_template 		= "model_template_1_conv_layers.lua"
 	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["nfeaturemaps"]  	= [32,1000,500],
-	model_parameters["featuremaps_h"] 	= 14,
-	model_parameters["featuremaps_w" ]	= 14,
+	model_parameters["nfeaturemaps"]  	= [32,1000,500]
+	model_parameters["featuremaps_h"] 	= 14
+	model_parameters["featuremaps_w" ]	= 14
 
 	start_experiment(training_parameters, model_parameters)
 
 	experiment_name 	= "varying_number_of_convolutional_layers/2_conv_layers"
 	model_template 		= "model_template_2_conv_layers.lua"
 	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["nfeaturemaps"]  	= [32,64,1000,500],
-	model_parameters["featuremaps_h"] 	= 5,
-	model_parameters["featuremaps_w" ]	= 5,
+	model_parameters["nfeaturemaps"]  	= [32,64,1000,500]
+	model_parameters["featuremaps_h"] 	= 5
+	model_parameters["featuremaps_w" ]	= 5
 
 	start_experiment(training_parameters, model_parameters)
 
 	experiment_name 	= "varying_number_of_convolutional_layers/3_conv_layers"
 	model_template 		= "model_template_3_conv_layers.lua"
 	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["nfeaturemaps"]  	= [32,32,64,1000,500],
-	model_parameters["featuremaps_h"] 	= 4,
-	model_parameters["featuremaps_w" ]	= 4,
+	model_parameters["nfeaturemaps"]  	= [32,32,64,1000,500]
+	model_parameters["featuremaps_h"] 	= 4
+	model_parameters["featuremaps_w" ]	= 4
 
 	start_experiment(training_parameters, model_parameters)
 
 	experiment_name 	= "varying_number_of_convolutional_layers/4_conv_layers"
 	model_template 		= "model_template_4_conv_layers.lua"
 	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["nfeaturemaps"]  	= [32,32,64,64,1000,500],
-	model_parameters["featuremaps_h"] 	= 2,
-	model_parameters["featuremaps_w" ]	= 2,
+	model_parameters["nfeaturemaps"]  	= [32,32,64,64,1000,500]
+	model_parameters["featuremaps_h"] 	= 2
+	model_parameters["featuremaps_w" ]	= 2
 
 	start_experiment(training_parameters, model_parameters)
 
