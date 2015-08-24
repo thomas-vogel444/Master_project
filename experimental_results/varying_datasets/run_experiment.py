@@ -50,7 +50,7 @@ if __name__ == "__main__":
 			"segmentationCode"	: os.path.join(NN_code_directory, "segment.lua"),
 			"segmentationFile" 	: os.path.join(dataset_directory,"segmentation_datasets.hdf5"),
 			"modelDirectory"	: os.path.join(experimental_results_directory, experiment_name),
-			"predictedFilename"	: "predicted_labels.hdf5"
+			"predictedFilename"	: "segmentation_datasets_14040204.hdf5"
 		}
 		return dict(base_training_parameters), dict(base_model_parameters), dict(base_segmentation_parameters)
 
@@ -71,17 +71,17 @@ if __name__ == "__main__":
 	dataset_directory	= os.path.join(base_project_path, "datasets")
 	model_template 		= "model_template.lua"
 
-	experiment_name 	= "varying_datasets/no_atrium_box"
+	experiment_name 	= "varying_datasets_test/no_atrium_box"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
 	training_parameters["training_dataset"] = os.path.join(dataset_directory,"no_atrium_box_training_dataset.hdf5")
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_datasets/small_atrium_box"
+	experiment_name 	= "varying_datasets_test/small_atrium_box"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
 	training_parameters["training_dataset"] = os.path.join(dataset_directory,"small_atrium_box_training_dataset.hdf5")
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)
 
-	experiment_name 	= "varying_datasets/large_atrium_box"
+	experiment_name 	= "varying_datasets_test/large_atrium_box"
 	training_parameters, model_parameters, segmentation_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
 	training_parameters["training_dataset"] = os.path.join(dataset_directory,"large_atrium_box_training_dataset.hdf5")
 	start_experiment(training_parameters, model_parameters, segmentation_parameters)

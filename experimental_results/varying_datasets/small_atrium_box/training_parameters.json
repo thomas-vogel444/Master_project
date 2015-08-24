@@ -2,7 +2,7 @@
     "testing_dataset": "/home/tv15/master_project/datasets/testing_dataset.hdf5",
     "training_dataset": "/home/tv15/master_project/datasets/small_atrium_box_training_dataset.hdf5",
     "batchSize": 6000,
-    "savingDirectory": "/home/tv15/master_project/experimental_results/varying_datasets/small_atrium_box",
+    "savingDirectory": "/home/tv15/master_project/experimental_results/varying_datasets_test/small_atrium_box",
     "presavedModelPath": "",
     "learningRate": 0.01,
     "maxepoch": 100,
