@@ -93,11 +93,11 @@ function train()
         targets   = targets:cuda()
  	
         f, outputs = optimator:optimize(optim.sgd, inputs, targets, criterion)
-	
+
         if opt.number_of_GPUs > 1 then cutorch.synchronize() end
 
-	outputs = outputs:cuda()
-	targets = targets:cuda()
+	outputs = outputs:float()
+	targets = targets:float()
 
 	confusion:batchAdd(outputs, targets)	
     end
