@@ -17,7 +17,7 @@ def segment(segmentation_dataset, segmentation_dataset_directory, predicted_file
 		# Setting up the segmentation
 		segmentation_parameters = {
 			"GPU_id"			: available_GPUs[(file_number%len(available_GPUs))],
-			"number_of_GPUs"	: len(available_GPUs),
+			"number_of_GPUs"	: 1,
 			"segmentationCode"	: os.path.abspath("CNN/segment.lua"),
 			"modelDirectory"	: args.model_path,
 		}

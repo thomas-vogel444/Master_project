@@ -58,27 +58,28 @@ if __name__ == "__main__":
 	# ************************************************************************************************
 	base_project_path 	= os.path.abspath("..")
 	dataset_directory	= os.path.join(base_project_path, "datasets")
-
-	experiment_name 	= "varying_number_of_connected_layers/1_connected_layer"
 	model_template 		= "model_template_2_conv_1_conn_layers.lua"
+
+	experiment_name 	= "varying_number_of_feature_maps/starting_with_16"
+	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
+	model_parameters["nfeaturemaps"]  	= [16,32,1000]
+
+	start_experiment(training_parameters, model_parameters)
+
+	experiment_name 	= "varying_number_of_feature_maps/starting_with_32"
 	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
 	model_parameters["nfeaturemaps"]  	= [32,64,1000]
 
 	start_experiment(training_parameters, model_parameters)
 
-	experiment_name 	= "varying_number_of_connected_layers/2_connected_layers"
-	model_template 		= "model_template_2_conv_2_conn_layers.lua"
+	experiment_name 	= "varying_number_of_feature_maps/starting_with_64"
 	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["nfeaturemaps"]  	= [32,64,1000,500]
+	model_parameters["nfeaturemaps"]  	= [64,128,1000]
 
 	start_experiment(training_parameters, model_parameters)
 
-	experiment_name 	= "varying_number_of_connected_layers/3_connected_layers"
-	model_template 		= "model_template_2_conv_3_conn_layers.lua"
-	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["nfeaturemaps"]  	= [32,64,1000,500,250]
 
-	start_experiment(training_parameters, model_parameters)
+
 
 
 
