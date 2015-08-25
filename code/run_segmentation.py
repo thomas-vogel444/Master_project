@@ -12,11 +12,12 @@ def get_CT_scan_number(segmentation_dataset):
 
 def segment(segmentation_dataset, segmentation_parameters, segmentation_dataset_directory, predicted_files_directory):
 		file_number = int(re.compile("segmentation_dataset_(.*).hdf5").search(segmentation_dataset).group(1))
+		available_GPUs = [1,2,3,4]
 
 		# Setting up the segmentation
 		segmentation_parameters = {
-			"GPU_id"			: (file_number%4+1),
-			"number_of_GPUs"	: 4,
+			"GPU_id"			: available_GPUs[(file_number%len(available_GPUs))],
+			"number_of_GPUs"	: len(available_GPUs),
 			"segmentationCode"	: os.path.abspath("CNN/segment.lua"),
 			"modelDirectory"	: args.model_path,
 		}
