@@ -78,7 +78,11 @@ if __name__ == "__main__":
 
 	start_experiment(training_parameters, model_parameters)
 
+	experiment_name 	= "varying_number_of_feature_maps/starting_with_64"
+	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
+	model_parameters["nfeaturemaps"]  	= [64,128,1000]
 
+	start_experiment(training_parameters, model_parameters)
 
 
 
