@@ -5,8 +5,11 @@ Articles
 ct_atrium
 code/torch-hdf5/
 code/process_results/model.net
+code/CNN/models/*
+code/CNN/results*
 *test_run
 datasets
+**/*.net
 Thesis_Report/**/*.aux
 Thesis_Report/**/*.out
 Thesis_Report/**/*.log
