@@ -35,7 +35,7 @@ def get_mask(predicted_labels, true_labels, true_values):
 	mask  = Image.fromarray(rgbLabels)
 	image = Image.fromarray(rgbValues)
 
-	return Image.blend(image, mask, 0.4)
+	return Image.blend(image, mask, 0.25)
 
 def get_resized_mask(mask, n=4, m=1):
 	"""

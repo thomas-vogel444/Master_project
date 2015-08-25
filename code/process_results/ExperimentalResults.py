@@ -64,7 +64,8 @@ class ExperimentalResults:
 
 	def get_CT_scans(self):
 		return [CTScanImage("14040204", CT_scan_parameters_template), 
-				CTScanImage("14031201", CT_scan_parameters_template)]
+				CTScanImage("14031201", CT_scan_parameters_template),
+				CTScanImage("14051404", CT_scan_parameters_template)]
 
 	def get_dice_coefficients(self, type):
 		"""	
