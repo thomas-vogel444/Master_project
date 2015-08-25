@@ -29,7 +29,9 @@ def segment(segmentation_dataset, segmentation_dataset_directory, predicted_file
 		
 		print "Segmenting %s and storing the predicted results in %s"%(segmentation_dataset, predicted_file)
 		height, width = 480, 480
-		segmentator.segment(segmentation_dataset_path, predicted_path, width, height)
+
+		if not os.path.exists(predicted_path):
+			segmentator.segment(segmentation_dataset_path, predicted_path, width, height)
 
 if __name__ == "__main__":
 	# Command line arguments
