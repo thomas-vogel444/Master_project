@@ -15,7 +15,6 @@ if __name__ == "__main__":
 	sampling_type						= "Without_Atrium_Box"		# options: Random, With_Atrium_Box, Without_Atrium_Box
 	n_examples_per_CT_scan_per_label 	= (100, 100) 	# (n_non_bd_non_atrium, n_bd_non_atrium, n_atrium)
 	xy_padding, z_padding  				= 5, 1
-	multithreaded 						= False
 
 	CT_scan_parameters_template = {
 			"CT_scan_path_template" : os.path.join(data_directory, "CTScan_name"),
@@ -30,14 +29,13 @@ if __name__ == "__main__":
 
 	# Generate the dataset from the list of CT scans
 	print "=======> Generating the dataset <======="
-	dataset, labels = df.generate_dataset(	CT_scan_names, 
+	dataset, labels = df.generate_random_dataset(	CT_scan_names, 
 											n_examples_per_CT_scan_per_label, 
 											CT_scan_parameters_template, 
 											patch_size, 
 											sampling_type, 
 											xy_padding=xy_padding, 
 											z_padding=z_padding, 
-											multithreaded=multithreaded
 										)
 
 	# Saving the dataset
