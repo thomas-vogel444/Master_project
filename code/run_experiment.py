@@ -60,21 +60,21 @@ if __name__ == "__main__":
 	dataset_directory	= os.path.join(base_project_path, "datasets")
 
 	experiment_name 	= "varying_number_of_connected_layers/1_connected_layer"
-	model_template 		= "model_template_1_conn_layers.lua"
+	model_template 		= "model_template_2_conv_1_conn_layers.lua"
 	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
 	model_parameters["nfeaturemaps"]  	= [32,64,1000]
 
 	start_experiment(training_parameters, model_parameters)
 
 	experiment_name 	= "varying_number_of_connected_layers/2_connected_layers"
-	model_template 		= "model_template_2_conn_layers.lua"
+	model_template 		= "model_template_2_conv_2_conn_layers.lua"
 	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
 	model_parameters["nfeaturemaps"]  	= [32,64,1000,500]
 
 	start_experiment(training_parameters, model_parameters)
 
 	experiment_name 	= "varying_number_of_connected_layers/3_connected_layers"
-	model_template 		= "model_template_3_conn_layers.lua"
+	model_template 		= "model_template_2_conv_3_conn_layers.lua"
 	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
 	model_parameters["nfeaturemaps"]  	= [32,64,1000,500,250]
 
