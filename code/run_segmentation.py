@@ -10,7 +10,7 @@ def get_CT_scan_number(segmentation_dataset):
         p = re.compile("../datasets/segmentation_dataset_for_(.*)")
         return p.search(segmentation_dataset).group(1)
 
-def segment(segmentation_dataset, segmentation_parameters, segmentation_dataset_directory, predicted_files_directory):
+def segment(segmentation_dataset, segmentation_dataset_directory, predicted_files_directory):
 		file_number = int(re.compile("segmentation_dataset_(.*).hdf5").search(segmentation_dataset).group(1))
 		available_GPUs = [1,2,3,4]
 
@@ -47,8 +47,7 @@ if __name__ == "__main__":
 
 	# Segment all the segmentation files into predicted files
 	print "Segmenting files in %s"%predicted_files_directory
-	segmentation_function = functools.partial(segment, 	segmentation_parameters 		= segmentation_parameters, 
-														segmentation_dataset_directory 	= segmentation_dataset_directory, 
+	segmentation_function = functools.partial(segment,  segmentation_dataset_directory 	= segmentation_dataset_directory, 
 														predicted_files_directory 		= predicted_files_directory)
 
 	pool = Pool(processes=4)
