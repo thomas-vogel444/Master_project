@@ -9,6 +9,43 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
 
+def convert_to_grey_scale(array):
+	"""
+		Converts a 0-1 scale array to the 0-255 grey sale
+	"""
+	return np.round(array*255)
+
+def get_mask(predicted_labels, true_labels, true_values):
+	"""
+		Creates a mask given the predicted and true labels and the true values of a slice of a CT scan.
+	"""
+	x, y = predicted_labels.shape
+	rgbLabels = np.zeros((x, y, 3), 'uint8')
+	rgbValues = np.zeros((x, y, 3), 'uint8')
+
+	rgbLabels[:,:,1] = np.where((predicted_labels == true_labels) & (true_labels == 2), 255, 0)
+	rgbLabels[:,:,2] = np.where((true_labels == 1), 255, 0)
+	rgbLabels[:,:,0] = np.where(predicted_labels != true_labels, 255, 0)
+
+
+	rgbValues[:,:,0] = convert_to_grey_scale(true_values)
+	rgbValues[:,:,1] = convert_to_grey_scale(true_values)
+	rgbValues[:,:,2] = convert_to_grey_scale(true_values)
+
+	mask  = Image.fromarray(rgbLabels)
+	image = Image.fromarray(rgbValues)
+
+	return Image.blend(image, mask, 0.4)
+
+def get_resized_mask(mask, n=4, m=1):
+	"""
+		Resizes the mask to be n times its width and m times its height.
+	"""
+	width, height = mask.size
+	return mask.resize((n*width, height))
+
+#************************************************************************************************
+
 def get_experiment_names(experiment_base_directory):
 	experiment_names = [os.path.basename(path) for path in get_experiments_paths(experiment_base_directory)]
 	if experiment_names[0].isdigit():
@@ -40,8 +77,6 @@ def get_true_values(segmentation_dataset_path, dataset_name):
 	return true_values
 
 def get_experiment_mask_images(segmentation_dataset_path, predicted_labels_path):
-	print predicted_labels_path
-	print segmentation_dataset_path
 	# import the label datasets from process_predicted_labels.py 
 	predicted_labels_fixed_x = get_predicted_labels(predicted_labels_path, "predicted_labels_fixed_x")
 	predicted_labels_fixed_y = get_predicted_labels(predicted_labels_path, "predicted_labels_fixed_y")
@@ -70,7 +105,6 @@ def get_experiment_set_mask_images(experiment_base_directory, segmentation_datas
 	for experiment_path in experiment_paths:
 		experiment_name 		= os.path.basename(experiment_path)
 		predicted_labels_path 	= os.path.join(experiment_path, predicted_dataset_name)
-		print predicted_labels_path
 
 		masks[experiment_name] = get_experiment_mask_images(segmentation_dataset_path, predicted_labels_path)
 
@@ -93,50 +127,27 @@ def read_values(filename):
     	f.readline()
         return [float(x.strip()) for x in f]
 
-def get_mask(predicted_labels, true_labels, true_values):
-	"""
-		Creates a mask given the predicted and true labels and the true values of a slice of a CT scan.
-	"""
-	x, y = predicted_labels.shape
-	rgbLabels = np.zeros((x, y, 3), 'uint8')
-	rgbValues = np.zeros((x, y, 3), 'uint8')
-
-	rgbLabels[:,:,1] = np.where((predicted_labels == true_labels) & (true_labels == 1), 255, 0)
-	rgbLabels[:,:,2] = np.where((true_labels == 0), 255, 0)
-	rgbLabels[:,:,0] = np.where(predicted_labels != true_labels, 255, 0)
-
-
-	rgbValues[:,:,0] = true_values
-	rgbValues[:,:,1] = true_values
-	rgbValues[:,:,2] = true_values
-
-	mask  = Image.fromarray(rgbLabels)
-	image = Image.fromarray(rgbValues)
-
-	return Image.blend(image, mask, 0.4)
-
-def get_resized_mask(mask):
-	width, height = mask.size
-	return mask.resize((4*width, height))
-
-def plot_comparative_masks(masks, experiment_names, experiment_base_directory, save_filename=None, save=False):
+def plot_comparative_masks(masks, experiment_names, save_filepath=None, save=False):
 	"""
 		Plot the transversal slice of the segmentation data for comparison sake...
 	"""
 	fig = plt.figure()
 	for i_experiment, experiment_name in enumerate(experiment_names):
 		experiment_masks = masks[experiment_name]
-		print experiment_name
-		a   = fig.add_subplot(2,np.ceil(len(experiment_names)/2.),i_experiment + 1)
+		if len(masks) <= 3:
+			a = fig.add_subplot(2,np.ceil(len(experiment_names)/2.),i_experiment + 1)
+		else:
+			a = fig.add_subplot(2,np.ceil(len(experiment_names)/2.),i_experiment + 1)
+
 		plt.imshow(np.array(experiment_masks[2]))
 		a.set_title(experiment_name)
 		plt.axis('off')
 	if save == True:
-		plt.savefig(os.path.join(experiment_base_directory, save_filename))
+		plt.savefig(save_filepath)
 	else:
 		plt.show()
 
-def plot_triplanar_masks(masks, experiment_base_directory, save_filename=None, save=False):
+def plot_triplanar_masks(masks, experiment_base_directory, save_filepath=None, save=False):
 	"""
 		Plot all three slices of the triplanar segmentation.
 	"""
@@ -146,20 +157,21 @@ def plot_triplanar_masks(masks, experiment_base_directory, save_filename=None, s
 		plt.imshow(np.array(masks[i_mask]))
 		plt.axis('off')
 	if save == True:
-		plt.savefig(os.path.join(experiment_base_directory, save_filename))
+		plt.savefig(save_filepath)
 	else:
 		plt.show()
+	plt.close()
 
-def plot_dice_coefficients(dice_coefficients, experiment_names, experiment_base_directory, saving_filename=None, save=False):
+def plot_dice_coefficients(dice_coefficients, experiment_names, save_filepath=None, save=False):
 	fig = plt.figure()
 	for experiment_name in experiment_names:
 		print experiment_name, max(dice_coefficients[experiment_name])
 		plt.plot(dice_coefficients[experiment_name])
-		plt.ylim((80,100))
 
 	plt.legend(experiment_names, loc='lower right')
 
 	if save == True:
-		plt.savefig(os.path.join(experiment_base_directory, saving_filename))
+		plt.savefig(save_filepath)
 	else:
 		plt.show()
+	plt.close()
