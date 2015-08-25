@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
 	# Setting up the segmentation
 	segmentation_parameters = {
-			"GPU_id"			: 1,
+			"GPU_id"			: 6,
 			"number_of_GPUs"	: 1,
 			"segmentationCode"	: os.path.abspath("CNN/segment.lua"),
 			"modelDirectory"	: args.model_path,
@@ -37,10 +37,10 @@ if __name__ == "__main__":
 
 	# Segment all the segmentation files into predicted files
 	print "Segmenting files in %s"%predicted_files_directory
-#	for segmentation_dataset in segmentation_datasets:
-#		segmentation_dataset_path 	= os.path.join(args.segmentation_dataset_directory, segmentation_dataset)
-#		predicted_file 				= "predicted_file_%i.hdf5"%get_slice_number(segmentation_dataset)
-#		predicted_path 				= os.path.join(predicted_files_directory, predicted_file)
-#		
-#		print "Segmenting %s and storing the predicted results in %s"%(segmentation_dataset, predicted_file)
-#		segmentator.segment(segmentation_dataset_path, predicted_path, width, height)
+	for segmentation_dataset in segmentation_datasets:
+		segmentation_dataset_path 	= os.path.join(args.segmentation_dataset_directory, segmentation_dataset)
+		predicted_file 				= "predicted_file_%i.hdf5"%get_slice_number(segmentation_dataset)
+		predicted_path 				= os.path.join(predicted_files_directory, predicted_file)
+		
+		print "Segmenting %s and storing the predicted results in %s"%(segmentation_dataset, predicted_file)
+		segmentator.segment(segmentation_dataset_path, predicted_path, width, height)
