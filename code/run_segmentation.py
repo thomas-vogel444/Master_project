@@ -1,15 +1,24 @@
+from process_results.Segmentator import Segmentator
 import re
 import argparse
 import os
-from process_results.Segmentator import Segmentator
+import functools
+from multiprocessing import Pool
 
-def get_slice_number(segmentation_dataset):
-	p = re.compile("segmentation_dataset_(.*).hdf5")
-	return int(p.search(segmentation_dataset).group(1))
 
 def get_CT_scan_number(segmentation_dataset):
         p = re.compile("../datasets/segmentation_dataset_for_(.*)")
-        return int(p.search(segmentation_dataset).group(1))
+        return p.search(segmentation_dataset).group(1)
+
+def segment(segmentation_dataset, segmentation_parameters, segmentation_dataset_directory, predicted_files_directory):
+		segmentator 				= Segmentator(segmentation_parameters)
+		segmentation_dataset_path 	= os.path.join(segmentation_dataset_directory, segmentation_dataset)
+		predicted_file 				= "predicted_file_%s.hdf5"%re.compile("segmentation_dataset_(.*).hdf5").search(segmentation_dataset).group(1)
+		predicted_path 				= os.path.join(predicted_files_directory, predicted_file)
+		
+		print "Segmenting %s and storing the predicted results in %s"%(segmentation_dataset, predicted_file)
+		height, width = 480, 480
+		segmentator.segment(segmentation_dataset_path, predicted_path, width, height)
 
 if __name__ == "__main__":
 	# Command line arguments
@@ -27,9 +36,7 @@ if __name__ == "__main__":
 			"modelDirectory"	: args.model_path,
 		}
 
-	segmentator 			= Segmentator(segmentation_parameters)
 	segmentation_datasets 	= [segmentation_dataset for segmentation_dataset in os.listdir(args.segmentation_dataset_directory)]
-	height, width 			= 480, 480
 
 	predicted_files_directory = os.path.join(args.model_path, "predicted_files_%s"%get_CT_scan_number(args.segmentation_dataset_directory))
 	if not os.path.exists(predicted_files_directory):
@@ -37,10 +44,24 @@ if __name__ == "__main__":
 
 	# Segment all the segmentation files into predicted files
 	print "Segmenting files in %s"%predicted_files_directory
-	for segmentation_dataset in segmentation_datasets:
-		segmentation_dataset_path 	= os.path.join(args.segmentation_dataset_directory, segmentation_dataset)
-		predicted_file 				= "predicted_file_%i.hdf5"%get_slice_number(segmentation_dataset)
-		predicted_path 				= os.path.join(predicted_files_directory, predicted_file)
-		
-		print "Segmenting %s and storing the predicted results in %s"%(segmentation_dataset, predicted_file)
-		segmentator.segment(segmentation_dataset_path, predicted_path, width, height)
+	segmentation_function = functools.partial(segment, 	segmentation_parameters 		= segmentation_parameters, 
+														segmentation_dataset_directory 	= segmentation_dataset_directory, 
+														predicted_files_directory 		= predicted_files_directory)
+
+	pool = Pool(processes=4)
+	pool.map(segmentation_function, segmentation_datasets)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
