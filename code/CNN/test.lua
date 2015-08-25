@@ -12,7 +12,7 @@ function test()
    -- set model to evaluate mode (for modules that differ in training and testing, like Dropout)
    prediction = torch.zeros(testData.size(), 2)
    model:evaluate()
-   model:cuda()
+--   model:cuda()
    prediction = prediction:cuda()
    
    -- test over test data
