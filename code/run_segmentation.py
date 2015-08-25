@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
 	# Segment all the segmentation files into predicted files
 	print "Segmenting files in %s"%predicted_files_directory
-	segmentation_function = functools.partial(segment,  segmentation_dataset_directory 	= segmentation_dataset_directory, 
+	segmentation_function = functools.partial(segment,  segmentation_dataset_directory 	= args.segmentation_dataset_directory, 
 														predicted_files_directory 		= predicted_files_directory)
 
 	pool = Pool(processes=4)
