@@ -11,9 +11,19 @@ def get_CT_scan_number(segmentation_dataset):
         return p.search(segmentation_dataset).group(1)
 
 def segment(segmentation_dataset, segmentation_parameters, segmentation_dataset_directory, predicted_files_directory):
+		file_number = int(re.compile("segmentation_dataset_(.*).hdf5").search(segmentation_dataset).group(1))
+
+		# Setting up the segmentation
+		segmentation_parameters = {
+			"GPU_id"			: (file_number%4+1),
+			"number_of_GPUs"	: 4,
+			"segmentationCode"	: os.path.abspath("CNN/segment.lua"),
+			"modelDirectory"	: args.model_path,
+		}
+
 		segmentator 				= Segmentator(segmentation_parameters)
 		segmentation_dataset_path 	= os.path.join(segmentation_dataset_directory, segmentation_dataset)
-		predicted_file 				= "predicted_file_%s.hdf5"%re.compile("segmentation_dataset_(.*).hdf5").search(segmentation_dataset).group(1)
+		predicted_file 				= "predicted_file_%i.hdf5"%file_number
 		predicted_path 				= os.path.join(predicted_files_directory, predicted_file)
 		
 		print "Segmenting %s and storing the predicted results in %s"%(segmentation_dataset, predicted_file)
@@ -27,14 +37,6 @@ if __name__ == "__main__":
 	parser.add_argument('-m', '--model_path',   default = '../experimental_results/varying_datasets_test/small_atrium_box')
 
 	args = parser.parse_args()
-
-	# Setting up the segmentation
-	segmentation_parameters = {
-			"GPU_id"			: 6,
-			"number_of_GPUs"	: 1,
-			"segmentationCode"	: os.path.abspath("CNN/segment.lua"),
-			"modelDirectory"	: args.model_path,
-		}
 
 	segmentation_datasets 	= [segmentation_dataset for segmentation_dataset in os.listdir(args.segmentation_dataset_directory)]
 
