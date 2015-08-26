@@ -60,27 +60,28 @@ if __name__ == "__main__":
 	dataset_directory	= os.path.join(base_project_path, "datasets")
 	model_template 		= "model_template_2_conv_1_conn_layers.lua"
 
-	experiment_name 	= "varying_number_of_feature_maps/starting_with_16"
+	experiment_name 	= "varying_number_of_hidden_units/100"
+	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
+	model_parameters["nfeaturemaps"]  	= [16,32,100]
+
+	start_experiment(training_parameters, model_parameters)
+
+	experiment_name 	= "varying_number_of_hidden_units/200"
+	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
+	model_parameters["nfeaturemaps"]  	= [16,32,200]
+
+	start_experiment(training_parameters, model_parameters)
+
+	experiment_name 	= "varying_number_of_hidden_units/500"
+	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
+	model_parameters["nfeaturemaps"]  	= [16,32,500]
+
+	start_experiment(training_parameters, model_parameters)
+
+
+	experiment_name 	= "varying_number_of_hidden_units/1000"
 	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
 	model_parameters["nfeaturemaps"]  	= [16,32,1000]
-
-	start_experiment(training_parameters, model_parameters)
-
-	experiment_name 	= "varying_number_of_feature_maps/starting_with_32"
-	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["nfeaturemaps"]  	= [32,64,1000]
-
-	start_experiment(training_parameters, model_parameters)
-
-	experiment_name 	= "varying_number_of_feature_maps/starting_with_64"
-	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["nfeaturemaps"]  	= [64,128,1000]
-
-	start_experiment(training_parameters, model_parameters)
-
-	experiment_name 	= "varying_number_of_feature_maps/starting_with_64"
-	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["nfeaturemaps"]  	= [64,128,1000]
 
 	start_experiment(training_parameters, model_parameters)
 
