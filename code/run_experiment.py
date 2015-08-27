@@ -36,8 +36,8 @@ if __name__ == "__main__":
 			"modelTemplate" 		: model_template,
 			"modelFilePath"			: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
 			"activation_function"	: "ReLU",
-			"pooling_function"		: "SpatialMaxPooling",
-			"nfeaturemaps"  		: [16,32,200],
+			"pooling_function"		: "SpatialAveragePooling",
+			"nfeaturemaps"  		: [16,32,500],
 			"filtsize" 	  			: 5,
 			"poolsize" 	  			: [2,2],
 			"featuremaps_h" 		: 5,
@@ -60,64 +60,32 @@ if __name__ == "__main__":
 	dataset_directory	= os.path.join(base_project_path, "datasets")
 	model_template 		= "model_template_2_conv_1_conn_layers.lua"
 
-	experiment_name 	= "varying_activation_function/ReLU"
-	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["activation_function"]  	= "ReLU"
-
-	start_experiment(training_parameters, model_parameters)
-
-	experiment_name 	= "varying_activation_function/Tanh"
-	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["activation_function"]  	= "Tanh"
-
-	start_experiment(training_parameters, model_parameters)
-
-	experiment_name 	= "varying_activation_function/Sigmoid"
-	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["activation_function"]  	= "Sigmoid"
-
-	start_experiment(training_parameters, model_parameters)
-
-	experiment_name 	= "varying_pooling_function/SpatialMaxPooling"
-	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["pooling_function"]  	= "SpatialMaxPooling"
-
-	start_experiment(training_parameters, model_parameters)
-
-	experiment_name 	= "varying_pooling_function/SpatialAveragePooling"
-	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	model_parameters["pooling_function"]  	= "SpatialAveragePooling"
-
-	start_experiment(training_parameters, model_parameters)
-
-	#****************************************************************************************
 	experiment_name 	= "varying_learning_rate/0_01"
 	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	base_training_parameters["learningRate"]  	= 0.01
+	training_parameters["learningRate"]  = 0.01
 
 	start_experiment(training_parameters, model_parameters)
 
 	experiment_name 	= "varying_learning_rate/0_05"
 	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	base_training_parameters["learningRate"]  	= 0.05
+	training_parameters["learningRate"]  = 0.05
 
 	start_experiment(training_parameters, model_parameters)
 
 	experiment_name 	= "varying_learning_rate/0_1"
 	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	base_training_parameters["learningRate"]  	= 0.1
+	training_parameters["learningRate"]  = 0.1
 
 	start_experiment(training_parameters, model_parameters)
 
 	experiment_name 	= "varying_learning_rate/0_5"
 	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	base_training_parameters["learningRate"]  	= 0.5
+	training_parameters["learningRate"]  = 0.5
 
 	start_experiment(training_parameters, model_parameters)
 
 	experiment_name 	= "varying_learning_rate/1"
 	training_parameters, model_parameters = get_base_parameters(base_project_path, experiment_name, model_template)
-	base_training_parameters["learningRate"]  	= 1
+	training_parameters["learningRate"]  = 1
 
 	start_experiment(training_parameters, model_parameters)
-
