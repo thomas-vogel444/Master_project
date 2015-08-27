@@ -84,7 +84,7 @@ def generate_random_dataset(CT_scan_names, n_examples_per_label, CT_scan_paramet
 		random_indices = list(itertools.chain.from_iterable(
 				[CT_scan.sample_CT_scan_indices(sampling_type, n_examples_per_label[label-1], label, dicom_index) for label in label_types]))
 
-		n_examples = len(CT_scan_labels)
+		n_examples = sum(n_examples_per_label)
 		dataset[(i*n_examples):((i+1)*n_examples)] = generate_dataset_from_CT_scan(random_indices, CT_scan, patch_size)
 		labels[(i*n_examples):((i+1)*n_examples)]  = np.array(map(CT_scan.get_label, random_indices))
 
