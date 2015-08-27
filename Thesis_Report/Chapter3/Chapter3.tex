@@ -39,9 +39,18 @@
 
 \subsection{General approach for model selection}
 
-\noindent For the purpose of model selection, we allocated 20 of the 27 CT scans to the training set and the remaining 7 to a testing set. The training set is composed of 400000 training examples equally divided among the training CT scans, half being in the atrium and the other half outside it. The validation set is composed of 200000 testing examples equally divided among the testing CT scans. Furthermore at the end of training, each model fully segments a test CT scan from the testing set to provide performance statistics. In particular, from this segmentation image, we evaluate the model's sensitivity, which is the percentage of correctly classified atrium voxels, specificity, which is the percentage of correctly classified non-atrium voxels, and overall classification rate also known as the Dice coefficient, which is calculated by evaluating the proportion of correctly classified voxels in the segmented image. Model selection will be conducted on the basis of these three statistics.\\
+\noindent For the purpose of model selection, we allocated 20 of the 27 CT scans to the training set and the remaining 7 to a testing set. The training set is composed of 400000 training examples equally divided among the training CT scans, half being in the atrium and the other half outside it. The validation set is composed of 200000 testing examples equally divided among the testing CT scans. Furthermore at the end of training, each model fully segments a test CT scan from the testing set to provide performance statistics. In particular, from this segmentation image, we evaluate the model's sensitivity, which is the percentage of correctly classified atrium voxels, specificity, which is the percentage of correctly classified non-atrium voxels, and overall classification rate also known as the Dice coefficient, which is calculated by evaluating the proportion of correctly classified voxels in the segmented image. Model selection will be conducted on the basis of these three test statistics.
 
-\noindent We start off our model selection with a CNN with an input layer composed of 6 channels with patches of size 32*32, 2 convolutional layers with 32 and 64 feature maps respectively, 2 fully connected layers with 1000 and 500 hidden units each respectively, and a logsoftmax output layer giving log probabilities. The training parameters are composed of a learning rate of 0.01, a momentum rate set to 0, and a mini-batch size set to 6000 examples. We will be varying in turn the following hyperparameters while at each stage keeping the rest constant.\\
+Additionally, 3 transversal mask images are generated from the segmented CT scan, where the grey CT scan image is overlaid with colours representing the error status of a given voxel. These masks provide a visual element to the performance of the models. The colour codes are:
+
+\begin{itemize}
+	\item Green: correctly classified atrium voxel
+	\item Blue: correctly classified non-atrium voxel
+	\item Red: incorrectly classified atrium voxel
+	\item Pink: incorrectly classified non-atrium voxel
+\end{itemize}
+
+\noindent We start off our model selection with a CNN comprised of an input layer with 6 channels with patches of size 32*32, 2 convolutional layers with 32 and 64 feature maps respectively, 2 fully connected layers with 1000 and 500 hidden units each respectively, and a logsoftmax output layer giving log probabilities. The training parameters are composed of a learning rate of 0.01, a momentum rate set to 0, and a mini-batch size set to 6000 examples. We will be varying in turn the following hyper-parameters while at each stage keeping the others constant.\\
 
 \begin{itemize}
 	\item the number of convolutional layers.
@@ -189,9 +198,22 @@ Average Pooling & 0.953                                                        &
 
 \subsection{varying the learning rate}
 
-\noindent Tried different learning rates: 0.01, 0.05, 0.1, 0.5, 1. It seems that 0.1 is best. Having a learning rate of 1 doesn't train the network.  We omitted the results.
+\noindent Tried different learning rates: 0.01, 0.05, 0.1, 0.5. It seems that 0.1 is best. Having a learning rate of 0.5 doesn't train the network.  
 
+\begin{tabular}{c|c|c|c|c|c}
+\rowcolor[HTML]{C0C0C0} 
+     & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
+0.01 & 0.953                                                        & 0.95                                                        & 0.936       & 0.964       & 0.963                                                        \\ \hline
+0.05 & 0.968                                                        & 0.958                                                       & 0.935       & 0.972       & 0.971                                                        \\ \hline
+0.1  & 0.973                                                        & 0.963                                                       & 0.946       & 0.976       & 0.975                                                        \\ \hline
+0.5  & 0.667                                                        & 0.987                                                       & 0.0         & 1.0         & 0.982                                                       
+\end{tabular}
 
+\begin{figure}
+\centering
+\includegraphics[trim=2.5cm 1.5cm 2cm 1.5cm, clip=true, height=80mm, width=150mm]{Chapter3/mask_results_varying_learning_rate.png}
+\caption{Left: grey scale slices from a CT scan taken in the transversal, saggital and coronal planes.}
+\end{figure}
 
 \subsection{varying the momentum}
 
