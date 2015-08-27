@@ -63,9 +63,10 @@ class ExperimentalResults:
 		return predictions
 
 	def get_CT_scans(self):
-		return [CTScanImage("14040204", CT_scan_parameters_template), 
-				CTScanImage("14031201", CT_scan_parameters_template),
-				CTScanImage("14051404", CT_scan_parameters_template)]
+		return [CTScanImage("14040204", CT_scan_parameters_template)] 
+		# return [CTScanImage("14040204", CT_scan_parameters_template), 
+		# 		CTScanImage("14031201", CT_scan_parameters_template),
+		# 		CTScanImage("14051404", CT_scan_parameters_template)]
 
 	def get_dice_coefficients(self, type):
 		"""	
@@ -99,8 +100,8 @@ class ExperimentalResults:
 															number_correctly_classified_non_atrium) /
 															float(self.predicted_labels[0].size), 3)
 
-		classification_statistics["Dice coefficient over training set"] = round(self.training_dice_coefficients[-1], 3)
-		classification_statistics["Dice coefficient over testing set"] = round(self.testing_dice_coefficients[-1], 3)
+		classification_statistics["Dice coefficient over training set"] = round(self.training_dice_coefficients[-1]/100, 3)
+		classification_statistics["Dice coefficient over testing set"] = round(self.testing_dice_coefficients[-1]/100, 3)
 		return classification_statistics
 
 
