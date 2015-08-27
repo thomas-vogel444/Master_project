@@ -1,16 +1,16 @@
-\chapter{Searching for a good model}
+\chapter{Experimental Results}
 
 \section{The Data}
 
-The aim of this thesis is to use deep learning techniques to segment CT scans of the chest and identify the voxels that are in the part of the heart called the atrium. The atrium is composed of two chambers called the right and left atrium which are the two entry points of the blood into the heart, one returning to the heart to complete the circulating cycle through the body and the other coming back from the lungs after being oxygenated.\\
+\noindent The aim of this thesis is to implement, and then fine-tune, a CNN to classify voxels of chest computerised tomography (CT) scan as being either in the part of the heart called the atrium or outside it. The atrium is composed of two chambers called the right and left atrium which are the two entry points of the blood into the heart, one returning to the heart to complete the cardiovascular cycle through the body and the other coming back from the lungs after being oxygenated and purified of toxins.\\
 
-The data from which the training and testing datasets are generated comprise 27 chest computerised tomography (CT) scans. CT scans are 3 dimensional grey scale images generated via computers combining many X-ray images taken from different angles to produce cross-sectional images of specific body parts. They are stored as DICOM files, DICOM standing for Digital Imaging and Communications in Medicine and which is a standard for handling, storing, printing, and transmitting information in medical imaging. Each has been segmented by trained radiologists at St Thomas's hospital, the results of which are stored in Nearly Raw Raster Data (NRRD) files, a standard format for storing raster data. These are 3D arrays of the same dimension, each voxel taking either or two values which indicates whether the corresponding voxel in the CT scan is in the Atrium (1) or not (0). 
+\noindent The data from which the training and testing datasets are generated comprise 27 CT scans. CT scans are 3 dimensional grey scale images, generally of size 480*480*50, generated via computers combining many X-ray images taken from different angles to produce cross-sectional images of specific body parts. They are stored as DICOM files, DICOM standing for Digital Imaging and Communications in Medicine which is a standard for handling, storing, printing, and transmitting information in medical imaging. Each has been segmented by trained radiologists at St Thomas's hospital, the results of which are stored in Nearly Raw Raster Data (NRRD) files, a standard format for storing raster data. These are 3D arrays of the same dimension, each entry being either a 1 or 0 indicating whether the corresponding voxel in the CT scan is in the Atrium or not. 
 
 \section{Generating the datasets: The Tri-Planar Method}
 
-Classifying the voxels require building an input set for each containing enough local and global information to allow the Neural Network to learn effectively. One way of providing 3 dimensional information is to use the so-called tri-planar method [reference the paper that started it on knee cartilage]. This consists in generating 3 perpendicular square patches of a given dimension in the transversal, saggital and coronal planes centred at the voxel of interest (see the figure). This standard technique has been found to give competitive results compared to using 3D patches while being much more computationally and memory efficient. In addition, we use a multiscale approach where we add 3 more input channels composed of compressed patches that are originally 5 times larger than the above set of patches resized to the same size to provide global information about the surroundings of concerned voxel.\\
+\noindent Classifying the voxels require building a set of input vectors each containing enough local and global information to allow the Neural Network to learn effectively. One way of providing 3 dimensional information is to use the tri-planar method. This consists in generating 3 perpendicular square patches of a given dimension in the transversal, saggital and coronal planes centred at the voxel of interest as shown in Figure whatever. This standard technique has been found to give competitive results compared to using 3D patches while being much more computationally and memory efficient [reference the paper that started it on knee cartilage]. In addition, we use a multiscale approach where we add 3 more input channels composed of compressed patches that are originally 5 times larger than the above set of patches, resized to the same size to provide global information about the surroundings of the concerned voxel.\\
 
-Each patch is fed into a different input channel of the Convolutional Neural Network with one or more convolutional layers. The outputs of those channels are then feed as input to a number of connected layers before a classifying layer as output layer.
+\noindent Each patch is fed into a different input channel of the Convolutional Neural Network with one or more convolutional layers. The outputs of those channels are then feed as inputs to a set of connected layers itself connected to a classifying layer as output layer.
 
 \begin{figure}
 \centering
@@ -29,34 +29,34 @@ Each patch is fed into a different input channel of the Convolutional Neural Net
 
 \subsection{Libraries}
 
-We use Torch, an open-source library maintained by Facebook in Lua aiming to provide a Matlab-like environment for scientific computing, along with a number of dependent libraries (cunn, cudnn, fbcunn) to train the convolutional networks on single and multi-GPUs. In addition, we use Python and a number of its libraries to handle all the logistics from generating the datasets to producing plots of segmentation results.
+\noindent To train Neural Networks, we use Torch, an open-source library maintained by Facebook in Lua aiming to provide a Matlab-like environment for scientific computing, along with a number of dependent libraries (nn, cunn, cudnn, fbcunn) to train the convolutional networks on single and multiple GPUs. In addition, we use Python and a number of its libraries to handle all the logistics ranging from generating the datasets to producing plots of segmentation results.
 
-\subsection{Computer Power}
+\subsection{Computer facilities}
 
-The training of the CNNs were conducted on 2 multi-GPU clusters, named montana-nvidia and montana-k80, kindly provided by Prof. Montana's laboratory. montana-nvidia consists 24 cores with 129 Gb of memory connected to two NVIDIA Tesla K40m and two Tesla K20Xm while montana-k80 on the other hand has 56 cores with 258 Gb of memory supported by 8 of NVIDIA's Testla K80. 
+\noindent The training of the CNNs were conducted alternatively on one of 2 multi-GPU clusters, named montana-nvidia and montana-k80, kindly provided by Prof. Montana's. montana-nvidia consists of 24 cores with 129 Gb of memory connected to two NVIDIA Tesla K40m and two Tesla K20Xm while montana-k80 on the other hand has 56 cores with 258 Gb of memory supported by 8 of NVIDIA's Testla K80. 
 
 \section{Model Selection}
 
 \subsection{General approach for model selection}
 
-To look for a good model, we allocated 20 of the 27 CT scans to the training set, 7 to a testing set. We generated 400000 training examples equally divided among the training CT scans, half being in the atrium and the other half in the non-atrium part. The validation set is composed of 15000 testing examples from each testing CT scans to a total number of 105000 testing examples. The model selection is done by comparing the dice coefficient on the testing set calculated at the end of end epoch, which is just the classification accuracy in a 2-class problem, segmentation results from a few slices taken from the testing set and a final dice coefficient of the classification accuracy of the segmentation of the entire 7 testing CT scans preformed at the end of training.\\
+\noindent For the purpose of model selection, we allocated 20 of the 27 CT scans to the training set and the remaining 7 to a testing set. The training set is composed of 400000 training examples equally divided among the training CT scans, half being in the atrium and the other half outside it. The validation set is composed of 200000 testing examples equally divided among the testing CT scans. Furthermore at the end of training, each model fully segments a test CT scan from the testing set to provide performance statistics. In particular, from this segmentation image, we evaluate the model's sensitivity, which is the percentage of correctly classified atrium voxels, specificity, which is the percentage of correctly classified non-atrium voxels, and overall classification rate also known as the Dice coefficient, which is calculated by evaluating the proportion of correctly classified voxels in the segmented image. Model selection will be conducted on the basis of these three statistics.\\
 
-We start off our model selection with a CNN composed of 2 convolutional layers with 32 and 64 feature maps respectively, 2 fully connected layers with 1000 and 500 hidden units each respectively, a logsoftmax output layer giving log probabilities. The training parameters are composed of a learning rate of 0.01, a momentum set to 0, and a mini-batch size set to 6000 examples. We will be varying in turn the following hyperparameters while at each stage keeping the rest constant.\\
+\noindent We start off our model selection with a CNN with an input layer composed of 6 channels with patches of size 32*32, 2 convolutional layers with 32 and 64 feature maps respectively, 2 fully connected layers with 1000 and 500 hidden units each respectively, and a logsoftmax output layer giving log probabilities. The training parameters are composed of a learning rate of 0.01, a momentum rate set to 0, and a mini-batch size set to 6000 examples. We will be varying in turn the following hyperparameters while at each stage keeping the rest constant.\\
 
 \begin{itemize}
-	\item varying the number of convolutional layers.
-	\item varying the number of connected layers.
-	\item varying the number of feature maps in the chosen number of convolutional layers.
-	\item varying the number of hidden units in the chosen number of connected layers.
-	\item varying the type of activation function (ReLU, Tanh or Sigmoid).
-	\item varying the type of subsampling function (Maxpooling or average pooling).
-	\item varying the learning rate.
-	\item varying the momentum.
+	\item the number of convolutional layers.
+	\item the number of connected layers.
+	\item the number of feature maps in the chosen number of convolutional layers.
+	\item the number of hidden units in the chosen number of connected layers.
+	\item the type of activation function (ReLU, Tanh or Sigmoid).
+	\item the type of subsampling function (maximum or average pooling).
+	\item the learning rate.
+	\item the momentum.
 \end{itemize}
 
 \subsection{varying number of convolutional layers}
 
-To select the number of convolutional layers, we train 4 CNNs with architectures starting with the following convolutional layers:
+\noindent To select the number of convolutional layers, we train 4 CNNs with architectures starting with the following convolutional layers:
 
 \begin{itemize}
 	\item Input (6*32*32) => Conv layer (32*28*28) => 2*2 MaxPooling filter (32*14*14) 
@@ -65,7 +65,7 @@ To select the number of convolutional layers, we train 4 CNNs with architectures
 	\item Input (6*32*32) => Conv layer (32*28*28) => Conv layer (32*24*24) => 2*2 MaxPooling filter (32*12*12) => Conv layer (64*8*8) => Conv layer (64*4*4) => 2*2 MaxPooling filter (64*2*2)
 \end{itemize}
 
-These convolutional layers are then followed by two fully connected layers with 1000 and 500 hidden layers each. The following table gives the results for each of these architectures trained over 100 epochs.\\
+\noindent These convolutional layers are then followed by two fully connected layers with 1000 and 500 hidden layers each. The following table gives the results for each of these architectures trained over 100 epochs.\\
 
 \begin{tabular}{c|c|c|c|c|c}
 \rowcolor[HTML]{C0C0C0} 
@@ -123,7 +123,7 @@ With 64 FM  & 0.959                                                        & 0.9
 With 128 FM & 0.962                                                        & 0.964                                                       & 0.875       & 0.976       & 0.974                                                       
 \end{tabular}\\
 
-There is not much difference between all four architectures. We thus settle with having a first layer with 16 feature maps.
+\noindent There is not much difference between all four architectures. We thus settle with having a first layer with 16 feature maps.
 
 \begin{figure}
 \centering
@@ -133,7 +133,7 @@ There is not much difference between all four architectures. We thus settle with
 
 \subsection{varying the number of hidden units}
 
-We now vary the number of hidden units in the connected layer, trying 100, 200, 500, 1000 hidden units. \\
+\noindent We now vary the number of hidden units in the connected layer, trying 100, 200, 500, 1000 hidden units. \\
 
 \begin{tabular}{c|c|c|c|c|c}
 \rowcolor[HTML]{C0C0C0} 
@@ -144,7 +144,7 @@ We now vary the number of hidden units in the connected layer, trying 100, 200, 
 1000 Hidden Units & 0.955                                                        & 0.953                                                       & 0.921       & 0.967       & 0.966                                                       
 \end{tabular}\\
 
-Again the statistics across all 4 cases are very similar except for the increasing sensitivity for the 500 and 1000 hidden unit architectures. We thus select to have 500 hidden units in the fully connected layer.
+\noindent Again the statistics across all 4 cases are very similar except for the increasing sensitivity for the 500 and 1000 hidden unit architectures. We thus select to have 500 hidden units in the fully connected layer.
 
 \begin{figure}
 \centering
@@ -154,7 +154,7 @@ Again the statistics across all 4 cases are very similar except for the increasi
 
 \subsection{varying the activation function}
 
-We experimented with different types of activation function: ReLU, Tanh, Sigmoid. Doing it with ReLU is better...\\
+\noindent We experimented with different types of activation function: ReLU, Tanh, Sigmoid. Doing it with ReLU is better...\\
 
 \begin{tabular}{c|c|c|c|c|c}
 \rowcolor[HTML]{C0C0C0} 
@@ -172,7 +172,7 @@ Sigmoid & 0.673                                                        & 0.987  
 
 \subsection{varying the type of pooling}
 
-We also tried different types of pooling: Max pooling and average pooling. Average Pooling is better.\\
+\noindent We also tried different types of pooling: Max pooling and average pooling. Average Pooling is better.\\
 
 \begin{tabular}{c|c|c|c|c|c}
 \rowcolor[HTML]{C0C0C0} 
@@ -189,27 +189,27 @@ Average Pooling & 0.953                                                        &
 
 \subsection{varying the learning rate}
 
-Tried different learning rates: 0.01, 0.05, 0.1, 0.5, 1. It seems that 0.1 is best. Having a learning rate of 1 doesn't train the network.  We omitted the results.
+\noindent Tried different learning rates: 0.01, 0.05, 0.1, 0.5, 1. It seems that 0.1 is best. Having a learning rate of 1 doesn't train the network.  We omitted the results.
 
 
 
 \subsection{varying the momentum}
 
-Tried different momentums: 0, 0.01, 0.05, 0.1. Having momentum actually slightly improves the test results!
+\noindent Tried different momentums: 0, 0.01, 0.05, 0.1. Having momentum actually slightly improves the test results!
 
 
 
 \subsection{varying the data size}
 
-Tried a number of dataset sizes: 400000, 1000000, 3000000: No improved result from the increased data size.
+\noindent Tried a number of dataset sizes: 400000, 1000000, 3000000: No improved result from the increased data size.
 
 \subsection{varying datasets type}
 
-The first thing we investigate is the sampling method for obtaining the training set. In order to increase the number of non-atrium training examples lying near the boundaries where we expect most of the classification errors to lie, we construct a rectangular area which contains the atrium. The atrium box is constructed by going through all the coordinates of the voxels labeled as being in the atrium, picking the minimum and maximum values in each of the coordinate planes, and possibly adding some padding, this procedure gives us a box containing the atrium. \\
+\noindent The first thing we investigate is the sampling method for obtaining the training set. In order to increase the number of non-atrium training examples lying near the boundaries where we expect most of the classification errors to lie, we construct a rectangular area which contains the atrium. The atrium box is constructed by going through all the coordinates of the voxels labeled as being in the atrium, picking the minimum and maximum values in each of the coordinate planes, and possibly adding some padding, this procedure gives us a box containing the atrium. \\
 
-We train our base CNN on 3 sampling procedures with no atrium box, i.e. all the non-atrium training examples are sampled randomly uniformly, a small atrium box constructed by the procedure above with a padding of 5 pixels in the x and y coordinate directions and of 1 pixel in the z coordinate direction, and finally a large atrium box with a padding of 30 pixels in the x and y coordinates and of 5 pixels in the z coordinate.\\
+\noindent We train our base CNN on 3 sampling procedures with no atrium box, i.e. all the non-atrium training examples are sampled randomly uniformly, a small atrium box constructed by the procedure above with a padding of 5 pixels in the x and y coordinate directions and of 1 pixel in the z coordinate direction, and finally a large atrium box with a padding of 30 pixels in the x and y coordinates and of 5 pixels in the z coordinate.\\
 
-The results of the three training runs are shown in Figure whatever. From the testing dice coefficient plot, we get a better classification rate with sampling using an atrium box than no atrium box and particularly with the smaller atrium box. In the segmentation mask, sampling with no atrium box clearly yields more errors in the proximity of the atrium but none away from it whereas there are some errors far away from the atrium from the models trained with the atrium box sampling procedure. This is a consequence of the sampling procedures in both cases. Sampling with an atrium box would naturally yield better segmentation results near the atrium as the proportion of training examples is much higher in those regions than without an atrium box around it.\\
+\noindent The results of the three training runs are shown in Figure whatever. From the testing dice coefficient plot, we get a better classification rate with sampling using an atrium box than no atrium box and particularly with the smaller atrium box. In the segmentation mask, sampling with no atrium box clearly yields more errors in the proximity of the atrium but none away from it whereas there are some errors far away from the atrium from the models trained with the atrium box sampling procedure. This is a consequence of the sampling procedures in both cases. Sampling with an atrium box would naturally yield better segmentation results near the atrium as the proportion of training examples is much higher in those regions than without an atrium box around it.\\
 
 
 
