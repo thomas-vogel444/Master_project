@@ -114,6 +114,7 @@ function train()
     trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
 
     -- next epoch
+    collectgarbage()
     confusion:zero()
     epoch = epoch + 1
 end
