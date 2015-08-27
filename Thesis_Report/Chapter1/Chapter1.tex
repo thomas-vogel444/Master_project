@@ -1,3 +1,45 @@
 \chapter{Introduction}
 
 Describe some high level background about Machine Learning, deep learning, CNNs, Medical Imaging, literature review style.
+
+\section{Deep Learning and Convolution Neural Networks}
+
+The high dimensionality of the data increases the learning complexity of the algorithms grow exponentially with linear increase in the dimensionality of the data. So the job of the data engineer is to find a representation of the data, also called features, which captures the information contained within it while reducing the learning complexity of the algorithms used. There are two approaches to dealing with this. One is called feature engineering where the features are humanly generated. This has arguably become the bulk of the data scientist work [reference]. A second is to learn the features as part of the learning process. This is the Deep Learning approach. The craze surrounding it has to do with the hope that a sparse representation of the data can be learned with little to no human interaction.\\
+
+The field of Deep learning arose from an inspiration about how the brain works in terms of the flow of information through layers of more and more abstract feature detections. The point is to train a hierarchical network of simple processing units called neurons or nodes on a large set of data to learn a good representation model of the data and then add a simple standard classification layer on top to do the classification. Learning in this context means finding a set of weights which makes the Neural Network exhibit desired behaviour (e.g. classify hand written-digits correctly). The complexity of the learning problem influences the depth of neural network required.\\
+
+The first neural networks with multiple, if few, layers date back to the 60s [reference] and have been around for decades. An efficient gradient based method for supervised learning problems that is widely used called the backpropagation method was developed then and applied to NN in 1981 [reference]. However there were many difficulties with training these NNs which were prohibitive and it was only starting in 2006 and a seminal paper [reference] by Hinton which made NN with many layers trainable in practice using a unsupervised pre-training approach. This has lead to a resurgence in the interest in NNs and Deep Belief Networks. \\
+
+Another major development was the introduction of Convolutional Neural Networks by LeCun [reference]. CNNs are a specialised type of Neural Network for certain grid-like structures that reduces the number of parameters via weight sharing. In particular, they have been remarkably effective on classification tasks on images, videos, and audio recordings providing state of the art performance on object recognition and speech tasks. They were introduced in 1998 in the context of MNIST data, a national competition whose object was the classification of hand-written digits. Ever since they have won many official international pattern recognition competitions and are the state of the art in many applications. A full historical account can be found in [reference].\\
+
+\section{Deep Learning in Medical Imaging}
+
+\subsection{What is medical imaging, how has it been done so far}
+
+Medical imaging is the technique and process of creating visual representations of the interior of a body for clinical analysis and medical intervention. Medical imaging seeks to reveal internal structures hidden by the skin and bones, as well as to diagnose and treat disease. They have traditionally been done by trained clinicians such as radiologist or histologists and usually involves a time consuming and expensive process that cannot be performed at a large scale. Efforts have been made to automate this process called Computer-Aided Detection systems which aim to improve the performance of radiologists as well as their efficacy in speed and cost.
+
+\subsection{Deep learning in medical imaging}
+
+Following the success of Deep Learning approaches to the various contests, there has been a recent effort to implement these models in the context of Medical Imaging, for instance, in the automation of image segmentation of various medical images such as CT, MRI, X-ray or Electron Microscopy images. These include approaches for the segmentation of the lungs [reference], biological neuron membrane [reference] to map 3D brain structure and connectivity, tibial cartilage [reference], detection of bone tissue in X-ray images [reference] and counting cell mitosis in histology images [reference] for cancer screening and assessment, amongst others.\\
+
+The segmentation process represents a first step necessary for any automatic method of extracting information from an image.
+
+The machine learning approach is to train a model to classify each voxel into its corresponding anatomical region given a training set consisting of labelled medical images.\\
+
+Automating this task would enable systematic segmentation of medical images on the fly as soon as these images are acquired. They could also be useful in the detection of anatomical abnormalities such in tumour detections.\\
+
+\section{Goal of the Thesis}
+
+This thesis takes direct inspiration from the paper on brain segmentation, where the entire brain was segmented into 140 different anatomical regions. It will propose a deep convolution neural network for the automated segmentation of chest CT scans into atrium and non-atrium parts using a tri-planar multi-scale approach. \\
+
+The second chapters discusses some background on neural networks and CNNs. The second chapter then describes the approach undertaken and presents a number of experimental results from model selection, the varying of dataset size and various sampling strategies. We will finish with some conclusions and a discussion of various other ways to improve upon our results.
+
+
+
+
+
+
+
+
+
+
