@@ -1,0 +1,5 @@
+scp tv15@montana-nvidia:~/master_project/experimental_results/varying_number_of_connected_layers/1_connected_layers/model.net 1_connected_layers/
+scp tv15@montana-nvidia:~/master_project/experimental_results/varying_number_of_connected_layers/2_connected_layers/model.net 2_connected_layers/
+scp tv15@montana-nvidia:~/master_project/experimental_results/varying_number_of_connected_layers/3_connected_layers/model.net 3_connected_layers/
+
+
