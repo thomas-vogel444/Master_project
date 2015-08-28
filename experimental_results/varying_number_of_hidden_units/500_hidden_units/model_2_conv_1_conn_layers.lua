@@ -2,7 +2,7 @@
 print '==> define parameters'
 
 -- hidden units, filter sizes (for ConvNet only):
-nfeaturemaps  = { 16, 32, 500 }
+nfeaturemaps  = { 32, 64, 500 }
 filtsize 	  = 5
 poolsize 	  = { 2, 2 }
 featuremaps_h = 5
