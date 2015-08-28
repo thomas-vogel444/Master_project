@@ -16,7 +16,7 @@
 \centering
 \begin{minipage}{0.45\textwidth}
 \centering
-\includegraphics[trim=2cm 8cm 2cm 8cm, clip=true, height=60mm]{Chapter3/example_slice.pdf}
+\includegraphics[trim=3cm 1.5cm 3cm 1.5cm, clip=true, height=60mm]{Chapter3/example_slice.png}
 \end{minipage}\hfill
 \begin{minipage}{0.45\textwidth}
 \centering
@@ -39,7 +39,7 @@
 
 \subsection{General approach for model selection}
 
-\noindent For the purpose of model selection, we allocated 20 of the 27 CT scans to the training set and the remaining 7 to a testing set. The training set is composed of 400000 training examples equally divided among the training CT scans, half being in the atrium and the other half outside it. The validation set is composed of 200000 testing examples equally divided among the testing CT scans. Furthermore at the end of training, each model fully segments a test CT scan from the testing set to provide performance statistics. In particular, from this segmentation image, we evaluate the model's sensitivity, which is the percentage of correctly classified atrium voxels, specificity, which is the percentage of correctly classified non-atrium voxels, and overall classification rate also known as the Dice coefficient, which is calculated by evaluating the proportion of correctly classified voxels in the segmented image. Model selection will be conducted on the basis of these three test statistics.
+\noindent For the purpose of model selection, we allocated 20 of the 27 CT scans to the training set and the remaining 7 to a testing set. The training set is composed of 400000 training examples equally divided among the training CT scans, half being in the atrium and the other half outside it. The validation set is composed of 200000 testing examples equally divided among the testing CT scans. Furthermore at the end of training, each model fully segments a test CT scan from the testing set to provide performance statistics. In particular, from this segmentation image, we evaluate the model's sensitivity, which is the percentage of correctly classified atrium voxels, specificity, which is the percentage of correctly classified non-atrium voxels, and overall classification rate also known as the Dice coefficient, which is calculated by evaluating the proportion of correctly classified voxels in the segmented image. As 98\% of the CT scan image is composed of non-atrium voxels, the Dice coefficient is overwhelmingly influenced by the specificity. We will conduct our model selection by selectively choosing hyper-parameters that optimise the Dice coefficient while having a reasonable sensitivity.\\
 
 Additionally, 3 transversal mask images are generated from the segmented CT scan, where the grey CT scan image is overlaid with colours representing the error status of a given voxel. These masks provide a visual element to the performance of the models. The colour codes are:
 
@@ -85,17 +85,17 @@ Additionally, 3 transversal mask images are generated from the segmented CT scan
 4 Conv L & 0.959                                                        & 0.956                                                       & 0.881       & 0.973       & 0.972                                                       
 \end{tabular}\\
 
-\noindent The three key statistics are the sensitivity, which is the percentage of correctly classified atrium voxels, the specificity, which is the percentage of correctly classified non-atrium voxels, and the Dice coefficient over the entire test CT scan which gives the overall correct classification rate. As only 1.8\% of the voxels are in the atrium, the specificity has an overbearing effect on the test Dice coefficient. The results in the table across the 4 architectures show a tradeoff between the two. \\
+\noindent The table above presents the key test statistics across the 4 architectures considered. The architecture with the best test Dice coefficient is the one with 2 convolutional layer, closely followed by the one with 3 convolutional layers, with dice coefficients of 0.984 and 0.983 respectively. These two architectures give low sensitivities of 0.734 and 0.762 respectively. However the architectures with 1 and 4 convolutional layers yield significantly lower Dice coefficients of 0.969 and 0.972 respectively, despite a much greater sensitivity of 0.913 and 0.881. \\
 
 \begin{figure}
 \centering
 \includegraphics[trim=2.5cm 1.5cm 2cm 1.5cm, clip=true, height=80mm, width=150mm]{Chapter3/mask_results_varying_number_of_convolutional_layers.png}
-\caption{Left: grey scale slices from a CT scan taken in the transversal, saggital and coronal planes.}
+\caption{Masks for varying number of convolutional layers}
 \end{figure}
 
-\noindent Figure whatever brings a visual element to this comparison. Each column shows the segmentation of a transversal slice of 3 different CT scan images. The first column corresponding to segmentations by the architecture with 1 convolutional layer as much larger pink patches, corresponding to false positives than the other two columns but with smaller red patches corresponding to false negatives, corroborating the story told by the sensitivity and specificity. There is not much difference between the masks of the second and third layers.\\
+\noindent Figure whatever brings a visual element to this comparison. The first and fourth columns correspond to segmentations by the architectures with 1 and 4 convolutional layers respectively. These show much larger pink patches, corresponding to higher rates of false positives than the other two columns but with smaller red regions corresponding to lower rates of false negatives, corroborating the story told by the sensitivity and specificity in the table above. There is not much difference between the masks of the second and third layers.\\
 
-\noindent On that basis we choose to go with having 2 convolutional layers. 
+\noindent We choose to go with the architecture with the highest Dice coefficient at this stage and thus select an architecture with 2 convolutional layers. 
 
 \subsection{varying number of connected layers}
 
@@ -112,32 +112,29 @@ Additionally, 3 transversal mask images are generated from the segmented CT scan
 \begin{figure}
 \centering
 \includegraphics[trim=2.5cm 1.5cm 2cm 1.5cm, clip=true, height=80mm, width=150mm]{Chapter3/mask_results_varying_number_of_connected_layers.png}
-\caption{Left: grey scale slices from a CT scan taken in the transversal, saggital and coronal planes.}
+\caption{Masks for varying number of connected layers}
 \end{figure}
 
-\noindent The results for 1 and 2 fully connected layer architecture are very similar with better sensitivity for the 1 connected layer. However the specificity for 3 connected layers decreases significantly bringing down its test dice coefficient. Figure whatever shows very similar masks for the 1 and 2 connected layers and larger errors for the third column. \\
-
-\noindent We choose to have 1 fully connected layer for our final architecture.
+\noindent All three architectures have similar performances on the test CT scan. The architectures with 1 and 2 connected layers in particular that have the highest Dice coefficients of the three have marginally different specificities of 0.972 and 0.974 respectively. The discrepancies between their sensitivities are somewhat more pronounced at 0.887 and 0.856 respectively. Figure whatever similarly shows very little differences in the colour profile of the masks for all three architectures. Thus it seems that adding extra connected layers doesn't make much difference to the performance of the classifier and hence we opt for having 1 fully connected layer in our final architecture.
 
 \subsection{varying number of feature maps}
 
-\noindent We now focus on finding the right number of feature maps for the convolutional layers. In order to keep the computation comparable between the 2 layers, we set the number of feature maps in the second layer to be twice that of the first layer. We tried configurations with the first layer having 16, 32, 64, and 128 feature maps. The summary of the results are shown below.\\
+\noindent We now focus on finding the right number of feature maps for the convolutional layers. In order to keep the computation comparable between the 2 layers, we set the number of feature maps in the second layer to be twice that of the first layer. We tried configurations with the first layer having 16, 32, and 64 feature maps. The summary of the results are shown below.\\
 
 \begin{tabular}{c|c|c|c|c|c}
 \rowcolor[HTML]{C0C0C0} 
             & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
 With 16 FM  & 0.956                                                        & 0.953                                                       & 0.919       & 0.967       & 0.966                                                        \\ \hline
 With 32 FM  & 0.957                                                        & 0.958                                                       & 0.894       & 0.972       & 0.970                                                        \\ \hline
-With 64 FM  & 0.959                                                        & 0.958                                                       & 0.904       & 0.971       & 0.970                                                        \\ \hline
-With 128 FM & 0.962                                                        & 0.964                                                       & 0.875       & 0.976       & 0.974                                                       
+With 64 FM  & 0.959                                                        & 0.958                                                       & 0.904       & 0.971       & 0.970                                                        
 \end{tabular}\\
 
-\noindent There is not much difference between all four architectures. We thus settle with having a first layer with 16 feature maps.
+\noindent Yet again there is not much difference between the performance of all three architectures. The two with the highest test Dice coefficients are the ones with the first layer having 32 and 64 feature maps both at 0.970 and very similar sensitivities around 0.9. The one with 16 feature maps yields a slightly lower specificity of 0.967 but a higher sensitivity of 0.919 with an overall lower Dice coefficient of 0.966. The masks show slight differences in the first row of images, with a larger pink region for the 16 feature map architecture. These statistics don't justify having twice as many feature maps, we opt for having 32 feature maps i the first layer of the architecture.
 
 \begin{figure}
 \centering
 \includegraphics[trim=2.5cm 1.5cm 2cm 1.5cm, clip=true, height=80mm, width=150mm]{Chapter3/mask_results_varying_number_of_feature_maps.png}
-\caption{Left: grey scale slices from a CT scan taken in the transversal, saggital and coronal planes.}
+\caption{Masks for varying number of feature maps}
 \end{figure}
 
 \subsection{varying the number of hidden units}
@@ -158,7 +155,7 @@ With 128 FM & 0.962                                                        & 0.9
 \begin{figure}
 \centering
 \includegraphics[trim=2.5cm 1.5cm 2cm 1.5cm, clip=true, height=80mm, width=150mm]{Chapter3/mask_results_varying_number_of_hidden_units.png}
-\caption{Left: grey scale slices from a CT scan taken in the transversal, saggital and coronal planes.}
+\caption{Masks for varying number of hidden units}
 \end{figure}
 
 \subsection{varying the activation function}
@@ -176,7 +173,7 @@ Sigmoid & 0.673                                                        & 0.987  
 \begin{figure}
 \centering
 \includegraphics[trim=2.5cm 1.5cm 2cm 1.5cm, clip=true, height=80mm, width=150mm]{Chapter3/mask_results_varying_activation_function.png}
-\caption{Left: grey scale slices from a CT scan taken in the transversal, saggital and coronal planes.}
+\caption{Masks for varying activation function}
 \end{figure}
 
 \subsection{varying the type of pooling}
@@ -193,7 +190,7 @@ Average Pooling & 0.953                                                        &
 \begin{figure}
 \centering
 \includegraphics[trim=2.5cm 1.5cm 2cm 1.5cm, clip=true, height=80mm, width=150mm]{Chapter3/mask_results_varying_pooling_function.png}
-\caption{Left: grey scale slices from a CT scan taken in the transversal, saggital and coronal planes.}
+\caption{Masks for varying pooling function.}
 \end{figure}
 
 \subsection{varying the learning rate}
@@ -212,18 +209,29 @@ Average Pooling & 0.953                                                        &
 \begin{figure}
 \centering
 \includegraphics[trim=2.5cm 1.5cm 2cm 1.5cm, clip=true, height=80mm, width=150mm]{Chapter3/mask_results_varying_learning_rate.png}
-\caption{Left: grey scale slices from a CT scan taken in the transversal, saggital and coronal planes.}
+\caption{Mask for varying learning rate.}
 \end{figure}
 
 \subsection{varying the momentum}
 
-\noindent Tried different momentums: 0, 0.01, 0.05, 0.1. Having momentum actually slightly improves the test results!
+\noindent Tried different momentums: 0, 0.01, 0.05, 0.1, 0.5, 1.
+
+\begin{tabular}{c|c|c|c|c|c}
+\rowcolor[HTML]{C0C0C0} 
+     & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
+0    & 0.972                                                        & 0.961                                                       & 0.951       & 0.975       & 0.974                                                        \\ \hline
+0.05 & 0.972                                                        & 0.965                                                       & 0.933       & 0.977       & 0.976                                                        \\ \hline
+0.1  & 0.972                                                        & 0.962                                                       & 0.945       & 0.975       & 0.975                                                        \\ \hline
+0.5  & 0.973                                                        & 0.969                                                       & 0.906       & 0.979       & 0.978                                                       
+\end{tabular} 
+
+\begin{figure}
+\centering
+\includegraphics[trim=2.5cm 1.5cm 2cm 1.5cm, clip=true, height=80mm, width=150mm]{Chapter3/mask_results_varying_momentum.png}
+\caption{Masks for varying momentum}
+\end{figure}
 
 
-
-\subsection{varying the data size}
-
-\noindent Tried a number of dataset sizes: 400000, 1000000, 3000000: No improved result from the increased data size.
 
 \subsection{varying datasets type}
 
@@ -232,6 +240,12 @@ Average Pooling & 0.953                                                        &
 \noindent We train our base CNN on 3 sampling procedures with no atrium box, i.e. all the non-atrium training examples are sampled randomly uniformly, a small atrium box constructed by the procedure above with a padding of 5 pixels in the x and y coordinate directions and of 1 pixel in the z coordinate direction, and finally a large atrium box with a padding of 30 pixels in the x and y coordinates and of 5 pixels in the z coordinate.\\
 
 \noindent The results of the three training runs are shown in Figure whatever. From the testing dice coefficient plot, we get a better classification rate with sampling using an atrium box than no atrium box and particularly with the smaller atrium box. In the segmentation mask, sampling with no atrium box clearly yields more errors in the proximity of the atrium but none away from it whereas there are some errors far away from the atrium from the models trained with the atrium box sampling procedure. This is a consequence of the sampling procedures in both cases. Sampling with an atrium box would naturally yield better segmentation results near the atrium as the proportion of training examples is much higher in those regions than without an atrium box around it.\\
+
+\subsection{varying the data size}
+
+\noindent Tried a number of dataset sizes: 400000, 1000000, 3000000
+
+
 
 
 
