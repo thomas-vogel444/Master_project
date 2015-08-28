@@ -24,7 +24,7 @@ if __name__ == "__main__":
 			"presavedModelPath"	: "",
 			"modelFilePath"		: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
 			"maxepoch"			: 100, 
-			"learningRate"		: 0.1, 
+			"learningRate"		: 0.01, 
 			"batchSize"			: 1500*4, 
 			"momentum"			: 0, 
 			"training_dataset" 	: os.path.join(dataset_directory,"no_atrium_box_training_dataset.hdf5"),
@@ -38,7 +38,7 @@ if __name__ == "__main__":
 			"modelFilePath"			: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
 			"activation_function"	: "ReLU",
 			"pooling_function"		: "SpatialAveragePooling",
-			"nfeaturemaps"  		: [16,32,500],
+			"nfeaturemaps"  		: [128,256,1000],
 			"filtsize" 	  			: 5,
 			"poolsize" 	  			: [2,2],
 			"featuremaps_h" 		: 5,
@@ -59,24 +59,34 @@ if __name__ == "__main__":
 	# ************************************************************************************************
 	model_template 		= "model_template_2_conv_1_conn_layers.lua"
 
-	experiment_name 	= "varying_sampling_type/no_atrium_box"
+	experiment_name 	= "varying_number_of_hidden_units/100_hidden_units"
 	training_parameters, model_parameters = get_base_parameters(experiment_name, model_template)
-	training_parameters["training_dataset"]  = os.path.join(dataset_directory,"no_atrium_box_training_dataset.hdf5")
+	model_parameters["nfeaturemaps"]  = [128,256,100]
 
 	start_experiment(training_parameters, model_parameters)
 
-	experiment_name 	= "varying_sampling_type/small_atrium_box"
+	model_template 		= "model_template_2_conv_1_conn_layers.lua"
+
+	experiment_name 	= "varying_number_of_hidden_units/200_hidden_units"
 	training_parameters, model_parameters = get_base_parameters(experiment_name, model_template)
-	training_parameters["training_dataset"]  = os.path.join(dataset_directory,"small_atrium_box_training_dataset.hdf5")
+	model_parameters["nfeaturemaps"]  = [128,256,200]
 
 	start_experiment(training_parameters, model_parameters)
 
-	experiment_name 	= "varying_sampling_type/large_atrium_box"
+	model_template 		= "model_template_2_conv_1_conn_layers.lua"
+
+	experiment_name 	= "varying_number_of_hidden_units/500_hidden_units"
 	training_parameters, model_parameters = get_base_parameters(experiment_name, model_template)
-	training_parameters["training_dataset"]  = os.path.join(dataset_directory,"large_atrium_box_training_dataset.hdf5")
+	model_parameters["nfeaturemaps"]  = [128,256,500]
 
 	start_experiment(training_parameters, model_parameters)
 
+	model_template 		= "model_template_2_conv_1_conn_layers.lua"
 
+	experiment_name 	= "varying_number_of_hidden_units/1000_hidden_units"
+	training_parameters, model_parameters = get_base_parameters(experiment_name, model_template)
+	model_parameters["nfeaturemaps"]  = [128,256,1000]
+
+	start_experiment(training_parameters, model_parameters)
 
 
