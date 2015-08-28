@@ -37,8 +37,8 @@ if __name__ == "__main__":
 			"modelTemplate" 		: model_template,
 			"modelFilePath"			: os.path.join(os.path.join(NN_code_directory, "models"), model_name),
 			"activation_function"	: "ReLU",
-			"pooling_function"		: "SpatialAveragePooling",
-			"nfeaturemaps"  		: [128,256,1000],
+			"pooling_function"		: "SpatialMaxPooling",
+			"nfeaturemaps"  		: [32,64,1000],
 			"filtsize" 	  			: 5,
 			"poolsize" 	  			: [2,2],
 			"featuremaps_h" 		: 5,
@@ -59,34 +59,32 @@ if __name__ == "__main__":
 	# ************************************************************************************************
 	model_template 		= "model_template_2_conv_1_conn_layers.lua"
 
-	experiment_name 	= "varying_number_of_hidden_units/100_hidden_units"
+	experiment_name 	= "varying_learning_rate/0_01"
 	training_parameters, model_parameters = get_base_parameters(experiment_name, model_template)
-	model_parameters["nfeaturemaps"]  = [128,256,100]
+	model_parameters["learningRate"]  = 0.01
 
 	start_experiment(training_parameters, model_parameters)
 
-	model_template 		= "model_template_2_conv_1_conn_layers.lua"
-
-	experiment_name 	= "varying_number_of_hidden_units/200_hidden_units"
+	experiment_name 	= "varying_learning_rate/0_05"
 	training_parameters, model_parameters = get_base_parameters(experiment_name, model_template)
-	model_parameters["nfeaturemaps"]  = [128,256,200]
+	model_parameters["learningRate"]  = 0.05
 
 	start_experiment(training_parameters, model_parameters)
 
-	model_template 		= "model_template_2_conv_1_conn_layers.lua"
-
-	experiment_name 	= "varying_number_of_hidden_units/500_hidden_units"
+	experiment_name 	= "varying_learning_rate/0_1"
 	training_parameters, model_parameters = get_base_parameters(experiment_name, model_template)
-	model_parameters["nfeaturemaps"]  = [128,256,500]
+	model_parameters["learningRate"]  = 0.1
 
 	start_experiment(training_parameters, model_parameters)
 
-	model_template 		= "model_template_2_conv_1_conn_layers.lua"
-
-	experiment_name 	= "varying_number_of_hidden_units/1000_hidden_units"
+	experiment_name 	= "varying_learning_rate/0_5"
 	training_parameters, model_parameters = get_base_parameters(experiment_name, model_template)
-	model_parameters["nfeaturemaps"]  = [128,256,1000]
+	model_parameters["learningRate"]  = 0.5
 
 	start_experiment(training_parameters, model_parameters)
 
+	experiment_name 	= "varying_learning_rate/1"
+	training_parameters, model_parameters = get_base_parameters(experiment_name, model_template)
+	model_parameters["learningRate"]  = 1
 
+	start_experiment(training_parameters, model_parameters)
