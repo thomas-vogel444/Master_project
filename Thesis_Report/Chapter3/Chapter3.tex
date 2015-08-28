@@ -16,7 +16,7 @@
 \centering
 \begin{minipage}{0.45\textwidth}
 \centering
-\includegraphics[trim=2cm 8cm 2cm 8cm, clip=true, height=60mm]{Chapter3/example_slice.pdf}
+\includegraphics[trim=3cm 1.5cm 3cm 1.5cm, clip=true, height=60mm]{Chapter3/example_slice.png}
 \end{minipage}\hfill
 \begin{minipage}{0.45\textwidth}
 \centering
@@ -39,7 +39,7 @@
 
 \subsection{General approach for model selection}
 
-\noindent For the purpose of model selection, we allocated 20 of the 27 CT scans to the training set and the remaining 7 to a testing set. The training set is composed of 400000 training examples equally divided among the training CT scans, half being in the atrium and the other half outside it. The validation set is composed of 200000 testing examples equally divided among the testing CT scans. Furthermore at the end of training, each model fully segments a test CT scan from the testing set to provide performance statistics. In particular, from this segmentation image, we evaluate the model's sensitivity, which is the percentage of correctly classified atrium voxels, specificity, which is the percentage of correctly classified non-atrium voxels, and overall classification rate also known as the Dice coefficient, which is calculated by evaluating the proportion of correctly classified voxels in the segmented image. Model selection will be conducted on the basis of these three test statistics.
+\noindent For the purpose of model selection, we allocated 20 of the 27 CT scans to the training set and the remaining 7 to a testing set. The training set is composed of 400000 training examples equally divided among the training CT scans, half being in the atrium and the other half outside it. The validation set is composed of 200000 testing examples equally divided among the testing CT scans. Furthermore at the end of training, each model fully segments a test CT scan from the testing set to provide performance statistics. In particular, from this segmentation image, we evaluate the model's sensitivity, which is the percentage of correctly classified atrium voxels, specificity, which is the percentage of correctly classified non-atrium voxels, and overall classification rate also known as the Dice coefficient, which is calculated by evaluating the proportion of correctly classified voxels in the segmented image. As 98\% of the CT scan image is composed of non-atrium voxels, the Dice coefficient is overwhelmingly influenced by the specificity. We will conduct our model selection by selectively choosing hyper-parameters that optimise the Dice coefficient while having a reasonable sensitivity.\\
 
 Additionally, 3 transversal mask images are generated from the segmented CT scan, where the grey CT scan image is overlaid with colours representing the error status of a given voxel. These masks provide a visual element to the performance of the models. The colour codes are:
 
@@ -85,7 +85,7 @@ Additionally, 3 transversal mask images are generated from the segmented CT scan
 4 Conv L & 0.959                                                        & 0.956                                                       & 0.881       & 0.973       & 0.972                                                       
 \end{tabular}\\
 
-\noindent The three key statistics are the sensitivity, the specificity and the Dice coefficient over the entire test CT scan. As only 1.8\% of its voxels are in the atrium, the specificity has an overbearing effect on the test Dice coefficient and thus takes priority when selecting models. The table above shows a tradeoff between the two across the 4 architectures. While the 1 convolutional layer architecture has the highest sensitivity at 0.913, it also yields the lowest specificity at 0.970, test statistics very close to the 4 convolutional layer architecture. The architectures with 2 and 3 convolutional layers have similar test statistics with relatively low specificities at 0.734 and 0.762 respectively and high specificities at 0.989 and 0.987 respectively.\\
+\noindent The table above presents the key test statistics across the 4 architectures considered. The architecture with the best test Dice coefficient is the one with 2 convolutional layer, closely followed by the one with 3 convolutional layers, with dice coefficients of 0.984 and 0.983 respectively. These two architectures give low sensitivities of 0.734 and 0.762 respectively. However the architectures with 1 and 4 convolutional layers yield significantly lower Dice coefficients of 0.969 and 0.972 respectively, despite a much greater sensitivity of 0.913 and 0.881. \\
 
 \begin{figure}
 \centering
@@ -93,9 +93,9 @@ Additionally, 3 transversal mask images are generated from the segmented CT scan
 \caption{Masks for varying number of convolutional layers}
 \end{figure}
 
-\noindent Figure whatever brings a visual element to this comparison. Each column shows the segmentation of 3 different transversal slices of the test CT scan image. The first and fourth columns corresponding to segmentations by the architectures with 1 and 4 convolutional layers respectively show much larger pink patches, corresponding to higher rates of false positives than the other two columns but with smaller red regions corresponding to lower rates of false negatives, corroborating the story told by the sensitivity and specificity in the table above. There is not much difference between the masks of the second and third layers.\\
+\noindent Figure whatever brings a visual element to this comparison. The first and fourth columns correspond to segmentations by the architectures with 1 and 4 convolutional layers respectively. These show much larger pink patches, corresponding to higher rates of false positives than the other two columns but with smaller red regions corresponding to lower rates of false negatives, corroborating the story told by the sensitivity and specificity in the table above. There is not much difference between the masks of the second and third layers.\\
 
-\noindent We choose to go with having a higher specificity at this stage and thus select an architecture with 2 convolutional layers. 
+\noindent We choose to go with the architecture with the highest Dice coefficient at this stage and thus select an architecture with 2 convolutional layers. 
 
 \subsection{varying number of connected layers}
 
@@ -115,7 +115,7 @@ Additionally, 3 transversal mask images are generated from the segmented CT scan
 \caption{Masks for varying number of connected layers}
 \end{figure}
 
-\noindent All three architectures have similar performances on the test CT scan with specificities around 0.97 and sensitivities around 0.9. Figure whatever shows very little differences in the colour profile of the masks for all three architectures. Thus it seems that adding extra connected layers doesn't make much difference to the performance of the classifier and hence we opt for having 1 fully connected layer in our final architecture.
+\noindent All three architectures have similar performances on the test CT scan. The architectures with 1 and 2 connected layers in particular that have the highest Dice coefficients of the three have marginally different specificities of 0.972 and 0.974 respectively. The discrepancies between their sensitivities are somewhat more pronounced at 0.887 and 0.856 respectively. Figure whatever similarly shows very little differences in the colour profile of the masks for all three architectures. Thus it seems that adding extra connected layers doesn't make much difference to the performance of the classifier and hence we opt for having 1 fully connected layer in our final architecture.
 
 \subsection{varying number of feature maps}
 
@@ -129,7 +129,7 @@ With 32 FM  & 0.957                                                        & 0.9
 With 64 FM  & 0.959                                                        & 0.958                                                       & 0.904       & 0.971       & 0.970                                                        
 \end{tabular}\\
 
-\noindent Yet again there is not much difference between the performance of all four architectures. The specificities and sensitivities are around 0.97 and 0.9 respectively. We thus settle with having a first layer with 32 feature maps.
+\noindent Yet again there is not much difference between the performance of all three architectures. The two with the highest test Dice coefficients are the ones with the first layer having 32 and 64 feature maps both at 0.970 and very similar sensitivities around 0.9. The one with 16 feature maps yields a slightly lower specificity of 0.967 but a higher sensitivity of 0.919 with an overall lower Dice coefficient of 0.966. The masks show slight differences in the first row of images, with a larger pink region for the 16 feature map architecture. These statistics don't justify having twice as many feature maps, we opt for having 32 feature maps i the first layer of the architecture.
 
 \begin{figure}
 \centering
