@@ -59,26 +59,26 @@ if __name__ == "__main__":
 	# ************************************************************************************************
 	model_template 		= "model_template_2_conv_1_conn_layers.lua"
 
-	experiment_name 	= "varying_momentum/0"
+	experiment_name 	= "varying_learning_rate/0_01"
 	training_parameters, model_parameters = get_base_parameters(experiment_name, model_template)
-	model_parameters["momentum"]  = 0
+	training_parameters["learningRate"]  = 0.01
 
 	start_experiment(training_parameters, model_parameters)
 
-	experiment_name 	= "varying_momentum/0_05"
+	experiment_name 	= "varying_learning_rate/0_05"
 	training_parameters, model_parameters = get_base_parameters(experiment_name, model_template)
-	model_parameters["momentum"]  = 0.05
+	training_parameters["learningRate"]  = 0.05
 
 	start_experiment(training_parameters, model_parameters)
 
-	experiment_name 	= "varying_momentum/0_1"
+	experiment_name 	= "varying_learning_rate/0_1"
 	training_parameters, model_parameters = get_base_parameters(experiment_name, model_template)
-	model_parameters["momentum"]  = 0.1
+	training_parameters["learningRate"]  = 0.1
 
 	start_experiment(training_parameters, model_parameters)
 
-	experiment_name 	= "varying_momentum/0_5"
+	experiment_name 	= "varying_learning_rate/0_5"
 	training_parameters, model_parameters = get_base_parameters(experiment_name, model_template)
-	model_parameters["momentum"]  = 0.5
+	training_parameters["learningRate"]  = 0.5
 
 	start_experiment(training_parameters, model_parameters)
