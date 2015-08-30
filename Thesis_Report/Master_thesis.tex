@@ -15,7 +15,7 @@
 \usepackage{float}
 %\floatstyle{boxed} 
 \restylefloat{figure}
-
+\usepackage{listings}
 \usepackage{graphicx}
 %\graphicspath{{figures/}} % Useful if you have lots of images and want to keep thinks tidy by having a subfolder for images
 %\usepackage{tikz} %For creating vector-graphics diagrams, flowcharts etc directly in LaTeX (takes some time to learn)
@@ -24,8 +24,10 @@
 
 %%% Referencing and cross-referencing
 \usepackage[colorlinks=false,pdfborder={0 0 0},plainpages=false,pdfpagelabels]{hyperref} % If you click on an item in the table of contents or a referenced equation/figure number, the PDF will go to the desired page. Neat isn't it?
-\usepackage[round,authoryear,sort]{natbib} % Enable bibtex-based bibliography generation
-%\usepackage[square,numbers,sort&compress]{natbib} % If you want numbered referencing instead of author-year style.
+
+%\usepackage[round,authoryear,sort]{natbib} % Enable bibtex-based bibliography generation
+%\usepackage{cite}
+\usepackage[square,numbers,sort&compress]{natbib} % If you want numbered referencing instead of author-year style.
 
 %\setcounter{secnumdepth}{3} %If you want subsubsections to be numbered
 \numberwithin{equation}{chapter} % Reset equation numbers after each chapter.
@@ -147,5 +149,16 @@ Include an acknowledgement.
 \include{Chapter3/Chapter3}
 \include{Chapter4/Chapter4}
 %\include{Chapter5}
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{\bibname} % Add an entry for the Bibliography in the Table of Contents
+
+\bibliography{my_bibliography}
+\bibliographystyle{plain}
+
+\cleardoublepage 
+
+\include{Code_Appendix}
 
 \end{document}

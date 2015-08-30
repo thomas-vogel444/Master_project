@@ -76,13 +76,13 @@ Additionally, 3 transversal mask images are generated from the segmented CT scan
 
 \noindent These convolutional layers are then followed by two fully connected layers with 1000 and 500 hidden layers each. The following table gives the results for each of these architectures trained over 100 epochs.\\
 
-\begin{tabular}{c|c|c|c|c|c}
+\begin{tabular}{cccccc}
 \rowcolor[HTML]{C0C0C0} 
-         & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
-1 Conv L & 0.959                                                        & 0.956                                                       & 0.913       & 0.970       & 0.969                                                        \\ \hline
-2 Conv L & 0.958                                                        & 0.961                                                       & 0.734       & 0.989       & 0.984                                                        \\ \hline
-3 Conv L & 0.956                                                        & 0.960                                                       & 0.762       & 0.987       & 0.983                                                        \\ \hline
-4 Conv L & 0.959                                                        & 0.956                                                       & 0.881       & 0.973       & 0.972                                                       
+        \# Conv Layers & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
+1  & 0.959                                                        & 0.956                                                       & 0.913       & 0.970       & 0.969                                                        \\ 
+2  & 0.958                                                        & 0.961                                                       & 0.734       & 0.989       & 0.984                                                        \\ 
+3  & 0.956                                                        & 0.960                                                       & 0.762       & 0.987       & 0.983                                                        \\ 
+4  & 0.959                                                        & 0.956                                                       & 0.881       & 0.973       & 0.972                                                       
 \end{tabular}\\
 
 \noindent The table above presents the key test statistics across the 4 architectures considered. The architecture with the best test Dice coefficient is the one with 2 convolutional layer, closely followed by the one with 3 convolutional layers, with dice coefficients of 0.984 and 0.983 respectively. These two architectures give low sensitivities of 0.734 and 0.762 respectively. However the architectures with 1 and 4 convolutional layers yield significantly lower Dice coefficients of 0.969 and 0.972 respectively, despite a much greater sensitivity of 0.913 and 0.881. \\
@@ -101,12 +101,12 @@ Additionally, 3 transversal mask images are generated from the segmented CT scan
 
 \noindent Having settled on an architecture with 2 convolutional layers, we now train 3 CNNs with 1, 2, and 3 fully connected layers each starting with 1000 hidden units and halving the number of hidden units for each additional layer. Hence the CNN with 3 fully connected layers has 1000, 500, and 250 hidden units in each layer respectively. The results are shown in the following table.\\
 
-\begin{tabular}{c|c|c|c|c|c}
+\begin{tabular}{cccccc}
 \rowcolor[HTML]{C0C0C0} 
-              & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
-1 Connected L & 0.957                                                        & 0.959                                                       & 0.887       & 0.972       & 0.971                                                        \\ \hline
-2 Connected L & 0.958                                                        & 0.961                                                       & 0.856       & 0.974       & 0.972                                                        \\ \hline
-3 Connected L & 0.953                                                        & 0.951                                                       & 0.915       & 0.967       & 0.966                                                       
+             \begin{tabular}[c]{@{}c@{}}\# Connected \\ Layers \end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
+1  & 0.957                                                        & 0.959                                                       & 0.887       & 0.972       & 0.971                                                        \\ 
+2  & 0.958                                                        & 0.961                                                       & 0.856       & 0.974       & 0.972                                                        \\ 
+3  & 0.953                                                        & 0.951                                                       & 0.915       & 0.967       & 0.966                                                       
 \end{tabular}\\
 
 \begin{figure}
@@ -121,12 +121,12 @@ Additionally, 3 transversal mask images are generated from the segmented CT scan
 
 \noindent We now focus on finding the right number of feature maps for the convolutional layers. In order to keep the computation comparable between the 2 layers, we set the number of feature maps in the second layer to be twice that of the first layer. We tried configurations with the first layer having 16, 32, and 64 feature maps. The summary of the results are shown below.\\
 
-\begin{tabular}{c|c|c|c|c|c}
+\begin{tabular}{cccccc}
 \rowcolor[HTML]{C0C0C0} 
-            & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
-With 16 FM  & 0.956                                                        & 0.953                                                       & 0.919       & 0.967       & 0.966                                                        \\ \hline
-With 32 FM  & 0.957                                                        & 0.958                                                       & 0.894       & 0.972       & 0.970                                                        \\ \hline
-With 64 FM  & 0.959                                                        & 0.958                                                       & 0.904       & 0.971       & 0.970                                                        
+          \begin{tabular}[c]{@{}c@{}}\# Feature \\ Maps \end{tabular}  & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
+ 16  & 0.956                                                        & 0.953                                                       & 0.919       & 0.967       & 0.966                                                        \\ 
+ 32  & 0.957                                                        & 0.958                                                       & 0.894       & 0.972       & 0.970                                                        \\ 
+ 64  & 0.959                                                        & 0.958                                                       & 0.904       & 0.971       & 0.970                                                        
 \end{tabular}\\
 
 \noindent Yet again there is not much difference between the performance of all three architectures. The two with the highest test Dice coefficients are the ones with the first layer having 32 and 64 feature maps both at 0.970 and very similar sensitivities around 0.9. The one with 16 feature maps yields a slightly lower specificity of 0.967 but a higher sensitivity of 0.919 with an overall lower Dice coefficient of 0.966. The masks show slight differences in the first row of images, with a larger pink region for the 16 feature map architecture. These statistics don't justify having twice as many feature maps, we opt for having 32 feature maps i the first layer of the architecture.
@@ -141,16 +141,16 @@ With 64 FM  & 0.959                                                        & 0.9
 
 \noindent We now vary the number of hidden units in the connected layer, trying 100, 200, 500, 1000 hidden units. \\
 
-\begin{tabular}{c|c|c|c|c|c}
+\begin{tabular}{cccccc}
 \rowcolor[HTML]{C0C0C0} 
-                  & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
-100 Hidden Units  & 0.956                                                        & 0.957                                                       & 0.902       & 0.969       & 0.967                                                        \\ \hline
-200 Hidden Units  & 0.955                                                        & 0.957                                                       & 0.913       & 0.968       & 0.967                                                        \\ \hline
-500 Hidden Units  & 0.956                                                        & 0.953                                                       & 0.921       & 0.967       & 0.966                                                        \\ \hline
-1000 Hidden Units & 0.955                                                        & 0.953                                                       & 0.921       & 0.967       & 0.966                                                       
+                 \begin{tabular}[c]{@{}c@{}}\# Hidden \\ Units \end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
+100   & 0.956                                                        & 0.958                                                       & 0.879       & 0.972       & 0.97                                                         \\ 
+200   & 0.958                                                        & 0.957                                                       & 0.878       & 0.971       & 0.97                                                         \\ 
+500   & 0.957                                                        & 0.955                                                       & 0.894       & 0.97        & 0.968                                                        \\ 
+1000  & 0.957                                                        & 0.958                                                       & 0.892       & 0.972       & 0.97                                                        
 \end{tabular}\\
 
-\noindent Again the statistics across all 4 cases are very similar except for the increasing sensitivity for the 500 and 1000 hidden unit architectures. We thus select to have 500 hidden units in the fully connected layer.
+\noindent Here the test statistics across all 4 architectures are very similar with a specificity around 0.97 and a sensitivity around 0.89. Given the tie, we select the simpler model with 100 hidden units.
 
 \begin{figure}
 \centering
@@ -162,11 +162,11 @@ With 64 FM  & 0.959                                                        & 0.9
 
 \noindent We experimented with different types of activation function: ReLU, Tanh, Sigmoid. Doing it with ReLU is better...\\
 
-\begin{tabular}{c|c|c|c|c|c}
+\begin{tabular}{cccccc}
 \rowcolor[HTML]{C0C0C0} 
-        & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
-ReLU    & 0.956                                                        & 0.953                                                       & 0.923       & 0.967       & 0.966                                                        \\ \hline
-Tanh    & 0.956                                                        & 0.942                                                       & 0.942       & 0.955       & 0.955                                                        \\ \hline
+       \begin{tabular}[c]{@{}c@{}}Activation \\ Function\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
+ReLU    & 0.956                                                        & 0.953                                                       & 0.923       & 0.967       & 0.966                                                        \\ 
+Tanh    & 0.956                                                        & 0.942                                                       & 0.942       & 0.955       & 0.955                                                        \\ 
 Sigmoid & 0.673                                                        & 0.987                                                       & 0.0         & 1.0         & 0.982                                                       
 \end{tabular}
 
@@ -180,11 +180,11 @@ Sigmoid & 0.673                                                        & 0.987  
 
 \noindent We also tried different types of pooling: Max pooling and average pooling. Average Pooling is better.\\
 
-\begin{tabular}{c|c|c|c|c|c}
+\begin{tabular}{cccccc}
 \rowcolor[HTML]{C0C0C0} 
-                & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
-Max Pooling     & 0.956                                                        & 0.953                                                       & 0.923       & 0.967       & 0.966                                                        \\ \hline
-Average Pooling & 0.953                                                        & 0.95                                                        & 0.937       & 0.964       & 0.963                                                       
+               \begin{tabular}[c]{@{}c@{}}Pooling \\ Function\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
+Max      & 0.956                                                        & 0.953                                                       & 0.923       & 0.967       & 0.966                                                        \\ 
+Average  & 0.953                                                        & 0.95                                                        & 0.937       & 0.964       & 0.963                                                       
 \end{tabular}
 
 \begin{figure}
@@ -195,15 +195,18 @@ Average Pooling & 0.953                                                        &
 
 \subsection{varying the learning rate}
 
-\noindent Tried different learning rates: 0.01, 0.05, 0.1, 0.5. It seems that 0.1 is best. Having a learning rate of 0.5 doesn't train the network.  
+\noindent Tried different learning rates: 0.01, 0.05, 0.1, 0.5. Huge improvement as we increase the learning rate. A learning rate of 1 doesn't converge. We take LR = 0.5.
 
-\begin{tabular}{c|c|c|c|c|c}
-\rowcolor[HTML]{C0C0C0} 
-     & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
-0.01 & 0.953                                                        & 0.95                                                        & 0.936       & 0.964       & 0.963                                                        \\ \hline
-0.05 & 0.968                                                        & 0.958                                                       & 0.935       & 0.972       & 0.971                                                        \\ \hline
-0.1  & 0.973                                                        & 0.963                                                       & 0.946       & 0.976       & 0.975                                                        \\ \hline
-0.5  & 0.667                                                        & 0.987                                                       & 0.0         & 1.0         & 0.982                                                       
+\begin{tabular}{cccccc}
+\begin{tabular}[c]{@{}c@{}}Learning\\ Rate\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
+\rowcolor[HTML]{FFFFFF} 
+LR 0.01                                                 & 0.956                                                        & 0.957                                                       & 0.885       & 0.971       & 0.97                                                         \\
+\rowcolor[HTML]{FFFFFF} 
+LR 0.05                                                 & 0.97                                                         & 0.97                                                        & 0.915       & 0.977       & 0.976                                                        \\ 
+\rowcolor[HTML]{FFFFFF} 
+LR 0.1                                                  & 0.973                                                        & 0.973                                                       & 0.916       & 0.98        & 0.978                                                        \\
+\rowcolor[HTML]{FFFFFF} 
+LR 0.5                                                  & 0.982                                                        & 0.973                                                       & 0.932       & 0.982       & 0.981                                                       
 \end{tabular}
 
 \begin{figure}
@@ -216,22 +219,24 @@ Average Pooling & 0.953                                                        &
 
 \noindent Tried different momentums: 0, 0.01, 0.05, 0.1, 0.5, 1.
 
-\begin{tabular}{c|c|c|c|c|c}
+\begin{tabular}{cccccc}
 \rowcolor[HTML]{C0C0C0} 
-     & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
-0    & 0.972                                                        & 0.961                                                       & 0.951       & 0.975       & 0.974                                                        \\ \hline
-0.05 & 0.972                                                        & 0.965                                                       & 0.933       & 0.977       & 0.976                                                        \\ \hline
-0.1  & 0.972                                                        & 0.962                                                       & 0.945       & 0.975       & 0.975                                                        \\ \hline
-0.5  & 0.973                                                        & 0.969                                                       & 0.906       & 0.979       & 0.978                                                       
-\end{tabular} 
+Momentum & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
+\rowcolor[HTML]{FFFFFF} 
+0        & 0.982                                                        & 0.973                                                       & 0.906       & 0.982       & 0.981                                                        \\ 
+\rowcolor[HTML]{FFFFFF} 
+0.05     & 0.979                                                        & 0.973                                                       & 0.916       & 0.916       & 0.979                                                        \\ 
+\rowcolor[HTML]{FFFFFF} 
+0.1      & 0.983                                                        & 0.976                                                       & 0.9         & 0.9         & 0.982                                                        \\
+\rowcolor[HTML]{FFFFFF} 
+0.5      & 0.985                                                        & 0.981                                                       & 0.83        & 0.83        & 0.985                                                       
+\end{tabular}
 
 \begin{figure}
 \centering
 \includegraphics[trim=2.5cm 1.5cm 2cm 1.5cm, clip=true, height=80mm, width=150mm]{Chapter3/mask_results_varying_momentum.png}
 \caption{Masks for varying momentum}
 \end{figure}
-
-
 
 \subsection{varying datasets type}
 
@@ -241,7 +246,24 @@ Average Pooling & 0.953                                                        &
 
 \noindent The results of the three training runs are shown in Figure whatever. From the testing dice coefficient plot, we get a better classification rate with sampling using an atrium box than no atrium box and particularly with the smaller atrium box. In the segmentation mask, sampling with no atrium box clearly yields more errors in the proximity of the atrium but none away from it whereas there are some errors far away from the atrium from the models trained with the atrium box sampling procedure. This is a consequence of the sampling procedures in both cases. Sampling with an atrium box would naturally yield better segmentation results near the atrium as the proportion of training examples is much higher in those regions than without an atrium box around it.\\
 
+\begin{tabular}{cccccc}
+\rowcolor[HTML]{C0C0C0} 
+\begin{tabular}[c]{@{}c@{}}Training\\ Dataset\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
+\rowcolor[HTML]{FFFFFF} 
+No Atrium Box                                              & 0.982                                                        & 0.978                                                       & 0.881       & 0.986       & 0.984                                                        \\
+\rowcolor[HTML]{FFFFFF} 
+Small Atrium Box                                           & 0.96                                                         & 0.987                                                       & 0.838       & 0.994       & 0.991                                                        \\
+\rowcolor[HTML]{FFFFFF} 
+Large Atrium Box                                           & 0.963                                                        & 0.983                                                       & 0.871       & 0.989       & 0.987                                                       
+\end{tabular}
+
 \subsection{varying the data size}
+
+\begin{figure}
+\centering
+\includegraphics[trim=2.5cm 1.5cm 2cm 1.5cm, clip=true, height=80mm, width=150mm]{Chapter3/mask_results_varying_training_dataset.png}
+\caption{Masks for varying momentum}
+\end{figure}
 
 \noindent Tried a number of dataset sizes: 400000, 1000000, 3000000
 
