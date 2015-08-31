@@ -15,7 +15,6 @@
 \usepackage{float}
 %\floatstyle{boxed} 
 \restylefloat{figure}
-\usepackage{listings}
 \usepackage{graphicx}
 %\graphicspath{{figures/}} % Useful if you have lots of images and want to keep thinks tidy by having a subfolder for images
 %\usepackage{tikz} %For creating vector-graphics diagrams, flowcharts etc directly in LaTeX (takes some time to learn)
@@ -31,6 +30,36 @@
 
 %\setcounter{secnumdepth}{3} %If you want subsubsections to be numbered
 \numberwithin{equation}{chapter} % Reset equation numbers after each chapter.
+
+\usepackage{hyperref}
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstdefinestyle{myLuastyle}
+{frame=tb,
+  language={[5.0]Lua},
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\usepackage[toc,page]{appendix}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% Define how to create the title page  %%%%%%%%%%%%%%%%

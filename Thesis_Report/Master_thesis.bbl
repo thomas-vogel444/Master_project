@@ -10,6 +10,11 @@ Christopher~M. Bishop.
 \newblock {\em Neural Networks for Pattern Recognition}.
 \newblock Oxford University Press, Inc., New York, NY, USA, 1995.
 
+\bibitem{DBLP:journals/corr/BrebissonM15}
+Alexandre de~Brebisson and Giovanni Montana.
+\newblock Deep neural networks for anatomical brain segmentation.
+\newblock {\em CoRR}, abs/1502.02445, 2015.
+
 \bibitem{NYT_article}
 John Markoff.
 \newblock Scientists see promise in deep-learning programs.
@@ -19,6 +24,13 @@ John Markoff.
 Michael~A. Nielsen.
 \newblock {\em Neural Networks and Deep Learning}.
 \newblock Determination Press, 2015.
+
+\bibitem{knee_cartilage}
+Adhish Prasoon, {Peter Kersten} Petersen, Christian Igel, {Francois Bernard}
+  Lauze, Erik Dam, and Mads Nielsen.
+\newblock {\em Deep feature learning for knee cartilage segmentation using a
+  triplanar convolutional neural network}, pages 246--253.
+\newblock Lecture Notes in Computer Science. Springer, 2013.
 
 \bibitem{Deep_Learning_overview}
 J.~Schmidhuber.
