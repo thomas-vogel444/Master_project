@@ -2,18 +2,15 @@
 
 \section{The Data}
 
-\noindent The aim of this thesis is to implement, and then fine-tune, a CNN to classify voxels of chest computerised tomography (CT) scan as being either in the part of the heart called the atrium or outside it. The atrium is composed of two chambers called the right and left atrium which are the two entry points of the blood into the heart, one returning to the heart to complete the cardiovascular cycle through the body and the other coming back from the lungs after being oxygenated and purified of toxins.\\
+\noindent The aim of this thesis is to implement, and then fine-tune, a CNN to classify voxels of chest computerised tomography (CT) scan as being either in the part of the heart called the atrium or outside of it. The atrium is the two entry point of the blood into the heart. It is composed of two chambers: a right one which recovers blood returning to the heart to complete the cardiovascular cycle through the body, and a left one receiving blood coming back from the lungs after being oxygenated and purified of toxins.\\
 
-\noindent The data from which the training and testing datasets are generated comprise 27 CT scans. CT scans are 3 dimensional grey scale images, generally of size 480*480*50, generated via computers combining many X-ray images taken from different angles to produce cross-sectional images of specific body parts. They are stored as DICOM files, DICOM standing for Digital Imaging and Communications in Medicine which is a standard for handling, storing, printing, and transmitting information in medical imaging. Each has been segmented by trained radiologists at St Thomas's hospital, the results of which are stored in Nearly Raw Raster Data (NRRD) files, a standard format for storing raster data. These are 3D arrays of the same dimension, each entry being either a 1 or 0 indicating whether the corresponding voxel in the CT scan is in the Atrium or not. 
+\noindent The data from which the training and testing datasets are generated comprise 27 CT scans. CT scans are 3 dimensional grey scale images, generally of size 480*480*50, generated via computers combining many X-ray images taken from different angles to produce cross-sectional images of specific body parts. They are stored as DICOM files, DICOM standing for Digital Imaging and Communications in Medicine which is a standard for handling, storing, printing, and transmitting information in medical imaging. Each has been segmented by trained radiologists at St Thomas's hospital, the results of which are stored in Nearly Raw Raster Data (NRRD) files, a standard format for storing raster data. These are 3D arrays of the same dimension as their corresponding CT scan with each entry being either a 1 or 0 indicating whether its corresponding voxel belongs in the atrium or not. 
 
 \section{Generating the datasets: The Tri-Planar Method}
 
-\noindent Classifying the voxels require building a set of input vectors each containing enough local and global information to allow the Neural Network to learn effectively. One way of providing 3 dimensional information is to use the tri-planar method. This consists in generating 3 perpendicular square patches of a given dimension in the transversal, saggital and coronal planes centred at the voxel of interest as shown in Figure whatever. This standard technique has been found to give competitive results compared to using 3D patches while being much more computationally and memory efficient [reference the paper that started it on knee cartilage]. In addition, we use a multiscale approach where we add 3 more input channels composed of compressed patches that are originally 5 times larger than the above set of patches, resized to the same size to provide global information about the surroundings of the concerned voxel.\\
-
-\noindent Each patch is fed into a different input channel of the Convolutional Neural Network with one or more convolutional layers. The outputs of those channels are then feed as inputs to a set of connected layers itself connected to a classifying layer as output layer.
-
 \begin{figure}
 \centering
+\label{tri-planar}
 \begin{minipage}{0.45\textwidth}
 \centering
 \includegraphics[trim=3cm 1.5cm 3cm 1.5cm, clip=true, height=60mm]{Chapter3/example_slice.png}
@@ -25,45 +22,48 @@
 \caption{Left: grey scale slices from a CT scan taken in the transversal, saggital and coronal planes. Right: illustration of the triplanar}
 \end{figure}
 
+\noindent Classifying the voxels requires building a set of input vectors each containing enough local and global information to allow the neural network to learn effectively. One way of providing 3 dimensional information is to use the tri-planar method. This consists in generating 3 perpendicular square patches of a given dimension in the transversal, saggital and coronal planes centred at the voxel of interest as shown in Figure \ref{tri-planar}. This technique has been found to give competitive results compared to using 3D patches while being much more computationally and memory efficient \citep{knee_cartilage}. In addition, we use a multi-scale approach as in \citep{DBLP:journals/corr/BrebissonM15}, where we add 3 more input channels composed of compressed patches that are originally 5 times larger than the above set of patches, but resized to be of the same size as the first 3 input patches to provide global information about the surroundings of the concerned voxel.\\
+
+\noindent Each patch is fed into a different input channel of the CNN to a total of 6 channels. The outputs of those channels are then feed as inputs to a set of connected layers itself connected to a classifying layer.
+
 \section{Implementation Details}
 
 \subsection{Libraries}
 
-\noindent To train Neural Networks, we use Torch, an open-source library maintained by Facebook in Lua aiming to provide a Matlab-like environment for scientific computing, along with a number of dependent libraries (nn, cunn, cudnn, fbcunn) to train the convolutional networks on single and multiple GPUs. In addition, we use Python and a number of its libraries to handle all the logistics ranging from generating the datasets to producing plots of segmentation results.
+\noindent Our CNNs were implemented using Torch, an open-source library aiming to provide a Matlab-like environment for scientific computing in Lua, along with a number of dependent libraries (nn, cunn, cudnn, fbcunn) which facilitate the training of neural networks on single and multiple GPUs. In addition, we use Python and a number of its libraries to handle all the logistics ranging from generating the datasets to producing plots of segmentation results.
 
 \subsection{Computer facilities}
 
-\noindent The training of the CNNs were conducted alternatively on one of 2 multi-GPU clusters, named montana-nvidia and montana-k80, kindly provided by Prof. Montana's. montana-nvidia consists of 24 cores with 129 Gb of memory connected to two NVIDIA Tesla K40m and two Tesla K20Xm while montana-k80 on the other hand has 56 cores with 258 Gb of memory supported by 8 of NVIDIA's Testla K80. 
+\noindent The training of the CNNs were conducted alternatively on one of 2 multi-GPU clusters, named montana-nvidia and montana-k80, kindly provided by Prof. Montana. montana-nvidia consists of 24 cores with 129 Gb of memory connected to two NVIDIA Tesla K40m and two Tesla K20Xm while montana-k80 on the other hand has 56 cores with 258 Gb of memory supported by 8 of NVIDIA's Testla K80. 
 
 \section{Model Selection}
 
 \subsection{General approach for model selection}
 
-\noindent For the purpose of model selection, we allocated 20 of the 27 CT scans to the training set and the remaining 7 to a testing set. The training set is composed of 400000 training examples equally divided among the training CT scans, half being in the atrium and the other half outside it. The validation set is composed of 200000 testing examples equally divided among the testing CT scans. Furthermore at the end of training, each model fully segments a test CT scan from the testing set to provide performance statistics. In particular, from this segmentation image, we evaluate the model's sensitivity, which is the percentage of correctly classified atrium voxels, specificity, which is the percentage of correctly classified non-atrium voxels, and overall classification rate also known as the Dice coefficient, which is calculated by evaluating the proportion of correctly classified voxels in the segmented image. As 98\% of the CT scan image is composed of non-atrium voxels, the Dice coefficient is overwhelmingly influenced by the specificity. We will conduct our model selection by selectively choosing hyper-parameters that optimise the Dice coefficient while having a reasonable sensitivity.\\
+\noindent The purpose of this section is to find a good set of hyper-parameters fro our CNN. To that end, we allocate 20 of the 27 CT scans for generating the training set and the remaining 7 for generating the validation set. The training set is composed of 400000 training examples equally divided among the training CT scans, half being in the atrium and the other half outside it. The validation set is composed of 200000 examples equally divided among the testing CT scans. Furthermore at the end of training, each model fully segments a test CT scan from the testing set to provide performance statistics. In particular, from this segmentation image, we evaluate the model's sensitivity (the percentage of correctly classified atrium voxels), specificity (the percentage of correctly classified non-atrium voxels), and overall classification rate also known as the Dice coefficient, calculated by evaluating the proportion of correctly classified voxels in the segmented image. As 98\% of the CT scan is composed of non-atrium voxels, the Dice coefficient is overwhelmingly influenced by the specificity. We will conduct our model selection by selectively choosing hyper-parameters that optimise the Dice coefficient while having a reasonable sensitivity in the regions of 80 to 90\%.\\
 
-Additionally, 3 transversal mask images are generated from the segmented CT scan, where the grey CT scan image is overlaid with colours representing the error status of a given voxel. These masks provide a visual element to the performance of the models. The colour codes are:
+Additionally, mask images are generated from 3 transversal slices in the segmented CT. The masks are formed by overlaying the grey scale CT scan image with colours representing the error status of the classification of a given voxel. They provide a visual representation of the performance of the models. The colour codes are:
 
 \begin{itemize}
-	\item Green: correctly classified atrium voxel
-	\item Blue: correctly classified non-atrium voxel
-	\item Red: incorrectly classified atrium voxel
-	\item Pink: incorrectly classified non-atrium voxel
+	\item Green: correctly classified atrium voxel.
+	\item Blue: correctly classified non-atrium voxel.
+	\item Red: incorrectly classified atrium voxel.
+	\item Pink: incorrectly classified non-atrium voxel.
 \end{itemize}
 
-\noindent We start off our model selection with a CNN comprised of an input layer with 6 channels with patches of size 32*32, 2 convolutional layers with 32 and 64 feature maps respectively, 2 fully connected layers with 1000 and 500 hidden units each respectively, and a logsoftmax output layer giving log probabilities. The training parameters are composed of a learning rate of 0.01, a momentum rate set to 0, and a mini-batch size set to 6000 examples. We will be varying in turn the following hyper-parameters while at each stage keeping the others constant.\\
+\noindent We start off our model selection with a CNN comprised of an input layer with 6 channels of patches of size 32*32, 2 convolutional layers with 32 and 64 feature maps respectively and a max pooling filter of size $2 \times 2$, 2 fully connected layers with 1000 and 500 hidden units each respectively, and a logsoftmax output layer giving the log probabilities of the voxel belonging to either classes. The training parameters are composed of a learning rate of 0.01, a momentum rate set to 0, and a mini-batch size set to 6000 examples. In addition, the negative log likelihood criterion provides the error measure during training. We will be varying in turn the following hyper-parameters while at each stage keeping the others constant.\\
 
 \begin{itemize}
 	\item the number of convolutional layers.
 	\item the number of connected layers.
 	\item the number of feature maps in the chosen number of convolutional layers.
 	\item the number of hidden units in the chosen number of connected layers.
-	\item the type of activation function (ReLU, Tanh or Sigmoid).
-	\item the type of subsampling function (maximum or average pooling).
 	\item the learning rate.
 	\item the momentum.
+	\item the type of activation function (ReLU, Tanh or Sigmoid).
 \end{itemize}
 
-\subsection{varying number of convolutional layers}
+\subsection{Varying the Number of Convolutional Layers}
 
 \noindent To select the number of convolutional layers, we train 4 CNNs with architectures starting with the following convolutional layers:
 
@@ -74,7 +74,7 @@ Additionally, 3 transversal mask images are generated from the segmented CT scan
 	\item Input (6*32*32) => Conv layer (32*28*28) => Conv layer (32*24*24) => 2*2 MaxPooling filter (32*12*12) => Conv layer (64*8*8) => Conv layer (64*4*4) => 2*2 MaxPooling filter (64*2*2)
 \end{itemize}
 
-\noindent These convolutional layers are then followed by two fully connected layers with 1000 and 500 hidden layers each. The following table gives the results for each of these architectures trained over 100 epochs.\\
+\noindent The values in parentheses indicate the number and dimensions of the feature maps at each layer. The following table gives the results for each of these architectures trained over 100 epochs.\\
 
 \begin{tabular}{cccccc}
 \rowcolor[HTML]{C0C0C0} 
@@ -158,46 +158,12 @@ Additionally, 3 transversal mask images are generated from the segmented CT scan
 \caption{Masks for varying number of hidden units}
 \end{figure}
 
-\subsection{varying the activation function}
-
-\noindent We experimented with different types of activation function: ReLU, Tanh, Sigmoid. Doing it with ReLU is better...\\
-
-\begin{tabular}{cccccc}
-\rowcolor[HTML]{C0C0C0} 
-       \begin{tabular}[c]{@{}c@{}}Activation \\ Function\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
-ReLU    & 0.956                                                        & 0.953                                                       & 0.923       & 0.967       & 0.966                                                        \\ 
-Tanh    & 0.956                                                        & 0.942                                                       & 0.942       & 0.955       & 0.955                                                        \\ 
-Sigmoid & 0.673                                                        & 0.987                                                       & 0.0         & 1.0         & 0.982                                                       
-\end{tabular}
-
-\begin{figure}
-\centering
-\includegraphics[trim=2.5cm 1.5cm 2cm 1.5cm, clip=true, height=80mm, width=150mm]{Chapter3/mask_results_varying_activation_function.png}
-\caption{Masks for varying activation function}
-\end{figure}
-
-\subsection{varying the type of pooling}
-
-\noindent We also tried different types of pooling: Max pooling and average pooling. Average Pooling is better.\\
-
-\begin{tabular}{cccccc}
-\rowcolor[HTML]{C0C0C0} 
-               \begin{tabular}[c]{@{}c@{}}Pooling \\ Function\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
-Max      & 0.956                                                        & 0.953                                                       & 0.923       & 0.967       & 0.966                                                        \\ 
-Average  & 0.953                                                        & 0.95                                                        & 0.937       & 0.964       & 0.963                                                       
-\end{tabular}
-
-\begin{figure}
-\centering
-\includegraphics[trim=2.5cm 1.5cm 2cm 1.5cm, clip=true, height=80mm, width=150mm]{Chapter3/mask_results_varying_pooling_function.png}
-\caption{Masks for varying pooling function.}
-\end{figure}
-
 \subsection{varying the learning rate}
 
 \noindent Tried different learning rates: 0.01, 0.05, 0.1, 0.5. Huge improvement as we increase the learning rate. A learning rate of 1 doesn't converge. We take LR = 0.5.
 
 \begin{tabular}{cccccc}
+\rowcolor[HTML]{C0C0C0} 
 \begin{tabular}[c]{@{}c@{}}Learning\\ Rate\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
 \rowcolor[HTML]{FFFFFF} 
 LR 0.01                                                 & 0.956                                                        & 0.957                                                       & 0.885       & 0.971       & 0.97                                                         \\
@@ -225,17 +191,38 @@ Momentum & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin
 \rowcolor[HTML]{FFFFFF} 
 0        & 0.982                                                        & 0.973                                                       & 0.906       & 0.982       & 0.981                                                        \\ 
 \rowcolor[HTML]{FFFFFF} 
-0.05     & 0.979                                                        & 0.973                                                       & 0.916       & 0.916       & 0.979                                                        \\ 
+0.05     & 0.979                                                        & 0.973                                                       & 0.916       & 0.98       & 0.979                                                        \\ 
 \rowcolor[HTML]{FFFFFF} 
-0.1      & 0.983                                                        & 0.976                                                       & 0.9         & 0.9         & 0.982                                                        \\
+0.1      & 0.983                                                        & 0.976                                                       & 0.9         & 0.984         & 0.982                                                        \\
 \rowcolor[HTML]{FFFFFF} 
-0.5      & 0.985                                                        & 0.981                                                       & 0.83        & 0.83        & 0.985                                                       
+0.5      & 0.985                                                        & 0.981                                                       & 0.83        & 0.988        & 0.985                                                       
 \end{tabular}
 
 \begin{figure}
 \centering
 \includegraphics[trim=2.5cm 1.5cm 2cm 1.5cm, clip=true, height=80mm, width=150mm]{Chapter3/mask_results_varying_momentum.png}
 \caption{Masks for varying momentum}
+\end{figure}
+
+\subsection{varying the activation function}
+
+\noindent We experimented with different types of activation function: ReLU, Tanh, Sigmoid. Doing it with ReLU is better...\\
+
+\begin{tabular}{cccccc}
+\rowcolor[HTML]{C0C0C0} 
+\begin{tabular}[c]{@{}c@{}}Activation\\ Function\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ training set\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dice \\ testing set\end{tabular} & Sensitivity & Specificity & \begin{tabular}[c]{@{}c@{}}Dice \\ test CT scan\end{tabular} \\ \hline
+\rowcolor[HTML]{FFFFFF} 
+ReLU                                                          & 0.984                                                        & 0.978                                                       & 0.87        & 0.986       & 0.984                                                        \\
+\rowcolor[HTML]{FFFFFF} 
+Tanh                                                          & 0.973                                                        & 0.972                                                       & 0.934       & 0.98        & 0.979                                                        \\
+\rowcolor[HTML]{FFFFFF} 
+Sigmoid                                                       & 0.958                                                        & 0.958                                                       & 0.941       & 0.968       & 0.967                                                       
+\end{tabular}
+
+\begin{figure}
+\centering
+\includegraphics[trim=2.5cm 1.5cm 2cm 1.5cm, clip=true, height=80mm, width=150mm]{Chapter3/mask_results_varying_activation_function.png}
+\caption{Masks for varying activation function}
 \end{figure}
 
 \subsection{varying datasets type}
@@ -262,7 +249,7 @@ Large Atrium Box                                           & 0.963              
 \begin{figure}
 \centering
 \includegraphics[trim=2.5cm 1.5cm 2cm 1.5cm, clip=true, height=80mm, width=150mm]{Chapter3/mask_results_varying_training_dataset.png}
-\caption{Masks for varying momentum}
+\caption{Masks for varying training dataset}
 \end{figure}
 
 \noindent Tried a number of dataset sizes: 400000, 1000000, 3000000
