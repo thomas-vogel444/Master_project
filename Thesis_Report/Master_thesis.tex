@@ -125,7 +125,7 @@ otherwise stated.\\
 %%% Actual words used in the title page
 \title{Segmentation of CT scans into Atrium/non Atrium}
 \author{Thomas Vogel}
-\CID{}
+\CID{01016217}
 \supervisor{Prof Giovanni Montana}
 \date{\today}
 \logoimg{Imperial__4_colour_process.jpg}
@@ -141,20 +141,11 @@ otherwise stated.\\
 \declaration %Insert plagiarism statement
 
 \begin{abstract}
-This is a \LaTeX{} template to be used for project theses by the students of the Imperial College MSc in Statistics. Please have a look at the \verb|*.tex| source and the code comments therein. You may use this template with only minor changes, or make any major style changes you desire (e.g. redesigning the title page, adding headers,...), or you may use a different template, or you may write your own approach from scratch, or you may just use some bits and pieces from the template's \LaTeX{} code. It's up to you. Note that resources on how to use \LaTeX{} are available on Blackboard under `R\&{}LaTeX intro'.
-
-This template will quote relevant sections from the MSc in Statistics student handbook throughout; e.g.
-\begin{myquote}
-The abstract should be a brief statement of the aims and outcomes of the project, to summarise/advise
-even for a casual reader!
-\end{myquote}
+The object of this thesis is to implement a convolutional neural network (CNN) to automatically identify the atrium of the heart in Computerised Tomography (CT) scans of the chest. A brief overview of Deep Learning is given in general, and in the context of Medical Imaging in particular as well as some background material on CNNs. We then describe the implementation of our CNN using a multi-scale tri-planar approach followed by some experimental results from a hyper-parameter search for a good architecture and set of learning parameters. The final set of results describes an altering to the sampling procedure yielding a significant improvement to the classification rate. The final model has an mean classification accuracy of 0.985 across 7 test CT scans, but makes significant errors in the neighbouring regions around the atrium where it is expected and, more worryingly, at times also away from it.
 \end{abstract}
 \newpage
 \chapter*{Acknowledgements}
-Thank you supervisor/friends/family/pet.
-\begin{myquote}
-Include an acknowledgement.
-\end{myquote}
+I would like to thank Professor Giovanni Montana for supplying the computational resources needed for this project as well as Rudra Poudel, his research associate, for providing technical help when I needed it. This thesis was written during a summer riddled with personal difficulties including a severe sciatica which severely threatened its completion. Special acknowledgement goes to my mother, who nursed me for 6 weeks in July and August while I was bed bound and unable to walk, and to fellow student Irina Timoshenko for helping me overcome a number of deep psychological issues.
 \newpage
 
 % Automatically create a table of contents
@@ -171,13 +162,12 @@ Include an acknowledgement.
 %\phantomsection
 %\listoftables  
 %\addcontentsline{toc}{chapter}{\listtablename}
-%\newpage
+%\newpagex
 
 \include{Chapter1/Chapter1}
 \include{Chapter2/Chapter2}
 \include{Chapter3/Chapter3}
 \include{Chapter4/Chapter4}
-%\include{Chapter5}
 
 \cleardoublepage
 \phantomsection
@@ -188,6 +178,6 @@ Include an acknowledgement.
 
 \cleardoublepage 
 
-\include{Code_Appendix}
+\include{Appendix}
 
 \end{document}

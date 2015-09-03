@@ -1,4 +1,12 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
+
+\bibitem{url_convolution}
+vimage programming guide, 10 2011.
+
+\bibitem{Bengio:2009:LDA:1658423.1658424}
+Yoshua Bengio.
+\newblock Learning deep architectures for ai.
+\newblock {\em Found. Trends Mach. Learn.}, 2(1):1--127, January 2009.
 
 \bibitem{Bengio-et-al-2015-Book}
 Yoshua Bengio, Ian~J. Goodfellow, and Aaron Courville.
@@ -10,15 +18,86 @@ Christopher~M. Bishop.
 \newblock {\em Neural Networks for Pattern Recognition}.
 \newblock Oxford University Press, Inc., New York, NY, USA, 1995.
 
+\bibitem{NIPS2012_4741}
+Dan Ciresan, Alessandro Giusti, Luca~M. Gambardella, and J\"{u}rgen
+  Schmidhuber.
+\newblock Deep neural networks segment neuronal membranes in electron
+  microscopy images.
+\newblock In F.~Pereira, C.J.C. Burges, L.~Bottou, and K.Q. Weinberger,
+  editors, {\em Advances in Neural Information Processing Systems 25}, pages
+  2843--2851. Curran Associates, Inc., 2012.
+
+\bibitem{Ciresan}
+Dan Ciresan, Alessandro Giusti, Luca~M. Gambardella, and J\"{u}rgen
+  Schmidhuber.
+\newblock Mitosis detection in breast cancer histology images with deep neural
+  networks.
+\newblock In Kensaku Mori, Ichiro Sakuma, Yoshinobu Sato, Christian Barillot,
+  and Nassir Navab, editors, {\em Medical Image Computing and Computer-Assisted
+  Intervention 2013}, volume 8150 of {\em Lecture Notes in Computer Science},
+  pages 411--418. Springer Berlin Heidelberg, 2013.
+
 \bibitem{DBLP:journals/corr/BrebissonM15}
 Alexandre de~Brebisson and Giovanni Montana.
 \newblock Deep neural networks for anatomical brain segmentation.
 \newblock {\em CoRR}, abs/1502.02445, 2015.
 
+\bibitem{Glorot10understandingthe}
+Xavier Glorot and Yoshua Bengio.
+\newblock Understanding the difficulty of training deep feedforward neural
+  networks.
+\newblock In {\em In Proceedings of the International Conference on Artificial
+  Intelligence and Statistics (AISTATS'10). Society for Artificial Intelligence
+  and Statistics}, 2010.
+
+\bibitem{AISTATS2011_GlorotBB11}
+Xavier Glorot, Antoine Bordes, and Yoshua Bengio.
+\newblock Deep sparse rectifier neural networks.
+\newblock In Geoffrey~J. Gordon and David~B. Dunson, editors, {\em Proceedings
+  of the Fourteenth International Conference on Artificial Intelligence and
+  Statistics (AISTATS-11)}, volume~15, pages 315--323. Journal of Machine
+  Learning Research - Workshop and Conference Proceedings, 2011.
+
+\bibitem{Hinton:2006:FLA:1161603.1161605}
+Geoffrey~E. Hinton, Simon Osindero, and Yee-Whye Teh.
+\newblock A fast learning algorithm for deep belief nets.
+\newblock {\em Neural Comput.}, 18(7):1527--1554, July 2006.
+
+\bibitem{NIPS2010_4133}
+Koray Kavukcuoglu, Pierre Sermanet, Y~lan Boureau, Karol Gregor, Michael
+  Mathieu, and Yann~L. Cun.
+\newblock Learning convolutional feature hierarchies for visual recognition.
+\newblock In J.D. Lafferty, C.K.I. Williams, J.~Shawe-Taylor, R.S. Zemel, and
+  A.~Culotta, editors, {\em Advances in Neural Information Processing Systems
+  23}, pages 1090--1098. Curran Associates, Inc., 2010.
+
+\bibitem{NIPS2012_4824}
+Alex Krizhevsky, Ilya Sutskever, and Geoffrey~E. Hinton.
+\newblock Imagenet classification with deep convolutional neural networks.
+\newblock pages 1097--1105, 2012.
+
+\bibitem{Larochelle:2009:EST:1577069.1577070}
+Hugo Larochelle, Yoshua Bengio, J{\'e}rome Louradour, and Pascal Lamblin.
+\newblock Exploring strategies for training deep neural networks.
+\newblock {\em J. Mach. Learn. Res.}, 10:1--40, June 2009.
+
+\bibitem{Lecun98gradient-basedlearning}
+Yann Lecun, L{\'e}on Bottou, Yoshua Bengio, and Patrick Haffner.
+\newblock Gradient-based learning applied to document recognition.
+\newblock {\em Proceedings of the IEEE}, pages 2278--2324, 1998.
+
 \bibitem{NYT_article}
 John Markoff.
 \newblock Scientists see promise in deep-learning programs.
 \newblock {\em New York Times}, November 2012.
+
+\bibitem{key:article}
+Srinivasan Nagaraj, G~Narasinga rao, and K~Koteswararao.
+\newblock The role of pattern recognition in computer-aided diagnosis and
+  computer-aided detection in medical imaging: A clinical validation.
+\newblock {\em International Journal of Computer Applications}, 8(5):18--22,
+  October 2010.
+\newblock Published By Foundation of Computer Science.
 
 \bibitem{Nielsen}
 Michael~A. Nielsen.
@@ -33,7 +112,7 @@ Adhish Prasoon, {Peter Kersten} Petersen, Christian Igel, {Francois Bernard}
 \newblock Lecture Notes in Computer Science. Springer, 2013.
 
 \bibitem{Deep_Learning_overview}
-J.~Schmidhuber.
+J\"{u}rgen Schmidhuber.
 \newblock Deep learning in neural networks: An overview.
 \newblock {\em Neural Networks}, 61:85--117, 2015.
 \newblock Published online 2014; based on TR arXiv:1404.7828 [cs.NE].
@@ -43,5 +122,11 @@ Nitish Srivastava, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan
   Salakhutdinov.
 \newblock Dropout: A simple way to prevent neural networks from overfitting.
 \newblock {\em Journal of Machine Learning Research}, 15:1929--1958, 2014.
+
+\bibitem{going_deeper_with_convolutions}
+Christian Szegedy, Wei Liu, Yangqing Jia, Pierre Sermanet, Scott Reed, Dragomir
+  Anguelov, Dumitru Erhan, Vincent Vanhoucke, and Andrew Rabinovich.
+\newblock Going deeper with convolutions.
+\newblock {\em CoRR}, abs/1409.4842, 2014.
 
 \end{thebibliography}
