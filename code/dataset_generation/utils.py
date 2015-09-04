@@ -85,3 +85,9 @@ def resize_image_2d_array(image_2d_array, height, width):
     im = Image.fromarray(image_2d_array)
     out = im.resize((height, width))
     return np.array(out)
+
+
+
+
+
+    

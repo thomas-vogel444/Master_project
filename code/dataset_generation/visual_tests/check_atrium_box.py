@@ -1,6 +1,7 @@
 import sys
 sys.path.append("..")
 from CTScanImage import CTScanImage
+import utils
 import dataset_functions as df
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
@@ -8,7 +9,7 @@ import re
 import numpy as np
 
 
-training_data_directory = "../../../ct_atrium/training/"
+training_data_directory = "../../../ct_atrium/testing/"
 
 CT_scan_parameters_template = {
 		"CT_scan_path_template" : training_data_directory + "CTScan_name",
@@ -18,11 +19,29 @@ CT_scan_parameters_template = {
 		"CT_directory_pattern"  : re.compile("[0-9]{8}")
 		}
 
-CT_scan_name 	= "14032003" 
-xy_padding  	= 50
-z_padding   	= 10
-CT_scan 		= CTScanImage(CT_scan_name, CT_scan_parameters_template, xy_padding, z_padding)
+CT_scan_names 	= ["14012303", "14022801"]
+xy_padding  	= 5
+z_padding   	= 1
+CT_scans 		= [CTScanImage(CT_scan_name, CT_scan_parameters_template, xy_padding, z_padding) for CT_scan_name in CT_scan_names]
 x, y, z 		= 250, 250, 30
+
+fig = plt.figure()
+a   = fig.add_subplot(2,2,1)
+plt.imshow(CT_scans[0].image[:,:,z], cmap = cm.Greys_r)
+plt.axis('off')
+a   = fig.add_subplot(2,2,2)
+plt.imshow(CT_scans[1].image[:,:,z], cmap = cm.Greys_r)
+plt.axis('off')
+a   = fig.add_subplot(2,2,3)
+plt.imshow(CT_scans[0].labels_with_atrium_box[:,:,z], cmap = cm.Greys_r)
+plt.axis('off')
+a   = fig.add_subplot(2,2,4)
+plt.imshow(CT_scans[1].labels_with_atrium_box[:,:,z], cmap = cm.Greys_r)
+plt.axis('off')
+plt.show()
+
+CT_scan_name 	= CT_scan_names[0]
+CT_scan 		= CT_scans[0]
 
 fig = plt.figure()
 a   = fig.add_subplot(1,3,1)

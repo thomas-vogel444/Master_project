@@ -20,13 +20,13 @@ CT_scan_parameters_template = {
 		}
 
 CT_scan_names = [directory for directory in os.listdir(data_directory) if CT_scan_parameters_template["CT_directory_pattern"].match(directory)]
-CT_scan_name  = CT_scan_names[6]
+CT_scan_name  = CT_scan_names[3]
 
 # CT_scan_name = "14012303"
 CT_scan = CTScanImage(CT_scan_name, CT_scan_parameters_template)
 
 # Plot a bunch of cross sections from the CT scan image
-x, y, z = 200, 200, 30
+x, y, z = 250, 250, 30
 
 # Resize the saggital and coronal images to make them look better
 t_height, t_width = CT_scan.image[:,:,z].shape
@@ -44,14 +44,20 @@ saggital_labels_resized = utils.resize_image_2d_array(CT_scan.labels[x,:,:], 3*s
 fig = plt.figure()
 a   = fig.add_subplot(2,3,1)
 plt.imshow(CT_scan.image[:,:,z], cmap=cm.Greys_r)
+plt.axis('off')
 a   = fig.add_subplot(2,3,2)
 plt.imshow(coronal_values_resized, cmap=cm.Greys_r)
+plt.axis('off')
 a   = fig.add_subplot(2,3,3)
 plt.imshow(saggital_values_resized, cmap=cm.Greys_r)
+plt.axis('off')
 a   = fig.add_subplot(2,3,4)
 plt.imshow(CT_scan.labels[:,:,z], cmap = cm.Greys_r)
+plt.axis('off')
 a   = fig.add_subplot(2,3,5)
 plt.imshow(coronal_labels_resized, cmap = cm.Greys_r)
+plt.axis('off')
 a   = fig.add_subplot(2,3,6)
 plt.imshow(saggital_labels_resized, cmap = cm.Greys_r)
+plt.axis('off')
 plt.show()
