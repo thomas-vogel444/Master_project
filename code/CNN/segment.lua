@@ -40,10 +40,6 @@ segment_dataset = {}
 segment_dataset.data = data
 segment_dataset.size = function() return(segment_dataset.data:size()[1]) end
 
--- Normalize the data
--- segment_dataset.data:add(-segment_dataset.data:mean())
--- segment_dataset.data:div(segment_dataset.data:std())
-
 ----------------------------------------------------------------------
 --            Segment the dataset
 ----------------------------------------------------------------------

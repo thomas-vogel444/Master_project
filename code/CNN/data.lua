@@ -26,9 +26,5 @@ testData.labels = testingLabels
 testData.size   = function() return(testingDataset:size()[1]) end
 f:close()
 
--- Normalize the data
--- normalize(trainData.data)
--- normalize(testData.data)
-
 nfeats  	= trainData.data:size()[2]
 patchsize   = trainData.data:size()[3]
