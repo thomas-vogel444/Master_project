@@ -87,65 +87,7 @@ if __name__ == "__main__":
 		plt.axis('off')
 	plt.show()
 
-	#************************************************************************************************************************
 
-	# experimental_results = ExperimentalResults(experiment_path)
-
-	# z = 30
-	# mask_z = rf.get_mask(experimental_results.predicted_labels[0][:,:,z], 
-	# 			experimental_results.segmented_CT_scans[0].labels[:,:,z],
-	# 			experimental_results.segmented_CT_scans[0].image[:,:,z])
-
-	# y = 220
-	# mask_y = rf.get_mask(experimental_results.predicted_labels[0][:,y,:], 
-	# 			experimental_results.segmented_CT_scans[0].labels[:,y,:],
-	# 			experimental_results.segmented_CT_scans[0].image[:,y,:])
-
-	# x = 220
-	# mask_x = rf.get_mask(experimental_results.predicted_labels[0][x,:,:], 
-	# 			experimental_results.segmented_CT_scans[0].labels[x,:,:],
-	# 			experimental_results.segmented_CT_scans[0].image[x,:,:])
-
-	
-
-	# all_masks = []
-	# for experiment_name in experiment_names:
-	# 	experiment_path = os.path.join(experiment_base_directory, experiment_name)
-		
-	# 	experimental_results = ExperimentalResults(experiment_path)
-		
-	# 	print "=====> Experiment statistics for %s"%experiment_name
-	# 	pp.pprint(experimental_results.get_classification_statistics())
-
-	# 	experiment_masks = []
-	# 	for predicted_labels, segmented_CT_scan in zip(experimental_results.predicted_labels, experimental_results.segmented_CT_scans):
-	# 		experiment_masks.append(rf.get_mask(predicted_labels[:,:,z], 
-	# 											segmented_CT_scan.labels[:,:,z],
-	# 											segmented_CT_scan.image[:,:,z]))
-	# 	all_masks.append(experiment_masks)
-
-	# Print the masks
-	# fig = plt.figure()
-	# for i_experiment, experiment_masks in enumerate(all_masks):
-	# 	a = fig.add_subplot(len(experiment_masks), len(all_masks), i_experiment + 1)
-	# 	a.set_title(experiment_names[i_experiment].replace("_", " "))
-	# 	plt.imshow(experiment_masks[0])
-	# 	plt.axis('off')
-	# plt.show()
-
-	# fig = plt.figure()
-	# for i_experiment, experiment_masks in enumerate(all_masks):
-	# 	a = fig.add_subplot(len(experiment_masks), len(all_masks), i_experiment + 1)
-	# 	a.set_title(experiment_names[i_experiment].replace("_", " "))
-	# 	plt.imshow(experiment_masks[0])
-	# 	plt.axis('off')
-	# 	a = fig.add_subplot(len(experiment_masks), len(all_masks), i_experiment + 1 + len(all_masks))
-	# 	plt.imshow(experiment_masks[1])
-	# 	plt.axis('off')
-	# 	a = fig.add_subplot(len(experiment_masks), len(all_masks), i_experiment + 1 + 2*len(all_masks))
-	# 	plt.imshow(experiment_masks[2])
-	# 	plt.axis('off')
-	# plt.show()
 
 
 

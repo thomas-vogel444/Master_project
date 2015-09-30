@@ -32,14 +32,16 @@ if __name__ == "__main__":
 		if not os.path.exists(segmentation_directory):
 		    os.makedirs(segmentation_directory)
 
-		segmented_CT_scan 		= CTScanImage(testing_CT_scan_name, CT_scan_parameters_template)
+		segmented_CT_scan 	= CTScanImage(testing_CT_scan_name, CT_scan_parameters_template)
+		dataset_generator 	= DatasetGenerator(segmented_CT_scan, patch_size)
+
 		_, _, number_of_slices 	= segmented_CT_scan.image.shape
 
 		for z in range(number_of_slices):
 			print "Generating a dataset for transversal slice number: %i"%z
 
 			# Generating the transversal dataset
-			transversal_dataset = df.generate_full_transversal_segmentation_dataset(segmented_CT_scan, patch_size, z)
+			transversal_dataset = dataset_generator.generate_full_transversal_segmentation_dataset(z)
 
 			# Saving the transversal dataset
 			transversal_dataset_path = os.path.join(segmentation_directory, "segmentation_dataset_%i.hdf5")%z

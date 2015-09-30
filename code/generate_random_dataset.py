@@ -1,9 +1,39 @@
-import dataset_generation.dataset_functions as df
+import dataset_generation.CTScanImage as CTScanImage
+import dataset_generation.DatasetGenerator as DatasetGenerator
 import dataset_generation.utils as utils
 import os
 import re
 import numpy as np
 import h5py
+
+
+def generate_random_dataset(CT_scan_names, n_examples_per_label, CT_scan_parameters_template, patch_size, sampling_type, dicom_index=None, xy_padding=0, z_padding=0):
+	"""
+		Generates a random dataset from a set of CT scans.
+	"""
+	dataset = np.zeros((sum(n_examples_per_label)*len(CT_scan_names), 6, patch_size, patch_size))
+	labels  = np.zeros(sum(n_examples_per_label)*len(CT_scan_names))
+
+	for i, CT_scan_name in enumerate(CT_scan_names):
+		print "Generating datasets from CT scan %s" %CT_scan_name
+		CT_scan 			= CTScanImage(CT_scan_name, CT_scan_parameters_template, xy_padding, z_padding)
+		dataset_generator 	= DatasetGenerator(CT_scan, patch_size)
+
+		# Randomly generate the pixel indices 
+		random_indices = list(itertools.chain.from_iterable(
+					[	CT_scan.sample_CT_scan_indices(sampling_type, n_examples_per_label[label-1], label, dicom_index) 
+						for label in range(1, len(n_examples_per_label) + 1)])
+				)
+
+		n_examples = sum(n_examples_per_label)
+
+		# Get the dataset for a given CT scan
+		dataset[(i*n_examples):((i+1)*n_examples)] = dataset_generator.generate_dataset_from_CT_scan(random_indices)
+
+		# Get the respective labels
+		labels[(i*n_examples):((i+1)*n_examples)]  = np.array(map(CT_scan.get_label, random_indices))
+
+	return dataset, labels
 
 if __name__ == "__main__":
 	# Setting Parameters
@@ -29,7 +59,7 @@ if __name__ == "__main__":
 
 	# Generate the dataset from the list of CT scans
 	print "=======> Generating the dataset <======="
-	dataset, labels = df.generate_random_dataset(	CT_scan_names, 
+	dataset, labels = generate_random_dataset(	CT_scan_names, 
 											n_examples_per_CT_scan_per_label, 
 											CT_scan_parameters_template, 
 											patch_size, 
