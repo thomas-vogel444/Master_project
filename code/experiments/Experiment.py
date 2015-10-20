@@ -4,14 +4,15 @@ import subprocess
 import os
 import shutil
 
+
 class Experiment:
 	"""
 		This class is responsible for handling all the logistics involved in training a Neural Network.
 	"""
-	def __init__(self, model):
-		self.model = model
+    def __init__(self, model):
+        self.model = model
 
-	def run_experiment(self):
+    def run_experiment(self):
 		"""
 			Sets up the logistics for training a model, trains the model, and finish with some post-training logistics.
 		"""

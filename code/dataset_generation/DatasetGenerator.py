@@ -1,4 +1,3 @@
-from CTScanImage import CTScanImage
 import utils
 import itertools
 import numpy as np
